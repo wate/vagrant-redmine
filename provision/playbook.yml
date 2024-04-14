@@ -1,0 +1,159 @@
+---
+# code: language=ansible
+- name: Redmine verify environment
+  hosts: all
+  become: true
+  gather_facts: true
+  pre_tasks:
+    - name: Update package cache
+      ansible.builtin.apt:
+        update_cache: true
+  roles:
+    - role: common
+      tags:
+        - role_common
+    - role: nodejs
+      tags:
+        - role_nodejs
+    - role: mariadb
+      tags:
+        - role_mariadb
+    - role: nginx
+      tags:
+        - role_nginx
+    - role: redmine
+      tags:
+        - role_redmine
+    - role: tools
+      tags:
+        - role_tools
+  tasks:
+    - name: Install HakuGen font
+      block:
+        - name: Create font directory
+          ansible.builtin.file:
+            path: /usr/local/share/fonts/HakuGen
+            state: directory
+            mode: "0755"
+        - name: Set Github API request header
+          ansible.builtin.set_fact:
+            github_api_request_headers:
+              Accept: application/vnd.github+json
+        - name: Merge Github API Authorization request header
+          ansible.builtin.set_fact:
+            github_api_request_headers: "{{ github_api_request_headers | combine(merge_reauest_header) }}"
+          vars:
+            merge_reauest_header:
+              Authorization: Bearer {{ lookup('env', 'GITHUB_TOKEN') }}
+          when: lookup('env', 'GITHUB_TOKEN') | length > 0
+        - name: Get latest version
+          ansible.builtin.uri:
+            url: https://api.github.com/repos/yuru7/HackGen/releases/latest
+            headers: "{{ github_api_request_headers }}"
+          register: latest_releases
+        - name: Set hakugen_version variable
+          ansible.builtin.set_fact:
+            hakugen_version: "{{ latest_releases.json.tag_name }}"
+        - name: Install Hakugen font
+          ansible.builtin.unarchive:
+            src: https://github.com/yuru7/HackGen/releases/download/{{ hakugen_version }}/HackGen_{{ hakugen_version }}.zip
+            dest: /usr/local/share/fonts/HakuGen
+            remote_src: true
+            extra_opts:
+              - -j
+    - name: Generate web font
+      block:
+        - name: Insall font packages
+          ansible.builtin.apt:
+            name:
+              - fonttools
+              - sfnt2woff-zopfli
+              - woff2
+        - name: Generate subset text file
+          ansible.builtin.template:
+            src: subset_all.txt.j2
+            dest: /vagrant/docs/assets/fonts/subset.txt
+            mode: "0644"
+          vars:
+            subset_text_files:
+              - files/subset_alphanumeric.txt
+              - files/subset_symbol.txt
+              - files/subset_fullwidth_alphanumeric.txt
+              - files/subset_fullwidth_symbol.txt
+              - files/subset_hiragana.txt
+              - files/subset_katakana.txt
+              - files/subset_kanji.txt
+        - name: Generate subset font file
+          ansible.builtin.command:
+            cmd: >
+              pyftsubset
+              /usr/local/share/fonts/HakuGen/{{ item }}
+              --text-file=/vagrant/docs/assets/fonts/subset.txt
+              --output-file=/vagrant/docs/assets/fonts/{{ item | replace('HackGen', 'CodeFontH') }}
+          loop:
+            - HackGen-Regular.ttf
+            - HackGen-Bold.ttf
+        - name: Find convert font files
+          ansible.builtin.find:
+            paths:
+              - /vagrant/docs/assets/fonts
+            patterns:
+              - "*.ttf"
+              - "*.otf"
+          register: find_result
+        - name: Generate woff file
+          ansible.builtin.command:
+            cmd: sfnt2woff-zopfli {{ item.path | basename }}
+            chdir: /vagrant/docs/assets/fonts
+          loop: "{{ find_result.files }}"
+          loop_control:
+            label: "{{ item.path | basename }}"
+        - name: Generate woff2 file
+          ansible.builtin.command:
+            cmd: woff2_compress {{ item.path | basename }}
+            chdir: /vagrant/docs/assets/fonts
+          loop: "{{ find_result.files }}"
+          loop_control:
+            label: "{{ item.path | basename }}"
+    - name: Install pipx
+      ansible.builtin.apt:
+        name: pipx
+    - name: Generate API doc files
+      ansible.builtin.command:
+        cmd: bundle exec rake yard
+        chdir: /opt/redmine
+      become: true
+      become_user: redmine
+    - name: Generate doc site
+      become: false
+      block:
+        - name: Install mkdocs-material
+          community.general.pipx:
+            name: mkdocs-material
+            install_deps: true
+        - name: Add mkdocs plugins
+          community.general.pipx:
+            name: mkdocs-material
+            state: inject
+            inject_packages:
+              - mkdocs-git-revision-date-localized-plugin
+              - mkdocs-glightbox
+              - mkdocs-tooltips
+              - mkdocs-section-index
+              - mkdocs-literate-nav
+              - mkdocs-gen-files
+        - name: Update schema files
+          ansible.builtin.command:
+            cmd: tbls doc -c /vagrant/.tbls.yml -f --rm-dist
+            chdir: /vagrant
+        - name: Copy Redmine API doc files
+          ansible.posix.synchronize:
+            src: /opt/redmine/doc/app/
+            dest: /vagrant/docs/api
+            delete: true
+          become: false
+          delegate_to: "{{ inventory_hostname }}"
+        - name: Build doc site
+          ansible.builtin.command:
+            cmd: ~/.local/bin/mkdocs build
+            chdir: /vagrant

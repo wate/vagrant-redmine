@@ -1,0 +1,26 @@
+/*
+ * "白源/HackGen" are licensed under SIL OPEN FONT LICENSE Version 1.1.
+ * https://github.com/yuru7/HackGen
+ */
+@font-face {
+  /* Original: HackGen */
+  font-family: 'CodeFontH';
+  src:
+    url('../fonts/CodeFontH-Regular.woff2') format('woff2'),
+    url('../fonts/CodeFontH-Regular.woff') format('woff'),
+    url('../fonts/CodeFontH-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+}
+@font-face {
+  /* Original: HackGen */
+  font-family: 'CodeFontH';
+  src:
+    url('../fonts/CodeFontH-Bold.woff2') format('woff2'),
+    url('../fonts/CodeFontH-Bold.woff') format('woff'),
+    url('../fonts/CodeFontH-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: bold;
+  font-display: swap;
+}

@@ -1,0 +1,75 @@
+---
+## --------------------
+## Redmineのバージョン(ブランチ名)
+## --------------------
+redmine_version: 5.1-stable
+
+## --------------------
+## Redmineの動作モード
+## --------------------
+redmine_mode: development
+
+## --------------------
+## Gemパッケージのインストール先
+## --------------------
+# redmine_gem_path: vendor/bundle
+
+## --------------
+## バーチャルホストの設定
+## --------------
+nginx_vhosts:
+  # --------------
+  # Simple static site
+  # --------------
+  - name: default
+    default: true
+    server_name: redmine.local
+    upstream:
+      name: redmine
+      content: |
+        server unix:///opt/redmine/tmp/redmine.sock;
+    client_max_body_size: 100M
+    locations:
+      - pattern: /.well-known/acme-challenge/
+        match_type: ^~
+        content: |
+          default_type "text/plain";
+          alias /var/lib/dehydrated/acme-challenges/;
+      - pattern: /
+        content: |
+          proxy_pass http://redmine;
+          include proxy_params;
+      - pattern: "/\\.ht"
+        match_type: "~"
+        content: "deny all;"
+
+
+## --------------------------
+## インストールするツール
+## --------------------------
+install_tools:
+  # https://direnv.net/
+  - direnv
+  ## https://github.com/eza-community/eza
+  - eza
+  ## https://github.com/k1LoW/tbls
+  - tbls
+  ## https://github.com/terrastruct/d2
+  - d2
+  ## https://github.com/google/osv-scanner
+  - osv-scanner
+  ## https://www.mycli.net/
+  - mycli
+  ## https://graphviz.org/
+  - graphviz
+
+## --------------------
+## デフォルトのシステム管理者設定
+## --------------------
+redmine_admin:
+  login: admin
+  password: password
+  firstname: 管理者
+  lastname: システム
+  mail: admin@example.com
+  language: ja

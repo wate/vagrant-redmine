@@ -1,0 +1,81 @@
+---
+site_name: Redmineドキュメント
+##「sitemap.xml」を正しく出力するには「site_url」の設定を有効化する必要あり
+# site_url: http://doc.example.com/
+theme:
+  # https://squidfunk.github.io/mkdocs-material/
+  name: material
+  language: ja
+  # palette:
+  #   scheme: default
+  #   primary: indigo
+  #   accent: indigo
+  font:
+    # https://squidfunk.github.io/mkdocs-material/setup/changing-the-fonts/
+    text: BIZ UDPGothic
+    code: CodeFontH
+  features:
+    - navigation.tabs.sticky
+    - content.code.copy
+    # - navigation.tabs
+    # - navigation.sections
+    # - navigation.expand
+    # - navigation.indexes
+    - search.suggest
+    - search.highlight
+    # - search.share
+# docs_dir: docs
+site_dir: public
+extra_javascript:
+  - assets/javascripts/extra.js
+extra_css:
+  - https://cdn.jsdelivr.net/npm/hint.css/hint.min.css
+  - assets/stylesheets/extra.css
+markdown_extensions:
+  - abbr
+  - footnotes
+  - attr_list
+  - def_list
+  - tables
+  - md_in_html
+  - admonition
+  - pymdownx.betterem
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      # auto_append:
+      #   - includes/abbreviations.md
+      #   - includes/links.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+## https://www.mkdocs.org/about/release-notes/#excluded-doc-files
+exclude_docs: |
+  rules
+plugins:
+  ## https://squidfunk.github.io/mkdocs-material/plugins/search/
+  - search:
+      lang: ja
+  ## https://squidfunk.github.io/mkdocs-material/plugins/tags/
+  - tags
+  ## https://github.com/blueswen/mkdocs-glightbox
+  - glightbox
+  ## https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
+  # - git-revision-date-localized:
+  #     type: iso_date
+  #     timezone: Asia/Tokyo
+  #     locale: ja
+  ## https://roipoussiere.frama.io/mkdocs-tooltips/
+  - tooltips
+  ## https://oprypin.github.io/mkdocs-section-index/
+  - section-index
+  ## https://oprypin.github.io/mkdocs-literate-nav/
+  - literate-nav:
+      nav_file: index.md
