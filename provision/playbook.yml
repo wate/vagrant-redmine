@@ -56,18 +56,32 @@
       become: true
       become_user: redmine
       block:
+        - name: Check generated API document
+          ansible.builtin.stat:
+            path: /opt/redmine/doc/app
+          register: api_doc_stat_result
         - name: Generate API document
           ansible.builtin.command:
             cmd: bundle exec rake yard
             chdir: /opt/redmine
+            creates: /opt/redmine/doc/app
+          when: >
+            not api_doc_stat_result.stat.exists
+            or
+            force_update_doc_redmine_api | default(false)
         - name: Create/update Rails ERD config
           ansible.builtin.copy:
-            content: "{{ rails_erd_conf }}"
+            content: "{{ rails_erd_conf | to_nice_yaml }}"
             dest: /opt/redmine/.erdconfig
+          register: update_erd_config_result
         - name: Generate ER Diagram
           ansible.builtin.command:
             cmd: bundle exec rake erd
             chdir: /opt/redmine
+          when: >
+            update_erd_config_result is changed
+            or
+            force_update_doc_redmine_red | default(false)
     - name: Generate document site
       become: false
       block:
