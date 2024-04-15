@@ -33,6 +33,12 @@
     - role: tools
       tags:
         - role_tools
+    - role: font
+      tags:
+        - role_font
+    - role: webfont
+      tags:
+        - role_webfont
     - role: redmine
       tags:
         - role_redmine
@@ -41,93 +47,6 @@
       community.general.ufw:
         rule: allow
         port: 8025
-    - name: Install HakuGen font
-      block:
-        - name: Create font directory
-          ansible.builtin.file:
-            path: /usr/local/share/fonts/HackGen
-            state: directory
-            mode: "0755"
-        - name: Set Github API request header
-          ansible.builtin.set_fact:
-            github_api_request_headers:
-              Accept: application/vnd.github+json
-        - name: Merge Github API Authorization request header
-          ansible.builtin.set_fact:
-            github_api_request_headers: "{{ github_api_request_headers | combine(merge_reauest_header) }}"
-          vars:
-            merge_reauest_header:
-              Authorization: Bearer {{ lookup('env', 'GITHUB_TOKEN') }}
-          when: lookup('env', 'GITHUB_TOKEN') | length > 0
-        - name: Get latest version
-          ansible.builtin.uri:
-            url: https://api.github.com/repos/yuru7/HackGen/releases/latest
-            headers: "{{ github_api_request_headers }}"
-          register: latest_releases
-        - name: Set hackgen_version variable
-          ansible.builtin.set_fact:
-            hackgen_version: "{{ latest_releases.json.tag_name }}"
-        - name: Install HackGen font
-          ansible.builtin.unarchive:
-            src: https://github.com/yuru7/HackGen/releases/download/{{ hackgen_version }}/HackGen_{{ hackgen_version }}.zip
-            dest: /usr/local/share/fonts/HackGen
-            remote_src: true
-            extra_opts:
-              - -j
-    - name: Generate web font
-      block:
-        - name: Insall font packages
-          ansible.builtin.apt:
-            name:
-              - fonttools
-              - sfnt2woff-zopfli
-              - woff2
-        - name: Generate subset text file
-          ansible.builtin.template:
-            src: subset_all.txt.j2
-            dest: /vagrant/docs/assets/fonts/subset.txt
-            mode: "0644"
-          vars:
-            subset_text_files:
-              - files/subset_alphanumeric.txt
-              - files/subset_symbol.txt
-              - files/subset_fullwidth_alphanumeric.txt
-              - files/subset_fullwidth_symbol.txt
-              - files/subset_hiragana.txt
-              - files/subset_katakana.txt
-              - files/subset_kanji.txt
-        - name: Generate subset font file
-          ansible.builtin.command:
-            cmd: >
-              pyftsubset
-              /usr/local/share/fonts/HackGen/{{ item }}
-              --text-file=/vagrant/docs/assets/fonts/subset.txt
-              --output-file=/vagrant/docs/assets/fonts/{{ item | replace('HackGen', 'CodeFontH') }}
-          loop:
-            - HackGen-Regular.ttf
-            - HackGen-Bold.ttf
-        - name: Find convert font files
-          ansible.builtin.find:
-            paths:
-              - /vagrant/docs/assets/fonts
-            patterns:
-              - "*.ttf"
-              - "*.otf"
-          register: find_result
-        - name: Generate woff file
-          ansible.builtin.command:
-            cmd: sfnt2woff-zopfli {{ item.path | basename }}
-            chdir: /vagrant/docs/assets/fonts
-          loop: "{{ find_result.files }}"
-          loop_control:
-            label: "{{ item.path | basename }}"
-        - name: Generate woff2 file
-          ansible.builtin.command:
-            cmd: woff2_compress {{ item.path | basename }}
-            chdir: /vagrant/docs/assets/fonts
-          loop: "{{ find_result.files }}"
-          loop_control:
-            label: "{{ item.path | basename }}"
     - name: Install pipx
       ansible.builtin.apt:
         name: pipx

@@ -1,0 +1,436 @@
+---
+webfont_packages:
+  - fontforge
+  - fonttools
+  # - zopfli
+  # - brotli
+  - sfnt2woff-zopfli
+  # - woff-tools
+  - woff2
+
+webfont_output_font_dir: /vagrant/docs/assets/fonts
+webfont_output_css_dir: /vagrant/docs/assets/stylesheets
+webfont_css_font_path: "../fonts"
+
+webfont_css_output_license_text: |
+  "白源/HackGen" are licensed under SIL OPEN FONT LICENSE Version 1.1.
+  https://github.com/yuru7/HackGen
+
+## 出力するファイル名のプレフィックス
+webfont_font_prefix: CodeFont
+
+## CSS出力時の
+
+webfont_css_default:
+  style: normal
+  weight: normal
+  display: swap
+
+### font-weight map ###
+# Thin 100
+# ExtraLight 200
+# Light 300
+# Regular 400
+# Medium 500
+# SemiBold 600
+# Bold 700
+# ExtraBold 800
+# Black 900
+webfont_font_files:
+  ## BIZ UDGothic
+  # - src: /usr/share/fonts/truetype/bizud-gothic/BIZUDGothic-Regular.ttf
+  #   css:
+  #     family: "BIZ UDGothic"
+  # - src: /usr/share/fonts/truetype/bizud-gothic/BIZUDGothic-Bold.ttf
+  #   css:
+  #     family: "BIZ UDGothic"
+  #     weight: bold
+  ## BIZ UDPGothic
+  # - src: /usr/share/fonts/truetype/bizud-gothic/BIZUDPGothic-Regular.ttf
+  #   css:
+  #     family: "BIZ UDPGothic"
+  # - src: /usr/share/fonts/truetype/bizud-gothic/BIZUDPGothic-Bold.ttf
+  #   css:
+  #     family: "BIZ UDPGothic"
+  #     weight: bold
+  ## BIZ UDMincho
+  # - src: /usr/share/fonts/truetype/bizud-mincho/BIZUDMincho-Regular.ttf
+  #   css:
+  #     family: "BIZ UDMincho"
+  ## BIZ UDPMincho
+  # - src: /usr/share/fonts/truetype/bizud-mincho/BIZUDPMincho-Regular.ttf
+  #   css:
+  #     family: "BIZ UDPMincho"
+  ## HackGen
+  - src: /usr/local/share/fonts/HackGen/HackGen-Regular.ttf
+    output_file: "{{ webfont_font_prefix }}H-Regular.ttf"
+    css:
+      comment: "Original: HackGen"
+      family: "{{ webfont_font_prefix }}H"
+  - src: /usr/local/share/fonts/HackGen/HackGen-Bold.ttf
+    output_file: "{{ webfont_font_prefix }}H-Bold.ttf"
+    css:
+      comment: "Original: HackGen"
+      family: "{{ webfont_font_prefix }}H"
+      weight: bold
+  - src: /usr/local/share/fonts/HackGen/HackGen35-Regular.ttf
+    output_file: "{{ webfont_font_prefix }}H35-Regular.ttf"
+    css:
+      comment: "Original: HackGen35"
+      family: "{{ webfont_font_prefix }}H35"
+  - src: /usr/local/share/fonts/HackGen/HackGen35-Bold.ttf
+    output_file: "{{ webfont_font_prefix }}H35-Bold.ttf"
+    css:
+      comment: "Original: HackGen35"
+      family: "{{ webfont_font_prefix }}H35"
+      weight: bold
+  ## PlemolJP
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-Thin.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-Thin.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP"
+  #     family: "{{ webfont_font_prefix }}P"
+  #     weight: 100
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-ThinItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-ThinItalic.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP"
+  #     family: "{{ webfont_font_prefix }}P"
+  #     style: italic
+  #     weight: 100
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-Light.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-Light.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP"
+  #     family: "{{ webfont_font_prefix }}P"
+  #     weight: 200
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-LightItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-LightItalic.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP"
+  #     family: "{{ webfont_font_prefix }}P"
+  #     style: italic
+  #     weight: 200
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-ExtraLight.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-ExtraLight.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP"
+  #     family: "{{ webfont_font_prefix }}P"
+  #     weight: 300
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-ExtraLightItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-ExtraLightItalic.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP"
+  #     family: "{{ webfont_font_prefix }}P"
+  #     style: italic
+  #     weight: 300
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-Regular.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-Regular.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP"
+  #     family: "{{ webfont_font_prefix }}P"
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-Italic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-Italic.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP"
+  #     family: "{{ webfont_font_prefix }}P"
+  #     style: italic
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-Medium.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-Medium.ttf"
+  #   css:
+  #     family: "{{ webfont_font_prefix }}P"
+  #     weight: 500
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-MediumItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-MediumItalic.ttf"
+  #   css:
+  #     family: "{{ webfont_font_prefix }}P"
+  #     style: italic
+  #     weight: 500
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-SemiBold.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-SemiBold.ttf"
+  #   css:
+  #     family: "{{ webfont_font_prefix }}P"
+  #     weight: 600
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-SemiBoldItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-SemiBoldItalic.ttf"
+  #   css:
+  #     family: "{{ webfont_font_prefix }}P"
+  #     style: italic
+  #     weight: 600
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-Bold.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-Bold.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP"
+  #     family: "{{ webfont_font_prefix }}P"
+  #     weight: bold
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-BoldItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P-BoldItalic.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP"
+  #     family: "{{ webfont_font_prefix }}P"
+  #     style: italic
+  #     weight: bold
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-Thin.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-Thin.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     weight: 100
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-ThinItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-ThinItalic.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     style: italic
+  #     weight: 100
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-Light.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-Light.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     weight: 200
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-LightItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-LightItalic.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     style: italic
+  #     weight: 200
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-ExtraLight.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-ExtraLight.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     weight: 300
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-ExtraLightItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-ExtraLightItalic.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     style: italic
+  #     weight: 300
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-Regular.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-Regular.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-Italic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-Italic.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     style: italic
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-Medium.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-Medium.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     weight: 500
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-MediumItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-MediumItalic.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     style: italic
+  #     weight: 500
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-SemiBold.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-SemiBold.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     weight: 600
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-SemiBoldItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-SemiBoldItalic.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     style: italic
+  #     weight: 600
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-Bold.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-Bold.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     weight: bold
+  # - src: /usr/local/share/fonts/PlemolJP/PlemolJP35-BoldItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}P35-BoldItalic.ttf"
+  #   css:
+  #     comment: "Original: PlemolJP35"
+  #     family: "{{ webfont_font_prefix }}P35"
+  #     style: italic
+  #     weight: bold
+  ## UDEV Gothic
+  # - src: /usr/local/share/fonts/UDEVGothic/UDEVGothic-Regular.ttf
+  #   output_file: "{{ webfont_font_prefix }}U-Regular.ttf"
+  #   css:
+  #     comment: "Original: UDEV Gothic"
+  #     family: "{{ webfont_font_prefix }}U"
+  # - src: /usr/local/share/fonts/UDEVGothic/UDEVGothic-Italic.ttf
+  #   output_file: "{{ webfont_font_prefix }}U-Italic.ttf"
+  #   css:
+  #     comment: "Original: UDEV Gothic"
+  #     family: "{{ webfont_font_prefix }}U"
+  #     style: italic
+  # - src: /usr/local/share/fonts/UDEVGothic/UDEVGothic-Bold.ttf
+  #   output_file: "{{ webfont_font_prefix }}U-Bold.ttf"
+  #   css:
+  #     comment: "Original: UDEV Gothic"
+  #     family: "{{ webfont_font_prefix }}U"
+  #     weight: bold
+  # - src: /usr/local/share/fonts/UDEVGothic/UDEVGothic-BoldItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}U-BoldItalic.ttf"
+  #   css:
+  #     comment: "Original: UDEV Gothic"
+  #     family: "{{ webfont_font_prefix }}U"
+  #     style: italic
+  #     weight: bold
+  # - src: /usr/local/share/fonts/UDEVGothic/UDEVGothic35-Regular.ttf
+  #   output_file: "{{ webfont_font_prefix }}U35-Regular.ttf"
+  #   css:
+  #     comment: "Original: UDEV Gothic35"
+  #     family: "{{ webfont_font_prefix }}U35"
+  # - src: /usr/local/share/fonts/UDEVGothic/UDEVGothic35-Italic.ttf
+  #   output_file: "{{ webfont_font_prefix }}U35-Italic.ttf"
+  #   css:
+  #     comment: "Original: UDEV Gothic35"
+  #     family: "{{ webfont_font_prefix }}U35"
+  #     style: italic
+  # - src: /usr/local/share/fonts/UDEVGothic/UDEVGothic35-Bold.ttf
+  #   output_file: "{{ webfont_font_prefix }}U35-Bold.ttf"
+  #   css:
+  #     comment: "Original: UDEV Gothic35"
+  #     family: "{{ webfont_font_prefix }}U35"
+  #     weight: bold
+  # - src: /usr/local/share/fonts/UDEVGothic/UDEVGothic35-BoldItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}U35-BoldItalic.ttf"
+  #   css:
+  #     comment: "Original: UDEV Gothic35"
+  #     family: "{{ webfont_font_prefix }}U35"
+  #     style: italic
+  #     weight: bold
+  ## Moralerspace
+  ### Moralerspace Argon
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceArgon-Regular.ttf
+  #   output_file: "{{ webfont_font_prefix }}MA-Regular.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Argon"
+  #     family: "{{ webfont_font_prefix }}MA"
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceArgon-Italic.ttf
+  #   output_file: "{{ webfont_font_prefix }}MA-Italic.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Argon"
+  #     family: "{{ webfont_font_prefix }}MA"
+  #     style: italic
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceArgon-Bold.ttf
+  #   output_file: "{{ webfont_font_prefix }}MA-Bold.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Argon"
+  #     family: "{{ webfont_font_prefix }}MA"
+  #     weight: bold
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceArgon-BoldItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}MA-BoldItalic.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Argon"
+  #     family: "{{ webfont_font_prefix }}MA"
+  #     style: italic
+  #     weight: bold
+  ### Moralerspace Krypton
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceKrypton-Regular.ttf
+  #   output_file: "{{ webfont_font_prefix }}MK-Regular.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Krypton"
+  #     family: "{{ webfont_font_prefix }}MK"
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceKrypton-Italic.ttf
+  #   output_file: "{{ webfont_font_prefix }}MK-Italic.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Krypton"
+  #     family: "{{ webfont_font_prefix }}MK"
+  #     style: italic
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceKrypton-Bold.ttf
+  #   output_file: "{{ webfont_font_prefix }}MK-Bold.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Krypton"
+  #     family: "{{ webfont_font_prefix }}MK"
+  #     weight: bold
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceKrypton-BoldItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}MK-BoldItalic.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Krypton"
+  #     family: "{{ webfont_font_prefix }}MK"
+  #     style: italic
+  #     weight: bold
+  ### Moralerspace Neon
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceNeon-Regular.ttf
+  #   output_file: "{{ webfont_font_prefix }}MN-Regular.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Neon"
+  #     family: "{{ webfont_font_prefix }}MN"
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceNeon-Italic.ttf
+  #   output_file: "{{ webfont_font_prefix }}MN-Italic.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Neon"
+  #     family: "{{ webfont_font_prefix }}MN"
+  #     style: italic
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceNeon-Bold.ttf
+  #   output_file: "{{ webfont_font_prefix }}MN-Bold.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Neon"
+  #     family: "{{ webfont_font_prefix }}MN"
+  #     weight: bold
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceNeon-BoldItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}MN-BoldItalic.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Neon"
+  #     family: "{{ webfont_font_prefix }}MN"
+  #     style: italic
+  #     weight: bold
+  ### Moralerspace Radon
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceRadon-Regular.ttf
+  #   output_file: "{{ webfont_font_prefix }}MR-Regular.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Radon"
+  #     family: "{{ webfont_font_prefix }}MR"
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceRadon-Italic.ttf
+  #   output_file: "{{ webfont_font_prefix }}MR-Italic.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Radon"
+  #     family: "{{ webfont_font_prefix }}MR"
+  #     style: italic
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceRadon-Bold.ttf
+  #   output_file: "{{ webfont_font_prefix }}MR-Bold.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Radon"
+  #     family: "{{ webfont_font_prefix }}MR"
+  #     weight: bold
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceRadon-BoldItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}MR-BoldItalic.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Radon"
+  #     family: "{{ webfont_font_prefix }}MR"
+  #     style: italic
+  #     weight: bold
+  ### Moralerspace Xenon
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceXenon-Regular.ttf
+  #   output_file: "{{ webfont_font_prefix }}MX-Regular.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Xenon"
+  #     family: "{{ webfont_font_prefix }}MX"
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceXenon-Italic.ttf
+  #   output_file: "{{ webfont_font_prefix }}MX-Italic.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Xenon"
+  #     family: "{{ webfont_font_prefix }}MX"
+  #     style: italic
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceXenon-Bold.ttf
+  #   output_file: "{{ webfont_font_prefix }}MX-Bold.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Xenon"
+  #     family: "{{ webfont_font_prefix }}MX"
+  #     weight: bold
+  # - src: /usr/local/share/fonts/Moralerspace/MoralerspaceXenon-BoldItalic.ttf
+  #   output_file: "{{ webfont_font_prefix }}MX-BoldItalic.ttf"
+  #   css:
+  #     comment: "Original: Moralerspace Xenon"
+  #     family: "{{ webfont_font_prefix }}MX"
+  #     style: italic
+  #     weight: bold
