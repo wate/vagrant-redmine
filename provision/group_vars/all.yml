@@ -1,19 +1,4 @@
 ---
-## --------------------
-## Redmineのバージョン(ブランチ名)
-## --------------------
-redmine_version: 5.1-stable
-
-## --------------------
-## Redmineの動作モード
-## --------------------
-redmine_mode: development
-
-## --------------------
-## Gemパッケージのインストール先
-## --------------------
-# redmine_gem_path: vendor/bundle
-
 ## --------------
 ## バーチャルホストの設定
 ## --------------
@@ -43,6 +28,11 @@ nginx_vhosts:
         match_type: "~"
         content: "deny all;"
 
+## --------------
+## maipitの環境変数の設定
+## --------------
+mailpit_envs:
+  MP_ENABLE_SPAMASSASSIN: "127.0.0.1:783"
 
 ## --------------------------
 ## インストールするツール
@@ -62,14 +52,3 @@ install_tools:
   - mycli
   ## https://graphviz.org/
   - graphviz
-
-## --------------------
-## デフォルトのシステム管理者設定
-## --------------------
-redmine_admin:
-  login: admin
-  password: password
-  firstname: 管理者
-  lastname: システム
-  mail: admin@example.com
-  language: ja

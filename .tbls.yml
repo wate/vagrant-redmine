@@ -4,7 +4,7 @@
 # https://github.com/k1LoW/tbls
 # -------------
 name: Redmine Database Schema
-dsn: mariadb://redmine_dev_user:redmine_dev_password@localhost/redmine_development
+dsn: mariadb://redmine_user:redmine_password@localhost/redmine
 docPath: docs/schema
 er:
   format: svg

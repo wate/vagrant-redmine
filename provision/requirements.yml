@@ -18,6 +18,12 @@ roles:
   - name: redmine
     src: https://github.com/wate/ansible-role-redmine
     version: develop
+  - name: mailpit
+    src: https://github.com/wate/ansible-role-mailpit
+    version: develop
+  - name: spamassassin
+    src: https://github.com/wate/ansible-role-spamassassin
+    version: develop
   - name: tools
     src: https://github.com/wate/ansible-role-tools
     version: develop

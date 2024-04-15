@@ -18,21 +18,34 @@
     - role: mariadb
       tags:
         - role_mariadb
+    - role: dehydrated
+      tags:
+        - role_dehydrated
     - role: nginx
       tags:
         - role_nginx
-    - role: redmine
+    - role: mailpit
       tags:
-        - role_redmine
+        - role_mailpit
+    - role: spamassassin
+      tags:
+        - role_spamassassin
     - role: tools
       tags:
         - role_tools
+    - role: redmine
+      tags:
+        - role_redmine
   tasks:
+    - name: Allow mailpit port
+      community.general.ufw:
+        rule: allow
+        port: 8025
     - name: Install HakuGen font
       block:
         - name: Create font directory
           ansible.builtin.file:
-            path: /usr/local/share/fonts/HakuGen
+            path: /usr/local/share/fonts/HackGen
             state: directory
             mode: "0755"
         - name: Set Github API request header
@@ -51,13 +64,13 @@
             url: https://api.github.com/repos/yuru7/HackGen/releases/latest
             headers: "{{ github_api_request_headers }}"
           register: latest_releases
-        - name: Set hakugen_version variable
+        - name: Set hackgen_version variable
           ansible.builtin.set_fact:
-            hakugen_version: "{{ latest_releases.json.tag_name }}"
-        - name: Install Hakugen font
+            hackgen_version: "{{ latest_releases.json.tag_name }}"
+        - name: Install HackGen font
           ansible.builtin.unarchive:
-            src: https://github.com/yuru7/HackGen/releases/download/{{ hakugen_version }}/HackGen_{{ hakugen_version }}.zip
-            dest: /usr/local/share/fonts/HakuGen
+            src: https://github.com/yuru7/HackGen/releases/download/{{ hackgen_version }}/HackGen_{{ hackgen_version }}.zip
+            dest: /usr/local/share/fonts/HackGen
             remote_src: true
             extra_opts:
               - -j
@@ -87,7 +100,7 @@
           ansible.builtin.command:
             cmd: >
               pyftsubset
-              /usr/local/share/fonts/HakuGen/{{ item }}
+              /usr/local/share/fonts/HackGen/{{ item }}
               --text-file=/vagrant/docs/assets/fonts/subset.txt
               --output-file=/vagrant/docs/assets/fonts/{{ item | replace('HackGen', 'CodeFontH') }}
           loop:
@@ -146,7 +159,7 @@
           ansible.builtin.command:
             cmd: tbls doc -c /vagrant/.tbls.yml -f --rm-dist
             chdir: /vagrant
-        - name: Copy Redmine API doc files
+        - name: Copy Redmine API document
           ansible.posix.synchronize:
             src: /opt/redmine/doc/app/
             dest: /vagrant/docs/api
@@ -157,3 +170,12 @@
           ansible.builtin.command:
             cmd: ~/.local/bin/mkdocs build
             chdir: /vagrant
+  post_tasks:
+    - name: Restart services
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        state: restarted
+      loop:
+        - redmine
+        - mariadb
+        - nginx
