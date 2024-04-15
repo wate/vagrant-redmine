@@ -20,4 +20,5 @@
 .cache
 docs/schema
 docs/api
+docs/erd.pdf
 public

@@ -33,15 +33,15 @@
     - role: tools
       tags:
         - role_tools
-    - role: font
-      tags:
-        - role_font
-    - role: webfont
-      tags:
-        - role_webfont
     - role: redmine
       tags:
         - role_redmine
+    # - role: font
+    #   tags:
+    #     - role_font
+    # - role: webfont
+    #   tags:
+    #     - role_webfont
   tasks:
     - name: Allow mailpit port
       community.general.ufw:
@@ -50,13 +50,25 @@
     - name: Install pipx
       ansible.builtin.apt:
         name: pipx
-    - name: Generate API doc files
-      ansible.builtin.command:
-        cmd: bundle exec rake yard
-        chdir: /opt/redmine
+    - name: Generate document files
+      environment:
+        RAILS_ENV: "{{ redmine_mode }}"
       become: true
       become_user: redmine
-    - name: Generate doc site
+      block:
+        - name: Generate API document
+          ansible.builtin.command:
+            cmd: bundle exec rake yard
+            chdir: /opt/redmine
+        - name: Create/update Rails ERD config
+          ansible.builtin.copy:
+            content: "{{ rails_erd_conf }}"
+            dest: /opt/redmine/.erdconfig
+        - name: Generate ER Diagram
+          ansible.builtin.command:
+            cmd: bundle exec rake erd
+            chdir: /opt/redmine
+    - name: Generate document site
       become: false
       block:
         - name: Install mkdocs-material
@@ -85,6 +97,12 @@
             delete: true
           become: false
           delegate_to: "{{ inventory_hostname }}"
+        - name: Copy Redmine ER diagram
+          ansible.builtin.copy:
+            src: /opt/redmine/erd.pdf
+            dest: /vagrant/docs/erd.pdf
+            mode: "0644"
+            remote_src: true
         - name: Build doc site
           ansible.builtin.command:
             cmd: ~/.local/bin/mkdocs build

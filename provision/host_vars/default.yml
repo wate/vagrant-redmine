@@ -14,6 +14,27 @@ redmine_version: 5.1-stable
 ## --------------------
 redmine_gemfile_local_packages:
   yard:
+  rails-erd:
+
+rails_erd_conf: |
+  title: Redmine domain model
+  # attributes:
+  #   - content
+  #   - foreign_keys
+  #   - inheritance
+  #   - primary_keys
+  # disconnected: true
+  # filename: erd
+  # filetype: pdf
+  # indirect: true
+  # inheritance: true
+  # markup: true
+  # notation: bachman
+  # orientation: horizontal
+  # polymorphism: true
+  # warn: true
+  # exclude: null
+  # only: null
 
 ## --------------------
 ## Gemパッケージのインストール先
