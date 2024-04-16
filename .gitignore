@@ -20,5 +20,5 @@
 .cache
 docs/schema
 docs/api
-docs/erd.pdf
+docs/erd.*
 public

@@ -44,7 +44,7 @@ rails_erd_conf:
   ## The available formats depend on your installation of Graphviz.
   ## If you set the file type to dot, raw Graphviz instructions are saved in dot format. This does not require Graphviz to be installed.
   ## Default value: pdf
-  # filetype: pdf
+  filetype: png
   ## Specifies whether or not to display relationships that are indirect.
   ## Indirect relationships are defined in Active Record by `has_many :through` associations.
   ## Older versions of Graphviz may have trouble drawing diagrams with indirect relationships.
