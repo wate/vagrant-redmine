@@ -35,6 +35,16 @@ rails_erd_conf:
   ## Specifies whether or not to display disconnected entities. An entity is disconnected if it has no relationships with any other entity.
   ## Default value: true
   # disconnected: true
+  ## The file basename of the generated diagram.
+  ## Together with the file type, this will determine the file name of the output.
+  ## Default value: ERD
+  # filename: erd
+  ## The file type of the generated diagram.
+  ## PDF output is strongly recommended, other formats may render significantly worse.
+  ## The available formats depend on your installation of Graphviz.
+  ## If you set the file type to dot, raw Graphviz instructions are saved in dot format. This does not require Graphviz to be installed.
+  ## Default value: pdf
+  # filetype: pdf
   ## Specifies whether or not to display relationships that are indirect.
   ## Indirect relationships are defined in Active Record by `has_many :through` associations.
   ## Older versions of Graphviz may have trouble drawing diagrams with indirect relationships.

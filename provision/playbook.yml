@@ -113,8 +113,8 @@
           delegate_to: "{{ inventory_hostname }}"
         - name: Copy Redmine ER diagram
           ansible.builtin.copy:
-            src: /opt/redmine/erd.pdf
-            dest: /vagrant/docs/erd.pdf
+            src: /opt/redmine/{{ rails_erd_conf.filename | default('erd') }}.{{ rails_erd_conf.filetype | default('pdf') }}
+            dest: /vagrant/docs/{{ rails_erd_conf.filename | default('erd') }}.{{ rails_erd_conf.filetype | default('pdf') }}
             mode: "0644"
             remote_src: true
         - name: Build doc site
