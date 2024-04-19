@@ -4,8 +4,6 @@
 # https://github.com/k1LoW/tbls
 # -------------
 name: Redmine Database Schema
-dsn: mariadb://redmine_user:redmine_password@localhost/redmine
-docPath: docs/schema
 er:
   format: svg
   comment: true
@@ -30,6 +28,7 @@ dict:
   Parents: 親テーブル
   Definition: 定義
   Table Definition: テーブル定義
+  Extra Definition: 拡張定義
 exclude:
   - ar_internal_metadata
   - schema_migrations

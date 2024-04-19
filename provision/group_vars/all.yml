@@ -52,3 +52,5 @@ install_tools:
   - mycli
   ## https://graphviz.org/
   - graphviz
+  ## https://github.com/jgm/pandoc
+  - pandoc

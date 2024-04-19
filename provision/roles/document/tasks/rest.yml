@@ -1,0 +1,45 @@
+---
+- name: ドキュメントディレクトリを作成
+  ansible.builtin.file:
+    path: "{{ document_rest_doc_dir }}"
+    state: directory
+    mode: "0755"
+- name: 本家のWikiページの一覧を取得
+  ansible.builtin.uri:
+    url: https://www.redmine.org/projects/redmine/wiki/index.json
+  register: api_result
+- name: REST APIに関するWikiページの一覧だけを抽出し変数に代入
+  ansible.builtin.set_fact:
+    wiki_pase_list: "{{ api_result.json.wiki_pages | selectattr('title', 'contains', 'Rest_') | rejectattr('title', 'contains', 'api_') | list }}"
+- name: 各Wikiページのコンテンツを取得
+  ansible.builtin.uri:
+    url: https://www.redmine.org/projects/redmine/wiki/{{ item.title | urlencode }}.json
+  loop: "{{ wiki_pase_list }}"
+  loop_control:
+    label: "{{ item.title }}"
+  register: wiki_page_result
+- name: REST APIのデータ部分を抽出し変数に代入
+  ansible.builtin.set_fact:
+    wiki_page_contents: "{{ wiki_page_result.results | map(attribute='json.wiki_page') | list }}"
+- name: ドキュメントファイルを生成
+  ansible.builtin.copy:
+    content: "{{ item.text | replace('{{>toc}}', '') }}"
+    dest: "{{ document_rest_doc_dir }}/{{ item.title | replace('Rest_', '') }}.textile"
+    mode: "0644"
+  loop: "{{ wiki_page_contents }}"
+  loop_control:
+    label: "{{ item.title | replace('Rest_', '') }}"
+# - name: 変換対象のドキュメントファイルを抽出
+#   ansible.builtin.find:
+#     paths:
+#       - "{{ document_rest_doc_dir }}"
+#     patterns:
+#       - "*.textile"
+#   register: find_result
+# - name: Textile形式をMarkdown形式に変換
+#   ansible.builtin.command:
+#     cmd: pandoc -s {{ item }} -o {{ item[:-8] }}.md -f textile -t commonmark_x
+#     chdir: "{{ document_rest_doc_dir }}"
+#   loop: "{{ find_result.files | map(attribute='path') | map('basename') | list }}"
+#   loop_control:
+#     label: "{{ item }}"

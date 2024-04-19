@@ -1,0 +1,16 @@
+---
+- name: Create schema doc directory
+  ansible.builtin.file:
+    path: "{{ document_schema_doc_dir }}"
+    state: directory
+    mode: "0755"
+- name: Set database connettion variable
+  ansible.builtin.set_fact:
+    tmp_db_cfg: "{{ redmine_db_cfg[redmine_mode] }}"
+- name: Update schema document
+  ansible.builtin.command:
+    cmd: tbls doc -c {{ document_dir | dirname }}/.tbls.yml -f --rm-dist {{ tbls_dsn }} {{ tbls_doc_path }}
+    chdir: "{{ document_dir | dirname }}"
+  vars:
+    tbls_dsn: mariadb://{{ tmp_db_cfg.username }}:{{ tmp_db_cfg.password }}@{{ tmp_db_cfg.host }}/{{ tmp_db_cfg.database }}
+    tbls_doc_path: "{{ document_schema_doc_dir }}"

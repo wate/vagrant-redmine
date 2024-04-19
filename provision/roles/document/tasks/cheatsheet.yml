@@ -1,0 +1,22 @@
+---
+- name: Rakeタスクの一覧を取得
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      bundle exec rake -T | grep -v "rake erd"
+    chdir: "{{ redmine_home }}"
+    executable: /bin/bash
+  changed_when: false
+  failed_when: command_result.rc > 1
+  register: command_result
+  environment:
+    RAILS_ENV: "{{ redmine_mode }}"
+  become: true
+  become_user: "{{ redmine_user }}"
+- name: チートシートを生成
+  ansible.builtin.template:
+    src: cheatsheet.md.j2
+    dest: "{{ document_dir }}/cheatsheet.md"
+    mode: "0644"
+  vars:
+    rake_tasks: "{{ command_result.stdout_lines }}"

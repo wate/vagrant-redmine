@@ -1,0 +1,16 @@
+---
+- name: データベーススキーマの生成
+  ansible.builtin.import_tasks:
+    file: schema.yml
+- name: ドメインの生成
+  ansible.builtin.import_tasks:
+    file: domain_model.yml
+- name: APIドキュメントの生成
+  ansible.builtin.import_tasks:
+    file: api.yml
+- name: チートシートの生成
+  ansible.builtin.import_tasks:
+    file: cheatsheet.yml
+- name: REST APIドキュメントの生成
+  ansible.builtin.import_tasks:
+    file: rest.yml

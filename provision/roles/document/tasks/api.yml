@@ -1,0 +1,46 @@
+---
+- name: Generate API document
+  environment:
+    RAILS_ENV: "{{ redmine_mode }}"
+  become: true
+  become_user: "{{ redmine_user }}"
+  block:
+    - name: Add require gem package setting
+      ansible.builtin.lineinfile:
+        path: "{{ redmine_home }}/Gemfile.local"
+        line: gem 'yard'
+      register: append_gemfile_result
+    - name: Instal/update gem packages
+      ansible.builtin.command:
+        cmd: bundle update
+        chdir: "{{ redmine_home }}"
+      when: append_gemfile_result is changed
+    - name: Check generated API document
+      ansible.builtin.stat:
+        path: "{{ redmine_home }}/doc/app"
+      register: redmine_api_doc_stat_result
+    - name: Generate API document
+      ansible.builtin.command:
+        cmd: bundle exec rake yard
+        chdir: "{{ redmine_home }}"
+      when: >
+        not redmine_api_doc_stat_result.stat.exists
+        or
+        force_update_api_doc | default(false)
+      register: generate_api_doc_result
+- name: Create API doc directory
+  ansible.builtin.file:
+    path: "{{ document_api_doc_dir }}"
+    state: directory
+    mode: "0755"
+  register: api_doc_dir_result
+- name: Copy Redmine API document
+  ansible.posix.synchronize:
+    src: "{{ redmine_home }}/doc/app/"
+    dest: "{{ document_api_doc_dir }}"
+    delete: true
+  delegate_to: "{{ inventory_hostname }}"
+  when: >
+    api_doc_dir_result is changed
+    or
+    generate_api_doc_result is changed
