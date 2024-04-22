@@ -23,7 +23,7 @@
     wiki_page_contents: "{{ wiki_page_result.results | map(attribute='json.wiki_page') | list }}"
 - name: ドキュメントファイルを生成
   ansible.builtin.copy:
-    content: "{{ item.text | replace('{{>toc}}', '') }}"
+    content: "{{ item.text | replace('{{>toc}}', '') | replace('\r', '') }}"
     dest: "{{ document_rest_doc_dir }}/{{ item.title | replace('Rest_', '') }}.textile"
     mode: "0644"
   loop: "{{ wiki_page_contents }}"

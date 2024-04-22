@@ -1,27 +1,27 @@
 ---
-- name: Generate domain model
+- name: ドメインモデルのドキュメントを生成
   environment:
     RAILS_ENV: "{{ redmine_mode }}"
   become: true
   become_user: "{{ redmine_user }}"
   block:
-    - name: Add require gem package setting
+    - name: ドキュメントの生成に必要となるgemパッケージの情報を追記
       ansible.builtin.lineinfile:
         path: "{{ redmine_home }}/Gemfile.local"
         line: gem 'rails-erd'
       register: append_gemfile_result
-    - name: Instal/update gem packages
+    - name: gemパッケージのインストール/更新
       ansible.builtin.command:
         cmd: bundle update
         chdir: "{{ redmine_home }}"
       when: append_gemfile_result is changed
-    - name: Create/update Rails ERD config
+    - name: ドメインモデルの出力設定ファイルを生成/更新
       ansible.builtin.copy:
         content: "{{ document_domain_model_conf | to_nice_yaml }}"
         dest: "{{ redmine_home }}/.erdconfig"
         mode: "0644"
       register: update_domain_mode_config_result
-    - name: Generate domain model
+    - name: ドメインモデルの画像を生成
       ansible.builtin.command:
         cmd: bundle exec rake erd
         chdir: "{{ redmine_home }}"
@@ -29,13 +29,18 @@
         update_domain_mode_config_result is changed
         or
         force_update_domain_model_doc | default(false)
-- name: Set domain model docment file variable
+- name: 出力した画像のファイル名の変数を代入
   ansible.builtin.set_fact:
-    document_file_name: "{{ document_domain_model_conf.filename | default('erd') }}"
-    document_file_type: "{{ document_domain_model_conf.filetype | default('pdf') }}"
-- name: Copy domain model file
+    image_file_name: "{{ document_domain_model_conf.filename | default('erd') }}"
+    image_file_type: "{{ document_domain_model_conf.filetype | default('pdf') }}"
+- name: 生成した画像不ファイルをドキュメントディレクトリにコピー
   ansible.builtin.copy:
-    src: /opt/redmine/{{ document_file_name }}.{{ document_file_type }}
-    dest: /vagrant/docs/{{ document_file_name }}.{{ document_file_type }}
+    src: "{{ redmine_home }}/{{ image_file_name }}.{{ image_file_type }}"
+    dest: "{{ document_dir }}/{{ image_file_name }}.{{ image_file_type }}"
     mode: "0644"
     remote_src: true
+- name: ドメインモデルのドキュメントを生成
+  ansible.builtin.template:
+    src: domain_model.md.j2
+    dest: "{{ document_dir }}/domain_model.md"
+    mode: "0644"

@@ -13,10 +13,10 @@
     RAILS_ENV: "{{ redmine_mode }}"
   become: true
   become_user: "{{ redmine_user }}"
-- name: チートシートを生成
+- name: タスク一覧のドキュメントを生成
   ansible.builtin.template:
-    src: cheatsheet.md.j2
-    dest: "{{ document_dir }}/cheatsheet.md"
+    src: rake_tasks.md.j2
+    dest: "{{ document_dir }}/rake_tasks.md"
     mode: "0644"
   vars:
     rake_tasks: "{{ command_result.stdout_lines }}"

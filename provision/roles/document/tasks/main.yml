@@ -2,15 +2,18 @@
 - name: データベーススキーマの生成
   ansible.builtin.import_tasks:
     file: schema.yml
-- name: ドメインの生成
+- name: ドメインモデルのドキュメントを生成
   ansible.builtin.import_tasks:
     file: domain_model.yml
-- name: APIドキュメントの生成
+- name: APIドキュメントを生成
   ansible.builtin.import_tasks:
     file: api.yml
-- name: チートシートの生成
+- name: Rakeタスク一覧のドキュメントを生成
   ansible.builtin.import_tasks:
-    file: cheatsheet.yml
-- name: REST APIドキュメントの生成
+    file: rake_tasks.yml
+- name: ルーティングのドキュメントを生成
+  ansible.builtin.import_tasks:
+    file: routes.yml
+- name: REST APIのドキュメントを生成
   ansible.builtin.import_tasks:
     file: rest.yml

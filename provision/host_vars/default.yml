@@ -7,7 +7,7 @@ redmine_version: 5.1-stable
 ## --------------------
 ## Redmineの動作モード
 ## --------------------
-# redmine_mode: production
+redmine_mode: development
 
 ## --------------------
 ## 追加インストールするgemパッケージ
