@@ -16,4 +16,4 @@
     file: routes.yml
 - name: REST APIのドキュメントを生成
   ansible.builtin.import_tasks:
-    file: rest.yml
+    file: rest_api.yml
