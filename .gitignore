@@ -19,6 +19,7 @@
 ###
 .cache
 docs/schema
+docs/rest_api
 docs/api
 docs/erd.*
 public

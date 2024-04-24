@@ -6,10 +6,8 @@ theme:
   # https://squidfunk.github.io/mkdocs-material/
   name: material
   language: ja
-  # palette:
-  #   scheme: default
-  #   primary: indigo
-  #   accent: indigo
+  palette:
+    primary: red
   font:
     # https://squidfunk.github.io/mkdocs-material/setup/changing-the-fonts/
     text: BIZ UDPGothic
@@ -78,4 +76,4 @@ plugins:
   - section-index
   ## https://oprypin.github.io/mkdocs-literate-nav/
   - literate-nav:
-      nav_file: index.md
+      # nav_file: SUMMARY.md

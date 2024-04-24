@@ -1,16 +1,19 @@
 ---
 - name: ドキュメントディレクトリを作成
   ansible.builtin.file:
-    path: "{{ document_rest_doc_dir }}"
+    path: "{{ document_rest_api_doc_dir }}"
     state: directory
     mode: "0755"
+- name: 一時ディレクトリのパスを変数に代入
+  ansible.builtin.set_fact:
+    document_rest_api_tmp_dir: /tmp/{{ document_rest_api_doc_dir | basename }}
 - name: 本家のWikiページの一覧を取得
   ansible.builtin.uri:
     url: https://www.redmine.org/projects/redmine/wiki/index.json
   register: api_result
 - name: REST APIに関するWikiページの一覧だけを抽出し変数に代入
   ansible.builtin.set_fact:
-    wiki_pase_list: "{{ api_result.json.wiki_pages | selectattr('title', 'contains', 'Rest_') | rejectattr('title', 'contains', 'api_') | list }}"
+    wiki_pase_list: "{{ api_result.json.wiki_pages | selectattr('title', 'contains', 'Rest_') | rejectattr('title', 'contains', '_api_') | list }}"
 - name: 各Wikiページのコンテンツを取得
   ansible.builtin.uri:
     url: https://www.redmine.org/projects/redmine/wiki/{{ item.title | urlencode }}.json
@@ -21,26 +24,95 @@
 - name: REST APIのデータ部分を抽出し変数に代入
   ansible.builtin.set_fact:
     wiki_page_contents: "{{ wiki_page_result.results | map(attribute='json.wiki_page') | list }}"
+- name: ドキュメントの一時出力用ディレクトリを作成
+  ansible.builtin.file:
+    path: "{{ document_rest_api_tmp_dir }}"
+    state: directory
+    mode: "0755"
 - name: ドキュメントファイルを生成
   ansible.builtin.copy:
-    content: "{{ wiki_page_content.text | replace('{{>toc}}', '') | replace('\r', '') | trim }}"
-    dest: "{{ document_rest_doc_dir }}/{{ wiki_page_content.title | replace('Rest_', '') }}.textile"
+    content: "{{ item.text | replace('{{>toc}}', '') | regex_replace('\\r', '') | regex_replace('\\[\\[(.+?)\\|(.+?)\\]\\]', '\"\\2\":\\1.textile') | trim }}"
+    dest: "{{ document_rest_api_tmp_dir }}/{{ item.title }}.textile"
     mode: "0644"
   loop: "{{ wiki_page_contents }}"
   loop_control:
-    loop_var: wiki_page_content
-    label: "{{ item.title | replace('Rest_', '') }}"
-# - name: 変換対象のドキュメントファイルを抽出
-#   ansible.builtin.find:
-#     paths:
-#       - "{{ document_rest_doc_dir }}"
-#     patterns:
-#       - "*.textile"
-#   register: find_result
-# - name: Textile形式をMarkdown形式に変換
-#   ansible.builtin.command:
-#     cmd: pandoc -s {{ item }} -o {{ item[:-8] }}.md -f textile -t commonmark_x
-#     chdir: "{{ document_rest_doc_dir }}"
-#   loop: "{{ find_result.files | map(attribute='path') | map('basename') | list }}"
-#   loop_control:
-#     label: "{{ item }}"
+    label: "{{ item.title }}"
+- name: 変換対象のドキュメントファイルを抽出
+  ansible.builtin.find:
+    paths:
+      - "{{ document_rest_api_tmp_dir }}"
+    patterns:
+      - "*.textile"
+  register: find_result
+- name: code(開始)タグの削除
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: <pre><code class="(xml|json)">
+    replace: <pre>
+  loop: "{{ find_result.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
+- name: code(終了)タグの削除
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: </code></pre>
+    replace: </pre>
+  loop: "{{ find_result.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
+- name: Markdown形式に変換してドキュメントディレクトリに出力
+  ansible.builtin.command:
+    cmd: pandoc -s {{ document_rest_api_tmp_dir }}/{{ item }} -o {{ document_rest_api_doc_dir }}/{{ output_file_name }}.md -f textile -t commonmark_x
+    chdir: "{{ document_rest_api_tmp_dir }}"
+  vars:
+    output_file_name: "{{ 'index' if item[:-8] == 'Rest_api' else item[5:-8] }}"
+  loop: "{{ find_result.files | map(attribute='path') | map('basename') | list }}"
+  loop_control:
+    label: "{{ item }}"
+- name: 変換対象のドキュメントファイルを抽出
+  ansible.builtin.find:
+    paths:
+      - "{{ document_rest_api_doc_dir }}"
+    patterns:
+      - "*.md"
+  register: find_result
+- name: 拡張フォーマットをuタグに変換
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: \[([a-zA-Z0-9 ]+)\]\{\.underline\}
+    replace: '<u>\1</u>'
+  loop: "{{ find_result.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
+- name: 各ドキュメントへのリンクを変換
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: \(Rest_([a-zA-Z0-9]+)\.textile\)
+    replace: '(\1.md)'
+  loop: "{{ find_result.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
+- name: 各ドキュメントへのリンクを変換(インデックスファイル)
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: \(api\.md\)
+    replace: '(index.md)'
+  loop: "{{ find_result.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
+- name: 見出しを変換
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: "^# Rest "
+    replace: "# "
+  loop: "{{ find_result.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
+- name: リストのフォーマット変換漏れを修正
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: ^\\\*
+    replace: "*"
+  loop: "{{ find_result.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"

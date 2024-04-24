@@ -2,7 +2,7 @@
 document_dir: /vagrant/docs
 document_schema_doc_dir: "{{ document_dir }}/schema"
 document_api_doc_dir: "{{ document_dir }}/api"
-document_rest_doc_dir: "{{ document_dir }}/rest"
+document_rest_api_doc_dir: "{{ document_dir }}/rest_api"
 
 document_domain_model_conf:
   ## Specifies which attributes to include in the diagram output.
