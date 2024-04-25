@@ -1,25 +1,54 @@
-# Created by https://www.toptal.com/developers/gitignore/api/ansible,vagrant
-# Edit at https://www.toptal.com/developers/gitignore?templates=ansible,vagrant
+### macOS ###
+.DS_Store
+
+### Windows ###
+Thumbs.db
+
+### VirtualEnv ###
+.venv
+
+### Vagrant ###
+.vagrant/
 
 ### Ansible ###
 *.retry
 
-### Vagrant ###
-# General
-.vagrant/
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
-# Log files (if you are creating logs in debug mode, uncomment this)
-# *.log
+### PhpStorm / WebStorm ###
+.idea/
 
-### Vagrant Patch ###
-*.box
+### Composer ###
+composer.phar
+/vendor/
 
-# End of https://www.toptal.com/developers/gitignore/api/ansible,vagrant
+### Node ###
+/node_modules/
 
-###
-.cache
-docs/schema
-docs/rest_api
-docs/api
-docs/erd.*
-public
+## Ruby ##
+/.bundle/
+
+### mkdocs ###
+/site/
+
+### direnv ###
+.direnv
+.envrc
+
+### dotenv ###
+.env
+
+### common ###
+.cache/
+
+### this project only ###
+docs/api/
+docs/rest_api/
+docs/schema/
+docs/erd.svg

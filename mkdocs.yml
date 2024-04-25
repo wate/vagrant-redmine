@@ -23,7 +23,7 @@ theme:
     - search.highlight
     # - search.share
 # docs_dir: docs
-site_dir: public
+# site_dir: site
 extra_javascript:
   - assets/javascripts/extra.js
 extra_css:
