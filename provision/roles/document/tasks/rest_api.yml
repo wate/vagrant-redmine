@@ -1,4 +1,11 @@
 ---
+- name: 本家のWikiページの一覧を取得
+  ansible.builtin.uri:
+    url: https://www.redmine.org/projects/redmine/wiki/index.json
+  register: api_result
+- name: REST APIに関するWikiページの一覧だけを抽出し変数に代入
+  ansible.builtin.set_fact:
+    wiki_pages: "{{ api_result.json.wiki_pages | selectattr('title', 'contains', 'Rest_') | rejectattr('title', 'contains', '_api_') | list }}"
 - name: ドキュメントディレクトリを作成
   ansible.builtin.file:
     path: "{{ document_rest_api_doc_dir }}"
@@ -7,17 +14,11 @@
 - name: 一時ディレクトリのパスを変数に代入
   ansible.builtin.set_fact:
     document_rest_api_tmp_dir: /tmp/{{ document_rest_api_doc_dir | basename }}
-- name: 本家のWikiページの一覧を取得
-  ansible.builtin.uri:
-    url: https://www.redmine.org/projects/redmine/wiki/index.json
-  register: api_result
-- name: REST APIに関するWikiページの一覧だけを抽出し変数に代入
-  ansible.builtin.set_fact:
-    wiki_pase_list: "{{ api_result.json.wiki_pages | selectattr('title', 'contains', 'Rest_') | rejectattr('title', 'contains', '_api_') | list }}"
+    # document_rest_api_tmp_dir: "{{ document_rest_api_doc_dir }}"
 - name: 各Wikiページのコンテンツを取得
   ansible.builtin.uri:
     url: https://www.redmine.org/projects/redmine/wiki/{{ item.title | urlencode }}.json
-  loop: "{{ wiki_pase_list }}"
+  loop: "{{ wiki_pages }}"
   loop_control:
     label: "{{ item.title }}"
   register: wiki_page_result
@@ -33,16 +34,20 @@
   ansible.builtin.copy:
     content: |
       {% set wiki_content = item.text %}
-      {# 目次タグを削除 #}
-      {% set wiki_content = wiki_content | replace('{{>toc}}', '') %}
-      {# キャリッジリターンを削除 #}
       {% set wiki_content = wiki_content | regex_replace('\\r', '') %}
-      {# Wiki記法のリンクをMarkdownのリンクに変換 #}
-      {% set wiki_content = wiki_content | regex_replace('\\[\\[(.+?)\\|(.+?)\\]\\]', '\"\\2\":\\1.textile') %}
-      {# code(開始)タグを削除 #}
+      {# 目次マクロを削除 #}
+      {% set wiki_content = wiki_content | replace('{{>toc}}', '') %}
+      {# Wikiページのリンク記法を変換 #}
+      {% set wiki_content = wiki_content | regex_replace('\\[\\[(.+?)\\|(.+?)\\]\\]', '"\\2":\\1') %}
       {% set wiki_content = wiki_content | regex_replace('<pre><code class="(xml|json)">', '<pre>') %}
-      {# code(終了)タグを削除 #}
       {% set wiki_content = wiki_content | regex_replace('</code></pre>', '</pre>') %}
+      {# インデントを使ったリストのネスト記法を変換 #}
+      {% set wiki_content = wiki_content | regex_replace('^  \\*', '**', multiline=True) %}
+      {% set wiki_content = wiki_content | regex_replace('\\n\\n\\*\\*', '\\n**', ) %}
+      {# レスポンス部分のステータスコードの表記を修正 #}
+      {% set wiki_content = wiki_content | regex_replace('^\\*\\* @(\\d{3}) ', '* @\\1 ', multiline=True) %}
+      {# インデントを使ったソースコードブロックを変換 #}
+      {% set wiki_content = wiki_content | regex_replace('^  (GET|POST|PUT|DELETE) (.+)', '<pre>\\n\\1 \\2\\n</pre>', multiline=True) %}
       {{ wiki_content }}
     dest: "{{ document_rest_api_tmp_dir }}/{{ item.title }}.textile"
     mode: "0644"
@@ -56,75 +61,29 @@
     patterns:
       - "*.textile"
   register: find_result
-- name: code(開始)タグの削除
-  ansible.builtin.replace:
-    path: "{{ item.path }}"
-    regexp: <pre><code class="(xml|json)">
-    replace: <pre>
-  loop: "{{ find_result.files }}"
-  loop_control:
-    label: "{{ item.path | basename }}"
-- name: code(終了)タグの削除
-  ansible.builtin.replace:
-    path: "{{ item.path }}"
-    regexp: </code></pre>
-    replace: </pre>
-  loop: "{{ find_result.files }}"
-  loop_control:
-    label: "{{ item.path | basename }}"
-- name: Markdown形式に変換してドキュメントディレクトリに出力
-  ansible.builtin.command:
-    cmd: pandoc -s {{ document_rest_api_tmp_dir }}/{{ item }} -o {{ document_rest_api_doc_dir }}/{{ output_file_name }}.md -f textile -t commonmark_x
+- name: ドキュメントファイルの一覧を変数に代入
+  ansible.builtin.set_fact:
+    rest_api_doc_files: "{{ find_result.files | map(attribute='path') | map('basename') | list }}"
+- name: Textile形式をMarkdown形式に変換
+  ansible.builtin.shell:
+    cmd: pandoc -s {{ document_rest_api_tmp_dir }}/{{ item }} -f textile -t commonmark_x
     chdir: "{{ document_rest_api_tmp_dir }}"
-  vars:
-    output_file_name: "{{ 'index' if item[:-8] == 'Rest_api' else item[5:-8] }}"
-  loop: "{{ find_result.files | map(attribute='path') | map('basename') | list }}"
+  register: rest_api_markdown_contents
+  loop: "{{ rest_api_doc_files }}"
   loop_control:
     label: "{{ item }}"
-- name: 変換対象のドキュメントファイルを抽出
-  ansible.builtin.find:
-    paths:
-      - "{{ document_rest_api_doc_dir }}"
-    patterns:
-      - "*.md"
-  register: find_result
-- name: 拡張フォーマットをuタグに変換
-  ansible.builtin.replace:
-    path: "{{ item.path }}"
-    regexp: \[([a-zA-Z0-9 ]+)\]\{\.underline\}
-    replace: '<u>\1</u>'
-  loop: "{{ find_result.files }}"
+- name: ドキュメントファイルを保存
+  ansible.builtin.copy:
+    content: |
+      {% set wiki_content = item.stdout %}
+      {% set wiki_content = wiki_content | regex_replace('^# Rest ', '# ', multiline=True) %}
+      {% set wiki_content = wiki_content | regex_replace('\\[([a-zA-Z0-9 ]+)\\]\\{\\.underline\\}', '<u>\\1</u>') %}
+      {{ wiki_content }}
+    dest: "{{ document_rest_api_doc_dir }}/{{ out_file_name }}.md"
+    mode: "0644"
+  loop: "{{ rest_api_markdown_contents.results }}"
+  vars:
+    out_file_name: "{{ 'index' if rest_api_doc_files[loop_index][:-8] == 'Rest_api' else rest_api_doc_files[loop_index][5:-8] }}"
   loop_control:
-    label: "{{ item.path | basename }}"
-- name: 各ドキュメントへのリンクを変換
-  ansible.builtin.replace:
-    path: "{{ item.path }}"
-    regexp: \(Rest_([a-zA-Z0-9]+)\.textile\)
-    replace: '(\1.md)'
-  loop: "{{ find_result.files }}"
-  loop_control:
-    label: "{{ item.path | basename }}"
-- name: 各ドキュメントへのリンクを変換(インデックスファイル)
-  ansible.builtin.replace:
-    path: "{{ item.path }}"
-    regexp: \(api\.md\)
-    replace: '(index.md)'
-  loop: "{{ find_result.files }}"
-  loop_control:
-    label: "{{ item.path | basename }}"
-- name: 見出しを変換
-  ansible.builtin.replace:
-    path: "{{ item.path }}"
-    regexp: "^# Rest "
-    replace: "# "
-  loop: "{{ find_result.files }}"
-  loop_control:
-    label: "{{ item.path | basename }}"
-- name: リストのフォーマット変換漏れを修正
-  ansible.builtin.replace:
-    path: "{{ item.path }}"
-    regexp: ^\\\*
-    replace: "*"
-  loop: "{{ find_result.files }}"
-  loop_control:
-    label: "{{ item.path | basename }}"
+    label: "{{ rest_api_doc_files[loop_index] }}"
+    index_var: loop_index

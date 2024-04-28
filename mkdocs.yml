@@ -57,6 +57,7 @@ markdown_extensions:
 ## https://www.mkdocs.org/about/release-notes/#excluded-doc-files
 exclude_docs: |
   rules
+  SUMMARY.md
 plugins:
   ## https://squidfunk.github.io/mkdocs-material/plugins/search/
   - search:
@@ -76,4 +77,4 @@ plugins:
   - section-index
   ## https://oprypin.github.io/mkdocs-literate-nav/
   - literate-nav:
-      nav_file: index.md
+      # nav_file: SUMMARY.md
