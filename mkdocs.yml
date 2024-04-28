@@ -76,4 +76,4 @@ plugins:
   - section-index
   ## https://oprypin.github.io/mkdocs-literate-nav/
   - literate-nav:
-      # nav_file: SUMMARY.md
+      nav_file: index.md

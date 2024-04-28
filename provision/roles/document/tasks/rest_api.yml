@@ -29,9 +29,21 @@
     path: "{{ document_rest_api_tmp_dir }}"
     state: directory
     mode: "0755"
-- name: ドキュメントファイルを生成
+- name: 本家から取得したREST APIのドキュメントをファイルを保存
   ansible.builtin.copy:
-    content: "{{ item.text | replace('{{>toc}}', '') | regex_replace('\\r', '') | regex_replace('\\[\\[(.+?)\\|(.+?)\\]\\]', '\"\\2\":\\1.textile') | trim }}"
+    content: |
+      {% set wiki_content = item.text %}
+      {# 目次タグを削除 #}
+      {% set wiki_content = wiki_content | replace('{{>toc}}', '') %}
+      {# キャリッジリターンを削除 #}
+      {% set wiki_content = wiki_content | regex_replace('\\r', '') %}
+      {# Wiki記法のリンクをMarkdownのリンクに変換 #}
+      {% set wiki_content = wiki_content | regex_replace('\\[\\[(.+?)\\|(.+?)\\]\\]', '\"\\2\":\\1.textile') %}
+      {# code(開始)タグを削除 #}
+      {% set wiki_content = wiki_content | regex_replace('<pre><code class="(xml|json)">', '<pre>') %}
+      {# code(終了)タグを削除 #}
+      {% set wiki_content = wiki_content | regex_replace('</code></pre>', '</pre>') %}
+      {{ wiki_content }}
     dest: "{{ document_rest_api_tmp_dir }}/{{ item.title }}.textile"
     mode: "0644"
   loop: "{{ wiki_page_contents }}"
