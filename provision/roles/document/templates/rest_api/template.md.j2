@@ -1,0 +1,7 @@
+{% set wiki_content = pandoc_convert_result.stdout %}
+{# 見出しの表記を統一 #}
+{% set wiki_content = wiki_content | regex_replace('^# Rest ', '# ', multiline=True) %}
+{# リストのネスト部分のインデントを4スペースに変換 #}
+{% set wiki_content = wiki_content | regex_replace('^ {4}- ', '        - ', multiline=True) %}
+{% set wiki_content = wiki_content | regex_replace('^ {2}- ', '    - ', multiline=True) %}
+{{ wiki_content }}

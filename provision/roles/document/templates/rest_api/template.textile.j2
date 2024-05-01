@@ -1,0 +1,17 @@
+{% set wiki_content = wiki_page_content.text %}
+{% set wiki_content = wiki_content | regex_replace('\\r', '') %}
+{# 目次マクロを削除 #}
+{% set wiki_content = wiki_content | replace('{{>toc}}', '') %}
+{# Wikiページのリンク記法を変換 #}
+{% set wiki_content = wiki_content | regex_replace('\\[\\[(.+?)\\|(.+?)\\]\\]', '"\\2":\\1') %}
+{# ソースコードコードブロックを変換 #}
+{% set wiki_content = wiki_content | regex_replace('<pre><code class="(xml|json)">', '<pre>') %}
+{% set wiki_content = wiki_content | regex_replace('</code></pre>', '</pre>') %}
+{# インデントを使ったリストのネスト記法を変換 #}
+{% set wiki_content = wiki_content | regex_replace('^  \\*', '**', multiline=True) %}
+{% set wiki_content = wiki_content | regex_replace('\\n\\n\\*\\*', '\\n**', ) %}
+{# レスポンス部分のステータスコードの表記を修正 #}
+{% set wiki_content = wiki_content | regex_replace('^\\*\\* @(\\d{3}) ', '* @\\1 ', multiline=True) %}
+{# インデントを使ったソースコードブロックを変換 #}
+{% set wiki_content = wiki_content | regex_replace('^  (GET|POST|PUT|DELETE) (.+)', '<pre>\\n\\1 \\2\\n</pre>', multiline=True) %}
+{{ wiki_content }}
