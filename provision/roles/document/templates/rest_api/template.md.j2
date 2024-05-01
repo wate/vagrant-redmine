@@ -4,4 +4,6 @@
 {# リストのネスト部分のインデントを4スペースに変換 #}
 {% set wiki_content = wiki_content | regex_replace('^ {4}- ', '        - ', multiline=True) %}
 {% set wiki_content = wiki_content | regex_replace('^ {2}- ', '    - ', multiline=True) %}
+{# コード部分の表記を調整 #}
+{% set wiki_content = wiki_content | regex_replace('- ‘(.+)’: ', '- `\\1`: ', multiline=True) %}
 {{ wiki_content }}
