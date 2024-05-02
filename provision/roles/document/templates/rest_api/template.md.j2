@@ -1,4 +1,6 @@
 {% set wiki_content = pandoc_convert_result.stdout %}
+{# 本家内のリンク(チケット/ソースコード)を書き換え #}
+{% set wiki_content = wiki_content | replace('](/projects/redmine/', '](https://www.redmine.org/projects/redmine/') %}
 {# 見出しの表記を統一 #}
 {% set wiki_content = wiki_content | regex_replace('^# Rest ', '# ', multiline=True) %}
 {# リストのネスト部分のインデントを4スペースに変換 #}
@@ -6,4 +8,8 @@
 {% set wiki_content = wiki_content | regex_replace('^ {2}- ', '    - ', multiline=True) %}
 {# コード部分の表記を調整 #}
 {% set wiki_content = wiki_content | regex_replace('- ‘(.+)’: ', '- `\\1`: ', multiline=True) %}
+{# Wikiページのリンク先を書き換え #}
+{% set wiki_content = wiki_content | regex_replace('/redmine_wiki_link/(Rest_api_[^#\\)]+)', 'https://www.redmine.org/projects/redmine/wiki/\\1') %}
+{% set wiki_content = wiki_content | regex_replace('/redmine_wiki_link/Rest_([^#\\)]+)', '\\1.md') %}
+{% set wiki_content = wiki_content | replace('](api.md', '](index.md') %}
 {{ wiki_content }}

@@ -2,16 +2,16 @@
 {% set wiki_content = wiki_content | regex_replace('\\r', '') %}
 {# 目次マクロを削除 #}
 {% set wiki_content = wiki_content | replace('{{>toc}}', '') %}
-{# Wikiページのリンク記法を変換 #}
-{% set wiki_content = wiki_content | regex_replace('\\[\\[(.+?)\\|(.+?)\\]\\]', '"\\2":\\1') %}
+{# Wikiページのリンク記法を変換(※`/redmine_dot_org/`はMarkdown変換後の置換用文字列) #}
+{% set wiki_content = wiki_content | regex_replace('\\[\\[(.+?)\\|(.+?)\\]\\]', '"\\2":/redmine_wiki_link/\\1') %}
 {# ソースコードコードブロックを変換 #}
 {% set wiki_content = wiki_content | regex_replace('<pre><code class="(xml|json)">', '<pre>') %}
 {% set wiki_content = wiki_content | regex_replace('</code></pre>', '</pre>') %}
+{# レスポンス部分のステータスコードの表記を修正 #}
+{% set wiki_content = wiki_content | regex_replace('^  \\* @(\\d{3}) ', '* @\\1 ', multiline=True) %}
 {# インデントを使ったリストのネスト記法を変換 #}
 {% set wiki_content = wiki_content | regex_replace('^  \\*', '**', multiline=True) %}
 {% set wiki_content = wiki_content | regex_replace('\\n\\n\\*\\*', '\\n**', ) %}
-{# レスポンス部分のステータスコードの表記を修正 #}
-{% set wiki_content = wiki_content | regex_replace('^\\*\\* @(\\d{3}) ', '* @\\1 ', multiline=True) %}
 {# インデントを使ったソースコードブロックを変換 #}
 {% set wiki_content = wiki_content | regex_replace('^  (GET|POST|PUT|DELETE) (.+)', '<pre>\\n\\1 \\2\\n</pre>', multiline=True) %}
 {{ wiki_content }}

@@ -49,7 +49,7 @@
 - name: ドキュメントファイルの一覧を変数に代入
   ansible.builtin.set_fact:
     rest_api_doc_files: "{{ find_result.files | map(attribute='path') | map('basename') | list }}"
-- name: Textile形式をMarkdown形式に変換
+- name: 本文をTextile形式からMarkdown形式に変換
   ansible.builtin.shell:
     cmd: >
       pandoc -s {{ document_rest_api_tmp_dir }}/{{ item }}
@@ -57,19 +57,20 @@
       --to gfm
       --wrap preserve
     chdir: "{{ document_rest_api_tmp_dir }}"
+  changed_when: false
   register: rest_api_markdown_contents
   loop: "{{ rest_api_doc_files }}"
   loop_control:
-    label: "{{ item }}"
+    label: "{{ item[:-8] }}"
 - name: ドキュメントファイルを保存
   ansible.builtin.template:
     src: rest_api/template.md.j2
     dest: "{{ document_rest_api_doc_dir }}/{{ out_file_name }}.md"
     mode: "0644"
   loop: "{{ rest_api_markdown_contents.results }}"
-  vars:
-    out_file_name: "{{ 'index' if rest_api_doc_files[loop_index][:-8] == 'Rest_api' else rest_api_doc_files[loop_index][5:-8] }}"
   loop_control:
-    label: "{{ rest_api_doc_files[loop_index] }}"
+    label: "{{ out_file_name + '.md' }}"
     index_var: loop_index
     loop_var: pandoc_convert_result
+  vars:
+    out_file_name: "{{ 'index' if rest_api_doc_files[loop_index][:-8] == 'Rest_api' else rest_api_doc_files[loop_index][5:-8] }}"
