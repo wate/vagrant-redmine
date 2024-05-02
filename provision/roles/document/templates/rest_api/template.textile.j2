@@ -2,6 +2,8 @@
 {% set wiki_content = wiki_content | regex_replace('\\r', '') %}
 {# 目次マクロを削除 #}
 {% set wiki_content = wiki_content | replace('{{>toc}}', '') %}
+{# クエリ文字列のURLエンコード置換 #}
+{% set wiki_content = wiki_content | replace('&c[]=', '&c%5B%5D=') %}
 {# Wikiページのリンク記法を変換(※`/redmine_dot_org/`はMarkdown変換後の置換用文字列) #}
 {% set wiki_content = wiki_content | regex_replace('\\[\\[(.+?)\\|(.+?)\\]\\]', '"\\2":/redmine_wiki_link/\\1') %}
 {# ソースコードコードブロックを変換 #}

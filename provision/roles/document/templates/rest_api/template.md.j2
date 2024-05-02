@@ -11,5 +11,10 @@
 {# Wikiページのリンク先を書き換え #}
 {% set wiki_content = wiki_content | regex_replace('/redmine_wiki_link/(Rest_api_[^#\\)]+)', 'https://www.redmine.org/projects/redmine/wiki/\\1') %}
 {% set wiki_content = wiki_content | regex_replace('/redmine_wiki_link/Rest_([^#\\)]+)', '\\1.md') %}
+{# Wikiページのリンク先を書き換え(インデックスページ) #}
 {% set wiki_content = wiki_content | replace('](api.md', '](index.md') %}
+{# アンカーの置換 #}
+{% set wiki_content = wiki_content | replace('index.md#API-Description', 'index.md#api-description') %}
+{% set wiki_content = wiki_content | replace('index.md#Working-with-custom-fields', 'index.md#working-with-custom-fields') %}
+{% set wiki_content = wiki_content | replace('index.md#Attaching-files', 'index.md#attaching-files') %}
 {{ wiki_content }}
