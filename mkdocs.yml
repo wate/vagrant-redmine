@@ -1,5 +1,5 @@
 ---
-site_name: Redmineドキュメント
+site_name: Redmine開発ドキュメント
 ##「sitemap.xml」を正しく出力するには「site_url」の設定を有効化する必要あり
 # site_url: http://doc.example.com/
 theme:
@@ -45,7 +45,9 @@ markdown_extensions:
   - pymdownx.tilde
   - pymdownx.details
   - pymdownx.inlinehilite
+  ## https://facelessuser.github.io/pymdown-extensions/extensions/snippets/
   - pymdownx.snippets:
+      base_path: docs
       # auto_append:
       #   - includes/abbreviations.md
       #   - includes/links.md
@@ -57,6 +59,7 @@ markdown_extensions:
 ## https://www.mkdocs.org/about/release-notes/#excluded-doc-files
 exclude_docs: |
   rules
+  includes
   SUMMARY.md
 plugins:
   ## https://squidfunk.github.io/mkdocs-material/plugins/search/
