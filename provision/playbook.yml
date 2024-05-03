@@ -9,30 +9,30 @@
       ansible.builtin.apt:
         update_cache: true
   roles:
-    # - role: common
-    #   tags:
-    #     - role_common
-    # - role: nodejs
-    #   tags:
-    #     - role_nodejs
-    # - role: mariadb
-    #   tags:
-    #     - role_mariadb
-    # - role: dehydrated
-    #   tags:
-    #     - role_dehydrated
-    # - role: nginx
-    #   tags:
-    #     - role_nginx
-    # - role: mailpit
-    #   tags:
-    #     - role_mailpit
-    # - role: spamassassin
-    #   tags:
-    #     - role_spamassassin
-    # - role: tools
-    #   tags:
-    #     - role_tools
+    - role: common
+      tags:
+        - role_common
+    - role: nodejs
+      tags:
+        - role_nodejs
+    - role: mariadb
+      tags:
+        - role_mariadb
+    - role: dehydrated
+      tags:
+        - role_dehydrated
+    - role: nginx
+      tags:
+        - role_nginx
+    - role: mailpit
+      tags:
+        - role_mailpit
+    - role: spamassassin
+      tags:
+        - role_spamassassin
+    - role: tools
+      tags:
+        - role_tools
     - role: redmine
       tags:
         - role_redmine
