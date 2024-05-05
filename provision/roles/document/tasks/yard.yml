@@ -19,7 +19,7 @@
       ansible.builtin.stat:
         path: "{{ redmine_home }}/doc/app"
       register: redmine_api_doc_stat_result
-    - name: APIドキュメントを生成
+    - name: YARDドキュメントを生成
       ansible.builtin.command:
         cmd: bundle exec rake yard
         chdir: "{{ redmine_home }}"

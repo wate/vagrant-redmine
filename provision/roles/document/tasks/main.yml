@@ -5,9 +5,9 @@
 - name: ドメインモデルのドキュメントを生成
   ansible.builtin.import_tasks:
     file: domain_model.yml
-- name: APIドキュメントを生成
+- name: YARDドキュメントを生成
   ansible.builtin.import_tasks:
-    file: api.yml
+    file: yard.yml
 - name: Rakeタスク一覧のドキュメントを生成
   ansible.builtin.import_tasks:
     file: rake_tasks.yml
