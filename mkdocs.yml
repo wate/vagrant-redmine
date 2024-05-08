@@ -30,32 +30,51 @@ extra_css:
   - https://cdn.jsdelivr.net/npm/hint.css/hint.min.css
   - assets/stylesheets/extra.css
 markdown_extensions:
+  ### Abbreviations
   - abbr
-  - footnotes
-  - attr_list
-  - def_list
-  - tables
-  - md_in_html
+  ### Admonition
   - admonition
+  ### Attribute Lists
+  - attr_list
+  ### Definition Lists
+  - def_list
+  ### Footnotes
+  - footnotes
+  ### Markdown in HTML
+  - md_in_html
+  ### Table of Contents
+  # - toc
+  ### Tables
+  - tables
+  ### BetterEm
   - pymdownx.betterem
-  - pymdownx.highlight:
-      anchor_linenums: true
+  ### Caret, Mark & Tilde
   - pymdownx.caret
   - pymdownx.mark
   - pymdownx.tilde
+  ### Details
   - pymdownx.details
+  ### Highlight
+  - pymdownx.highlight:
+      anchor_linenums: true
+  ### InlineHilite
   - pymdownx.inlinehilite
-  ## https://facelessuser.github.io/pymdown-extensions/extensions/snippets/
+  ### Keys
+  # - pymdownx.keys
+  ### Snippets
   - pymdownx.snippets:
       base_path: docs
       # auto_append:
       #   - includes/abbreviations.md
       #   - includes/links.md
+  ### SuperFences
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  ### Tabbed
+  # - pymdownx.tabbed
 ## https://www.mkdocs.org/about/release-notes/#excluded-doc-files
 exclude_docs: |
   rules
