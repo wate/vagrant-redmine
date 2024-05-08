@@ -30,6 +30,8 @@ extra_css:
   - https://cdn.jsdelivr.net/npm/hint.css/hint.min.css
   - assets/stylesheets/extra.css
 markdown_extensions:
+  ## Python Markdown
+  ## @see https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown/
   ### Abbreviations
   - abbr
   ### Admonition
@@ -46,6 +48,8 @@ markdown_extensions:
   # - toc
   ### Tables
   - tables
+  ## Python Markdown Extensions
+  ## @see https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown-extensions/
   ### BetterEm
   - pymdownx.betterem
   ### Caret, Mark & Tilde
@@ -61,21 +65,24 @@ markdown_extensions:
   - pymdownx.inlinehilite
   ### Keys
   # - pymdownx.keys
+  ### SmartSymbols
+  # - pymdownx.smartsymbols
   ### Snippets
   - pymdownx.snippets:
       base_path: docs
       # auto_append:
       #   - includes/abbreviations.md
       #   - includes/links.md
+  ### Tabbed
+  # - pymdownx.tabbed
   ### SuperFences
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-  ### Tabbed
-  # - pymdownx.tabbed
-## https://www.mkdocs.org/about/release-notes/#excluded-doc-files
+## Excluded doc files
+## @see https://www.mkdocs.org/about/release-notes/#excluded-doc-files
 exclude_docs: |
   rules
   includes
