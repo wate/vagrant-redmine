@@ -3,7 +3,7 @@
 {% set wiki_content = wiki_content | replace('](/projects/redmine/', '](https://www.redmine.org/projects/redmine/') %}
 {# 見出しの表記を統一 #}
 {% set wiki_content = wiki_content | regex_replace('^# Rest ', '# ', multiline=True) %}
-{# mkdocsでリストのネストが効かないため、リスト部分のインデントを2スペースから4スペースに変換 #}
+{# Pandocで変換した場合リストのネストが2スペースで出力されるため4スペースに変換(MkDocsはリストのネストは4スペースでしか認識しないため) #}
 {% set wiki_content = wiki_content | regex_replace('^ {4}- ', '        - ', multiline=True) %}
 {% set wiki_content = wiki_content | regex_replace('^ {2}- ', '    - ', multiline=True) %}
 {# コード部分の表記を調整 #}
