@@ -54,3 +54,5 @@ install_tools:
   - graphviz
   ## https://github.com/jgm/pandoc
   - pandoc
+  ## https://plantuml.com/ja/
+  - plantuml
