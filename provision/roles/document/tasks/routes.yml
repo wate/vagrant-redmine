@@ -6,12 +6,6 @@
       ansible.builtin.command:
         cmd: bundle exec rails routes
         chdir: "{{ redmine_home }}"
-      # ansible.builtin.shell:
-      #   cmd: |
-      #     set -o pipefail
-      #     bundle exec rails routes | jc --asciitable
-      #   chdir: "{{ redmine_home }}"
-      #   executable: /bin/bash
       changed_when: false
       register: command_result
       environment:
@@ -25,4 +19,3 @@
         mode: "0644"
       vars:
         redmine_routes: "{{ command_result.stdout_lines }}"
-        # redmine_routes: "{{ command_result.stdout | from_json }}"

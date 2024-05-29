@@ -15,12 +15,13 @@ webfont_css_font_path: "../fonts"
 webfont_css_output_license_text: |
   "白源/HackGen" are licensed under SIL OPEN FONT LICENSE Version 1.1.
   https://github.com/yuru7/HackGen
+  "Bizin Gothic" are licensed under SIL OPEN FONT LICENSE Version 1.1.
+  https://github.com/yuru7/bizin-gothic
 
 ## 出力するファイル名のプレフィックス
 webfont_font_prefix: CodeFont
 
-## CSS出力時の
-
+## CSS出力時の初期値
 webfont_css_default:
   style: normal
   weight: normal
@@ -73,17 +74,17 @@ webfont_font_files:
       comment: "Original: HackGen"
       family: "{{ webfont_font_prefix }}H"
       weight: bold
-  - src: /usr/local/share/fonts/HackGen/HackGen35-Regular.ttf
-    output_file: "{{ webfont_font_prefix }}H35-Regular.ttf"
-    css:
-      comment: "Original: HackGen35"
-      family: "{{ webfont_font_prefix }}H35"
-  - src: /usr/local/share/fonts/HackGen/HackGen35-Bold.ttf
-    output_file: "{{ webfont_font_prefix }}H35-Bold.ttf"
-    css:
-      comment: "Original: HackGen35"
-      family: "{{ webfont_font_prefix }}H35"
-      weight: bold
+  # - src: /usr/local/share/fonts/HackGen/HackGen35-Regular.ttf
+  #   output_file: "{{ webfont_font_prefix }}H35-Regular.ttf"
+  #   css:
+  #     comment: "Original: HackGen35"
+  #     family: "{{ webfont_font_prefix }}H35"
+  # - src: /usr/local/share/fonts/HackGen/HackGen35-Bold.ttf
+  #   output_file: "{{ webfont_font_prefix }}H35-Bold.ttf"
+  #   css:
+  #     comment: "Original: HackGen35"
+  #     family: "{{ webfont_font_prefix }}H35"
+  #     weight: bold
   ## PlemolJP
   # - src: /usr/local/share/fonts/PlemolJP/PlemolJP-Thin.ttf
   #   output_file: "{{ webfont_font_prefix }}P-Thin.ttf"
@@ -434,3 +435,15 @@ webfont_font_files:
   #     family: "{{ webfont_font_prefix }}MX"
   #     style: italic
   #     weight: bold
+  ## Bizin Gothic
+  - src: /usr/local/share/fonts/BizinGothic/BizinGothic-Regular.ttf
+    output_file: "{{ webfont_font_prefix }}B-Regular.ttf"
+    css:
+      comment: "Original: BizinGothic"
+      family: "{{ webfont_font_prefix }}B"
+  - src: /usr/local/share/fonts/BizinGothic/BizinGothic-Bold.ttf
+    output_file: "{{ webfont_font_prefix }}B-Bold.ttf"
+    css:
+      comment: "Original: BizinGothic"
+      family: "{{ webfont_font_prefix }}B"
+      weight: bold

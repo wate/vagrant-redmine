@@ -24,14 +24,20 @@ redmine_gemfile_local_packages:
 ## --------------------
 ## インストールするテーマ
 ## --------------------
-# redmine_themes:
-#   - name: PurpleMine2
-#     repo: https://github.com/mrliptontea/PurpleMine2.git
+redmine_themes:
+  - name: PurpleMine2
+    repo: https://github.com/mrliptontea/PurpleMine2.git
 
 ## --------------------
 ## インストールするプラグイン
 ## --------------------
-# redmine_plugins:
+redmine_plugins: []
+#   - name: dashboard
+#     repo: https://github.com/jgraichen/redmine_dashboard.git
+#     version: main
+#   - name: message_customize
+#     repo: https://github.com/farend/redmine_message_customize.git
+#     version: master
 #   - name: view_customize
 #     repo: https://github.com/onozaty/redmine-view-customize.git
 #     directory: view_customize
@@ -42,9 +48,6 @@ redmine_gemfile_local_packages:
 #     repo: https://github.com/redmica/redmica_ui_extension.git
 #     directory: redmica_ui_extension
 #     version: master
-#   - name: dashboard
-#     repo: https://github.com/jgraichen/redmine_dashboard.git
-#     version: main
 #   - name: drawio
 #     repo: https://github.com/mikitex70/redmine_drawio.git
 #     version: master
@@ -58,9 +61,6 @@ redmine_gemfile_local_packages:
 #   - name: sudo
 #     repo: https://github.com/AlphaNodes/redmine_sudo.git
 #     version: stable
-#   - name: message_customize
-#     repo: https://github.com/farend/redmine_message_customize.git
-#     version: master
 
 ## --------------------
 ## config/configuration.ymlの設定
