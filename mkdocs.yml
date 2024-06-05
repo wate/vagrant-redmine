@@ -11,10 +11,11 @@ theme:
   font:
     # https://squidfunk.github.io/mkdocs-material/setup/changing-the-fonts/
     text: BIZ UDPGothic
-    code: CodeFontB
+    code: CodeFontBD
   features:
     - navigation.tabs.sticky
     - content.code.copy
+    - content.tooltips
     # - navigation.tabs
     # - navigation.sections
     # - navigation.expand
