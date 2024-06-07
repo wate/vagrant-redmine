@@ -11,10 +11,6 @@
     path: "{{ document_rest_api_doc_dir }}"
     state: directory
     mode: "0755"
-- name: 一時ディレクトリのパスを変数に代入
-  ansible.builtin.set_fact:
-    # document_rest_api_tmp_dir: "{{ document_rest_api_doc_dir }}"
-    document_rest_api_tmp_dir: /tmp/{{ document_rest_api_doc_dir | basename }}
 - name: 各Wikiページのコンテンツを取得
   ansible.builtin.uri:
     url: https://www.redmine.org/projects/redmine/wiki/{{ item.title | urlencode }}.json
@@ -55,6 +51,7 @@
       pandoc -s {{ document_rest_api_tmp_dir }}/{{ item }}
       --from textile
       --to gfm
+      --markdown-headings setext
       --wrap preserve
     chdir: "{{ document_rest_api_tmp_dir }}"
   changed_when: false
