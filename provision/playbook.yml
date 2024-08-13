@@ -10,42 +10,30 @@
         update_cache: true
   roles:
     - role: common
-      tags:
-        - role_common
+      tags: role_common
     - role: nodejs
-      tags:
-        - role_nodejs
+      tags: role_nodejs
     - role: mariadb
-      tags:
-        - role_mariadb
+      tags: role_mariadb
     - role: dehydrated
-      tags:
-        - role_dehydrated
+      tags: role_dehydrated
     - role: nginx
-      tags:
-        - role_nginx
+      tags: role_nginx
     - role: mailpit
-      tags:
-        - role_mailpit
+      tags: role_mailpit
     - role: spamassassin
-      tags:
-        - role_spamassassin
+      tags: role_spamassassin
     - role: tools
-      tags:
-        - role_tools
+      tags: role_tools
     - role: redmine
-      tags:
-        - role_redmine
-    - role: document
-      tags:
-        - role_docment
-      become: false
+      tags: role_redmine
     - role: font
-      tags:
-        - role_font
-    - role: webfont
-      tags:
-        - role_webfont
+      tags: role_font
+    # - role: document
+    #   tags: role_docment
+    #   become: false
+    # - role: webfont
+    #   tags: role_webfont
   tasks:
     - name: Allow mailpit port
       community.general.ufw:

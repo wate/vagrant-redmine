@@ -1,21 +1,15 @@
 ---
-
 ## --------------------
 ## Redmineのバージョン
 ## --------------------
 redmine_version: 5.1-stable
 
 ## --------------------
-## Redmineの動作モード
-## --------------------
-redmine_mode: production
-
-## --------------------
 ## 追加インストールするgemパッケージ
 ## --------------------
-redmine_gemfile_local_packages:
-  yard:
-  rails-erd:
+# redmine_gemfile_local_packages:
+#   yard:
+#   rails-erd:
 
 ## --------------------
 ## config/configuration.ymlの設定
