@@ -11,6 +11,16 @@ document_api_dir: "{{ document_dir }}/api"
 document_rest_api_doc_dir: "{{ document_dir }}/rest_api"
 document_rest_api_tmp_dir: /tmp/{{ document_rest_api_doc_dir | basename }}
 
+## --------------------
+## 出力から除外するrakeタスク
+## --------------------
+document_rake_task_exclude_filters:
+  - rake redmine:import
+  - rake erd
+
+## --------------------
+## ドメインモデルの出力設定
+## --------------------
 document_domain_model_conf:
   ## Specifies which attributes to include in the diagram output.
   ## To hide attributes altogether, set this option to false.
@@ -110,8 +120,6 @@ document_webfont_css_default:
   style: normal
   weight: normal
   display: swap
-
-document_webfont_css_font_path: ../fonts
 
 ### font-weight map ###
 # Thin 100

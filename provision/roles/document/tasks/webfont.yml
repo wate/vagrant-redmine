@@ -31,6 +31,7 @@
           --text-file={{ document_asset_font_dir }}/subset.txt
           --output-file={{ item.output_file | default(item.src | basename) }}
           {{ item.src }}
+        chdir: "{{ document_asset_font_dir }}"
       loop: "{{ document_webfont_font_files }}"
       loop_control:
         label: "{{ item.src | basename }}"
@@ -56,8 +57,8 @@
       loop: "{{ find_subset_result.files }}"
       loop_control:
         label: "{{ item.path | basename }}"
-    - name: Generate CSS file
-      ansible.builtin.template:
-        src: fonts.css.j2
-        dest: "{{ document_asset_css_dir }}/fonts.css"
-        mode: "0644"
+- name: Generate CSS file
+  ansible.builtin.template:
+    src: fonts.css.j2
+    dest: "{{ document_asset_css_dir }}/fonts.css"
+    mode: "0644"

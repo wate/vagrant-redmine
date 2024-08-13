@@ -4,7 +4,7 @@
     cmd: bundle exec rails routes
     chdir: "{{ redmine_root }}"
   changed_when: false
-  register: command_result
+  register: routes_command_result
   environment:
     RAILS_ENV: "{{ redmine_mode }}"
   become: true
@@ -15,4 +15,4 @@
     dest: "{{ document_dir }}/routes.md"
     mode: "0644"
   vars:
-    redmine_routes: "{{ command_result.stdout_lines }}"
+    redmine_routes: "{{ routes_command_result.stdout_lines }}"
