@@ -29,41 +29,39 @@
       tags: role_redmine
     - role: font
       tags: role_font
-    # - role: document
-    #   tags: role_docment
-    #   become: false
-    # - role: webfont
-    #   tags: role_webfont
+    - role: document
+      tags: role_docment
+      become: false
   tasks:
     - name: Allow mailpit port
       community.general.ufw:
         rule: allow
         port: 8025
-    - name: Install pipx
-      ansible.builtin.apt:
-        name: pipx
-    - name: Generate document site
-      become: false
-      block:
-        - name: Install mkdocs-material
-          community.general.pipx:
-            name: mkdocs-material
-            install_deps: true
-        - name: Add mkdocs plugins
-          community.general.pipx:
-            name: mkdocs-material
-            state: inject
-            inject_packages:
-              - mkdocs-git-revision-date-localized-plugin
-              - mkdocs-glightbox
-              - mkdocs-tooltips
-              - mkdocs-section-index
-              - mkdocs-literate-nav
-              - mkdocs-gen-files
-        - name: Build doc site
-          ansible.builtin.command:
-            cmd: ~/.local/bin/mkdocs build
-            chdir: /vagrant
+    # - name: Install pipx
+    #   ansible.builtin.apt:
+    #     name: pipx
+    # - name: Generate document site
+    #   become: false
+    #   block:
+    #     - name: Install mkdocs-material
+    #       community.general.pipx:
+    #         name: mkdocs-material
+    #         install_deps: true
+    #     - name: Add mkdocs plugins
+    #       community.general.pipx:
+    #         name: mkdocs-material
+    #         state: inject
+    #         inject_packages:
+    #           - mkdocs-git-revision-date-localized-plugin
+    #           - mkdocs-glightbox
+    #           - mkdocs-tooltips
+    #           - mkdocs-section-index
+    #           - mkdocs-literate-nav
+    #           - mkdocs-gen-files
+    #     - name: Build doc site
+    #       ansible.builtin.command:
+    #         cmd: ~/.local/bin/mkdocs build
+    #         chdir: /vagrant
   post_tasks:
     - name: Restart services
       ansible.builtin.systemd_service:

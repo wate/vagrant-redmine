@@ -29,6 +29,7 @@ dict:
   Definition: 定義
   Table Definition: テーブル定義
   Extra Definition: 拡張定義
+  Viewpoints: ビューポイント
 exclude:
   - ar_internal_metadata
   - schema_migrations

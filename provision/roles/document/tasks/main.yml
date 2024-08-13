@@ -1,19 +1,22 @@
 ---
-- name: データベーススキーマの生成
-  ansible.builtin.import_tasks:
-    file: schema.yml
 - name: ドメインモデルのドキュメントを生成
   ansible.builtin.import_tasks:
     file: domain_model.yml
-- name: YARDドキュメントを生成
-  ansible.builtin.import_tasks:
-    file: yard.yml
-- name: Rakeタスク一覧のドキュメントを生成
-  ansible.builtin.import_tasks:
-    file: rake_tasks.yml
 - name: ルーティングのドキュメントを生成
   ansible.builtin.import_tasks:
     file: routes.yml
-- name: REST APIのドキュメントを生成
+- name: データベーススキーマの生成
   ansible.builtin.import_tasks:
-    file: rest_api.yml
+    file: schema.yml
+- name: Rakeタスク一覧のドキュメントを生成
+  ansible.builtin.import_tasks:
+    file: rake_tasks.yml
+- name: Webフォントを生成生成
+  ansible.builtin.import_tasks:
+    file: webfont.yml
+# - name: YARDドキュメントを生成
+#   ansible.builtin.import_tasks:
+#     file: yard.yml
+# - name: REST APIのドキュメントを生成
+#   ansible.builtin.import_tasks:
+#     file: rest_api.yml

@@ -7,22 +7,22 @@
   block:
     - name: ドキュメントの生成に必要となるgemパッケージの情報を追記
       ansible.builtin.lineinfile:
-        path: "{{ redmine_home }}/Gemfile.local"
+        path: "{{ redmine_root }}/Gemfile.local"
         line: gem 'yard'
       register: append_gemfile_result
     - name: gemパッケージのインストール/更新
       ansible.builtin.command:
         cmd: bundle update
-        chdir: "{{ redmine_home }}"
+        chdir: "{{ redmine_root }}"
       when: append_gemfile_result is changed
     - name: APIドキュメントが生成済みかどうかをチェック
       ansible.builtin.stat:
-        path: "{{ redmine_home }}/doc/app"
+        path: "{{ redmine_root }}/doc/app"
       register: redmine_api_doc_stat_result
     - name: YARDドキュメントを生成
       ansible.builtin.command:
         cmd: bundle exec rake yard
-        chdir: "{{ redmine_home }}"
+        chdir: "{{ redmine_root }}"
       when: >
         not redmine_api_doc_stat_result.stat.exists
         or
@@ -36,7 +36,7 @@
   register: api_doc_dir_result
 - name: 生成済みのAPIドキュメントをドキュメント格納ディレクトリにコピー
   ansible.posix.synchronize:
-    src: "{{ redmine_home }}/doc/app/"
+    src: "{{ redmine_root }}/doc/app/"
     dest: "{{ document_api_doc_dir }}"
     delete: true
   delegate_to: "{{ inventory_hostname }}"

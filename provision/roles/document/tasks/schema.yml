@@ -1,7 +1,7 @@
 ---
 - name: Create schema doc directory
   ansible.builtin.file:
-    path: "{{ document_schema_doc_dir }}"
+    path: "{{ document_schema_dir }}"
     state: directory
     mode: "0755"
 - name: Set database connettion variable
@@ -13,4 +13,4 @@
     chdir: "{{ document_dir | dirname }}"
   vars:
     tbls_dsn: mariadb://{{ tmp_db_cfg.username }}:{{ tmp_db_cfg.password }}@{{ tmp_db_cfg.host }}/{{ tmp_db_cfg.database }}
-    tbls_doc_path: "{{ document_schema_doc_dir }}"
+    tbls_doc_path: "{{ document_schema_dir }}"

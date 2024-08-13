@@ -1,11 +1,9 @@
 ---
 - name: Rakeタスクの一覧を取得
-  ansible.builtin.shell:
-    cmd: |
-      set -o pipefail
-      bundle exec rake -T | grep -v "rake erd"
-    chdir: "{{ redmine_home }}"
-    executable: /bin/bash
+  ansible.builtin.command:
+    cmd: bundle exec rake -T
+    chdir: "{{ redmine_root }}"
+    executable: /usr/bin/bash
   changed_when: false
   failed_when: command_result.rc > 1
   register: command_result
