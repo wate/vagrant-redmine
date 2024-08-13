@@ -1,4 +1,6 @@
 ドメインモデル
 ==========================
 
-![ドメインモデル]({{ image_file_name }}.{{ image_file_type }})
+{% set domain_model_file_dir = document_asset_image_dir | relpath(document_dir) %}
+{% set domain_model_file_name = document_domain_model_conf.filename | basename  %}
+![ドメインモデル]({{ domain_model_file_dir }}/{{ domain_model_file_name }}.{{ document_domain_model_conf.filetype }})

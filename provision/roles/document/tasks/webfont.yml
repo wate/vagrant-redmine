@@ -1,9 +1,9 @@
 ---
-- name: Install font tools
+- name: Webフォント生成用の各種パッケージをインストール
   ansible.builtin.apt:
     name: "{{ document_webfont_packages }}"
   become: true
-- name: Generate subset text file
+- name: サブセット
   ansible.builtin.template:
     src: subset_all.txt.j2
     dest: "{{ document_asset_font_dir }}/subset.txt"
@@ -18,13 +18,13 @@
       - files/webfont/subset_katakana.txt
       - files/webfont/subset_kanji.txt
   register: update_subset_font_text_result
-- name: Generate Subset font and web font
+- name: サブセットフォント及びWebフォントを生成
   when: >
     update_subset_font_text_result is changed
     or
     force_generate_webfont | default(false)
   block:
-    - name: Generate subset font
+    - name: サブセットフォントを生成
       ansible.builtin.command:
         cmd: >
           fonttools subset
@@ -35,7 +35,7 @@
       loop: "{{ document_webfont_font_files }}"
       loop_control:
         label: "{{ item.src | basename }}"
-    - name: Find subset font files
+    - name: 生成済みのサブセットフォントを抽出
       ansible.builtin.find:
         paths:
           - "{{ document_asset_font_dir }}"
@@ -43,21 +43,21 @@
           - "*.ttf"
           - "*.otf"
       register: find_subset_result
-    - name: Generate woff
+    - name: Webフォント(woff形式)を生成
       ansible.builtin.command:
         cmd: sfnt2woff-zopfli {{ item.path }}
         chdir: "{{ document_asset_font_dir }}"
       loop: "{{ find_subset_result.files }}"
       loop_control:
         label: "{{ item.path | basename }}"
-    - name: Generate woff2
+    - name: Webフォント(woff2形式)を生成
       ansible.builtin.command:
         cmd: woff2_compress {{ item.path }}
         chdir: "{{ document_asset_font_dir }}"
       loop: "{{ find_subset_result.files }}"
       loop_control:
         label: "{{ item.path | basename }}"
-- name: Generate CSS file
+- name: Webフォント定義用のCSSファイルを生成
   ansible.builtin.template:
     src: fonts.css.j2
     dest: "{{ document_asset_css_dir }}/fonts.css"

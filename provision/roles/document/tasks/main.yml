@@ -14,9 +14,12 @@
 - name: Webフォントを生成生成
   ansible.builtin.import_tasks:
     file: webfont.yml
-# - name: YARDドキュメントを生成
-#   ansible.builtin.import_tasks:
-#     file: yard.yml
+- name: YARDドキュメントを生成
+  ansible.builtin.import_tasks:
+    file: yard.yml
 # - name: REST APIのドキュメントを生成
 #   ansible.builtin.import_tasks:
 #     file: rest_api.yml
+- name: ドキュメントサイトを生成
+  ansible.builtin.import_tasks:
+    file: site.yml

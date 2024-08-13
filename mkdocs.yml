@@ -15,7 +15,7 @@ theme:
   features:
     - navigation.tabs.sticky
     - content.code.copy
-    - content.tooltips
+    # - content.tooltips
     # - navigation.tabs
     # - navigation.sections
     # - navigation.expand
@@ -28,7 +28,6 @@ theme:
 extra_javascript:
   - assets/javascripts/extra.js
 extra_css:
-  - https://cdn.jsdelivr.net/npm/hint.css/hint.min.css
   - assets/stylesheets/extra.css
 markdown_extensions:
   ## Python Markdown
@@ -100,8 +99,6 @@ plugins:
   #     type: iso_date
   #     timezone: Asia/Tokyo
   #     locale: ja
-  ## https://roipoussiere.frama.io/mkdocs-tooltips/
-  - tooltips
   ## https://oprypin.github.io/mkdocs-section-index/
   - section-index
   ## https://oprypin.github.io/mkdocs-literate-nav/

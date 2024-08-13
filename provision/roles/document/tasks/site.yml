@@ -1,0 +1,27 @@
+---
+- name: pipxをインストール
+  ansible.builtin.apt:
+    name: pipx
+  become: true
+- name: ドキュメントサイトを生成
+  become: false
+  block:
+    - name: mkdocs-materialをインストール
+      community.general.pipx:
+        name: mkdocs-material
+        install_deps: true
+    - name: MkDocsのプラグインをインストール
+      community.general.pipx:
+        name: mkdocs-material
+        state: inject
+        inject_packages:
+          - mkdocs-git-revision-date-localized-plugin
+          - mkdocs-glightbox
+          - mkdocs-tooltips
+          - mkdocs-section-index
+          - mkdocs-literate-nav
+          - mkdocs-gen-files
+    - name: ドキュメントサイトを生成
+      ansible.builtin.command:
+        cmd: ~/.local/bin/mkdocs build
+        chdir: /vagrant

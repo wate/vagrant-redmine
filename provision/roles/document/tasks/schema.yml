@@ -1,13 +1,13 @@
 ---
-- name: Create schema doc directory
+- name: データベースドキュメント格納ディレクトリを作成
   ansible.builtin.file:
     path: "{{ document_schema_dir }}"
     state: directory
     mode: "0755"
-- name: Set database connettion variable
+- name: データベース接続文字列用変数を設定
   ansible.builtin.set_fact:
     tmp_db_cfg: "{{ redmine_db_cfg[redmine_mode] }}"
-- name: Generate schema document
+- name: データベースドキュメント格納ディレクトリを生成
   ansible.builtin.command:
     cmd: tbls doc -c {{ document_dir | dirname }}/.tbls.yml -f --rm-dist {{ tbls_dsn }} {{ tbls_doc_path }}
     chdir: "{{ document_dir | dirname }}"

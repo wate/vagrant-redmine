@@ -1,12 +1,9 @@
 ---
 - name: Rakeタスクの一覧を取得
   ansible.builtin.shell:
-    cmd: >
+    cmd: |
       set -euxo pipefail
-      bundle exec rake -T
-      {% for exclude_filter in document_rake_task_exclude_filters | default([]) %}
-      | grep -v "{{ exclude_filter }}"
-      {% endfor %}
+      bundle exec rake -T{% for exclude_filter in document_rake_task_exclude_filters %} | grep -v "{{ exclude_filter }}"{% endfor %}
     chdir: "{{ redmine_root }}"
     executable: /usr/bin/bash
   changed_when: false

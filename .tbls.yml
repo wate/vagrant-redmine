@@ -3,7 +3,7 @@
 # tbls setting
 # https://github.com/k1LoW/tbls
 # -------------
-name: Redmine Database Schema
+name: Database schema
 er:
   format: svg
   comment: true
