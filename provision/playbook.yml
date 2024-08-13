@@ -40,12 +40,12 @@
       tags:
         - role_docment
       become: false
-    # - role: font
-    #   tags:
-    #     - role_font
-    # - role: webfont
-    #   tags:
-    #     - role_webfont
+    - role: font
+      tags:
+        - role_font
+    - role: webfont
+      tags:
+        - role_webfont
   tasks:
     - name: Allow mailpit port
       community.general.ufw:

@@ -48,6 +48,7 @@ composer.phar
 .cache/
 
 ### this project only ###
+provision/host_vars/default.yml
 docs/api/
 docs/rest_api/
 docs/schema/

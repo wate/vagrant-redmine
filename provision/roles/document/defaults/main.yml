@@ -84,6 +84,6 @@ document_domain_model_conf:
   ## Example: exclude="User,Role"
   # exclude: null
 
-
+# force_generate_webfont: false
 # force_update_api_doc: false
 # force_update_domain_model_doc: false
