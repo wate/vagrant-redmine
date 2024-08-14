@@ -32,6 +32,9 @@
     - role: document
       tags: role_docment
       become: false
+    - role: other
+      tags: role_other
+      become: false
   tasks:
     - name: Allow mailpit port
       community.general.ufw:

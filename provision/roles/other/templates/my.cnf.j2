@@ -1,0 +1,9 @@
+[mysql]
+auto-rehash
+
+[client]
+database={{ redmine_db_cfg[redmine_mode].database }}
+user={{ redmine_db_cfg[redmine_mode].username }}
+password={{ redmine_db_cfg[redmine_mode].password }}
+host={{ redmine_db_cfg[redmine_mode].host }}
+default-character-set={{ redmine_db_cfg[redmine_mode].encoding }}

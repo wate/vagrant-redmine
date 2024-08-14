@@ -1,0 +1,23 @@
+---
+
+- name: pipxをインストール
+  ansible.builtin.apt:
+    name: pipx
+  become: true
+- name: ドキュメントサイトを生成
+  become: false
+  block:
+    - name: MariaDBの接続設定ファイルを作成
+      ansible.builtin.template:
+        src: my.cnf.j2
+        dest: ~/.my.cnf
+        mode: "0600"
+    - name: mycliをインストール
+      community.general.pipx:
+        name: mycli
+        install_deps: true
+    - name: mycliの設定ファイルを生成
+      ansible.builtin.template:
+        src: myclirc.j2
+        dest: ~/.myclirc
+        mode: "0600"
