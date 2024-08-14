@@ -49,6 +49,7 @@ composer.phar
 
 ### this project only ###
 provision/host_vars/default.yml
+provision_tags.yml
 docs/api/
 docs/rest_api/
 docs/schema/

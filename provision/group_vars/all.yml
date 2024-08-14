@@ -32,6 +32,18 @@ redmine_themes:
   PurpleMine2:
     repo: https://github.com/mrliptontea/PurpleMine2.git
     version: master
+  bleuclair:
+    repo: https://github.com/farend/redmine_theme_farend_bleuclair.git
+    version: master
+  farend_fancy:
+    repo: https://github.com/farend/redmine_theme_farend_fancy.git
+    version: master
+  farend_basic:
+    repo: https://github.com/farend/redmine_theme_farend_basic.git
+    version: master
+  gitmike:
+    repo: https://github.com/makotokw/redmine-theme-gitmike.git
+    version: master
 
 ## --------------------
 ## インストールするプラグイン
