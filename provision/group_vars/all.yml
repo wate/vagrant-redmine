@@ -545,14 +545,18 @@ redmine_settings:
   ## --------------------
   ## Redmine本体の設定
   ## --------------------
-  ## 全般
+  ### ----------
+  ### 全般
+  ### ----------
   # ホスト名とパス
   # host_name: "{{ inventory_hostname }}"
   # テキスト書式
   text_formatting: common_mark
   # ウェルカムメッセージ
   welcome_text: "{{ lookup('file', 'files/welcome.md') }}"
-  ## 表示
+  ### ----------
+  ### 表示
+  ### ----------
   # デフォルトの言語
   default_language: ja
   # 時間の形式
@@ -561,15 +565,21 @@ redmine_settings:
   user_format: lastname_firstname
   # 新規オブジェクト作成タブ：「新しいチケット」タブを表示
   new_item_menu_tab: 1
-  ## 認証
+  ### ----------
+  ### 認証
+  ### ----------
   # 認証が必要
   login_required: 1
   # 自動ログイン
   autologin: 30
-  ## API
+  ### ----------
+  ### API
+  ### ----------
   # RESTによるWebサービスを有効にする
   rest_api_enabled: 1
-  ## プロジェクト
+  ### ----------
+  ### プロジェクト
+  ### ----------
   # デフォルトで新しいプロジェクトは公開にする
   default_projects_public: 0
   # 新規プロジェクトにおいてデフォルトで有効になるモジュール
@@ -600,10 +610,16 @@ redmine_settings:
     - 運用保守
     - 問い合わせ
     - その他
-  ## ユーザー
+  # システム管理者以外のユーザーが作成したプロジェクトに設定するロール
+  new_project_user_role: 管理者
+  ### ----------
+  ### ユーザー
+  ### ----------
   # 新しいユーザーのデフォルト設定(タイムゾーン)
   default_users_time_zone: Tokyo
-  ## チケットトラッキング
+  ### ----------
+  ### チケットトラッキング
+  ### ----------
   # チケットをコピーしたときに関連を設定
   link_copied_issue: ask
   # 現在の日付を新しいチケットの開始日とする
@@ -626,15 +642,19 @@ redmine_settings:
     - due_date
     # 更新日
     - updated_on
-  ## ファイル
+  ### ----------
+  ### ファイル
+  ### ----------
   # 添付ファイルサイズの上限(KB)
   attachment_max_size: 10240
   # 添付ファイルとリポジトリのエンコーディング
   repositories_encodings: "utf-8,cp932,euc-jp"
-  ## ----------
+  ## --------------------
   ## プラグインの設定
-  ## ----------
+  ## --------------------
+  ### ----------
   ### Additionals
+  ### ----------
   plugin_additionals:
     # 無効にするモジュール
     disabled_modules:
@@ -667,16 +687,22 @@ redmine_settings:
     # issue_timelog_required: 0
     # issue_timelog_required_tracker: []
     # issue_timelog_required_status: []
+  ### ----------
   ### RedMica UI extension
+  ### ----------
   plugin_redmica_ui_extension:
     # セレクトボックスを検索可能にする
     searchable_selectbox:
       enabled: 0
+  ### ----------
   ### チケットテンプレート
+  ### ----------
   plugin_redmine_issue_templates:
     # グローバルチケットテンプレートを全てのプロジェクトに適用
     apply_global_template_to_all_projects: "true"
+  ### ----------
   ### メッセンジャー
+  ### ----------
   plugin_redmine_messenger:
     # チケットの更新
     post_updates: 1
@@ -688,10 +714,14 @@ redmine_settings:
     post_wiki: 1
     # Wikiの更新
     post_wiki_updates: 1
+  ### ----------
   ### DMSF(文書管理)
+  ### ----------
   plugin_redmine_dmsf:
     # WebDAV
     dmsf_webdav: 0
+    # CJKテキストから n-grams の生成を有効にする
+    dmsf_enable_cjk_ngrams: "true"
 
 ## --------------------
 ## ワークフロー
