@@ -904,7 +904,7 @@ redmine_field_permissions:
 ## --------------------
 # redmine_reimport_user: true
 redmine_users:
-  - login: call_api_from_github
+  call_api_from_github:
     firstname: 連携
     lastname: Github
     mail: call_api_from_github@example.com
@@ -919,7 +919,7 @@ redmine_users:
         value: |
           GithubからRedmineのAPIを利用する場合はこのアカウントを利用してください。
           ※このアカウントを利用する場合はロックを解除してください。
-  - login: authority_check_admin
+  authority_check_admin:
     firstname: 管理者
     lastname: 権限チェック
     mail: check@example.com
@@ -930,7 +930,7 @@ redmine_users:
     custom_fields:
       - name: 自己紹介
         value: このユーザーは権限チェック完了後にロックしてください
-  - login: authority_check_developer
+  authority_check_developer:
     firstname: 開発者
     lastname: 権限チェック
     mail: check@example.net
@@ -942,7 +942,7 @@ redmine_users:
     custom_fields:
       - name: 自己紹介
         value: このユーザーは権限チェック完了後にロックしてください
-  - login: authority_check_repoter
+  authority_check_repoter:
     firstname: 報告者
     lastname: 権限チェック
     mail: check@example.org
@@ -954,7 +954,7 @@ redmine_users:
     custom_fields:
       - name: 自己紹介
         value: このユーザーは権限チェック完了後にロックしてください
-  - login: authority_check_guest
+  authority_check_guest:
     firstname: ゲスト
     lastname: 権限チェック
     mail: check@example.info
@@ -966,7 +966,7 @@ redmine_users:
     custom_fields:
       - name: 自己紹介
         value: このユーザーは権限チェック完了後にロックしてください
-  - login: client_contact_person
+  client_contact_person:
     firstname: 担当者
     lastname: クライアント
     mail: client_contact_person@example.info
