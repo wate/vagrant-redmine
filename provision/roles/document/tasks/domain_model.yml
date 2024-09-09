@@ -31,7 +31,7 @@
         force_update_domain_model | default(false)
 - name: 出力した画像のファイル名の変数を代入
   ansible.builtin.set_fact:
-    image_file_name: "{{ document_domain_model_conf.filename | default('erd') }}"
+    image_file_name: "{{ document_domain_model_conf.filename | default(redmine_root + '/erd') | basename }}"
     image_file_type: "{{ document_domain_model_conf.filetype | default('pdf') }}"
 - name: 生成した画像不ファイルをドキュメントディレクトリにコピー
   ansible.builtin.copy:
