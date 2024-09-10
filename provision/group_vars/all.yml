@@ -1697,15 +1697,13 @@ backup_settings:
     cron:
       minute: "0"
       job_suffix: "1>/dev/null"
-    command: >
-      mariadb-dump -u {{ redmine_db_cfg[redmine_mode].username }} -p{{ redmine_db_cfg[redmine_mode].password }} --single-transaction {{ redmine_db_cfg[redmine_mode].database }}
-      |
-      sed -e '/^\/\*\!50013 DEFINER=/d'
-      >${BACKUP_DATA_DIR}/dump.sql
-      &&
+    command: |
+      {% set db_name = redmine_db_cfg[redmine_mode].database -%}
+      {% set db_user = redmine_db_cfg[redmine_mode].username -%}
+      {% set db_password = redmine_db_cfg[redmine_mode].password -%}
+      mariadb-dump -u {{ db_user }} -p{{ db_password }} --single-transaction {{ db_name }} | sed -e '/^\/\*\!50013 DEFINER=/d' >${BACKUP_DATA_DIR}/dump.sql
       cd "{{ redmine_root }}/files"
-      &&
-      tar vcfz ${BACKUP_TARGET}/files.tar.gz ./*
+      tar vcfz ${BACKUP_DATA_DIR}/files.tar.gz ./*
     restic:
       repo_password: auto_backup_password
       forget_keep_type: hourly
@@ -1738,11 +1736,6 @@ nginx_vhosts:
       - pattern: "/\\.ht"
         match_type: "~"
         content: "deny all;"
-
-## ----------------
-## バックアップを共有する場合の各ディレクトリ(データ・リポジトリ)のアクセス権の設定
-## ----------------
-backup_dir_shared_mode: "0770"
 
 ## --------------
 ## maipitの環境変数の設定

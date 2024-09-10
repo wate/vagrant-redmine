@@ -42,11 +42,6 @@
       community.general.ufw:
         rule: allow
         port: 8025
-    - name: Add vagrant user to redmine group
-      ansible.builtin.user:
-        name: vagrant
-        append: true
-        groups: redmine
     - name: Setup custom script
       tags: custom_script
       block:
