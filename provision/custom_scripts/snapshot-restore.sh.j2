@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+BACKUP_TARGET="{{ backup_data_dir }}/auto_backup"
+
+DB_NAME="{{ redmine_db_cfg[redmine_mode].database }}"
+DB_USER="{{ redmine_db_cfg[redmine_mode].username }}"
+DB_PASSWORD="{{ redmine_db_cfg[redmine_mode].password }}"
+# DB_HOST=localhost
+
+FILES_DIR="{{ redmine_root }}/files"
+
+export RESTIC_REPOSITORY="{{ backup_repo_dir }}/auto_backup"
+export RESTIC_PASSWORD_FILE="{{ backup_repo_password_dir }}/auto_backup"
+
+if [ ! -e "${BACKUP_TARGET}" ]; then
+  echo "Create backup target directory"
+  mkdir -p "${BACKUP_TARGET}"
+fi
+
+RESTIC_SNAPSHOT_ID="${1}"
+if [ -n "${RESTIC_SNAPSHOT_ID}" ]; then
+  echo "## Restore snapshot: ${RESTIC_SNAPSHOT_ID}"
+  restic restore "${RESTIC_SNAPSHOT_ID}" --target "${BACKUP_TARGET}"
+fi
+
+if [ -n "${DB_NAME}" ] && [ -f "${BACKUP_TARGET}/dump.sql" ]; then
+  DB_PARAMS=()
+  if [ -n "${DB_USER}" ]; then
+    DB_PARAMS+=(-u "${DB_USER}")
+  fi
+  if [ -n "${DB_PASSWORD}" ]; then
+    DB_PARAMS+=(-p"${DB_PASSWORD}")
+  fi
+  if [ -n "${DB_HOST}" ]; then
+    DB_PARAMS+=(-h "${DB_HOST}")
+  fi
+  echo "## Resore datbase"
+  mysql "${DB_PARAMS[@]}" ${DB_NAME} <${BACKUP_TARGET}/dump.sql
+fi
+
+if [ -n "${FILES_DIR}" ] && [ -f "${BACKUP_TARGET}/files.tar.gz" ]; then
+  echo "## Restore files: ${FILES_DIR}"
+  cd "${FILES_DIR}" || exit 1;
+  tar vxfz ${BACKUP_TARGET}/files.tar.gz
+fi
+
