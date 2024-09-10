@@ -27,6 +27,9 @@ roles:
   - name: tools
     src: https://github.com/wate/ansible-role-tools
     version: develop
+  - name: backup
+    src: https://github.com/wate/ansible-role-backup
+    version: develop
   - name: font
     src: https://github.com/wate/ansible-role-font
     version: develop

@@ -6,15 +6,16 @@
 - name: ドキュメントサイトを生成
   become: false
   block:
-    - name: mkdocs-materialをインストール
+    - name: mkdocsをインストール
       community.general.pipx:
-        name: mkdocs-material
+        name: mkdocs
         install_deps: true
     - name: MkDocsのプラグインをインストール
       community.general.pipx:
-        name: mkdocs-material
+        name: mkdocs
         state: inject
         inject_packages:
+          - mkdocs-material
           - mkdocs-git-revision-date-localized-plugin
           - mkdocs-glightbox
           - mkdocs-tooltips

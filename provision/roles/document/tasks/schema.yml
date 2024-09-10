@@ -7,10 +7,19 @@
 - name: データベース接続文字列用変数を設定
   ansible.builtin.set_fact:
     tmp_db_cfg: "{{ redmine_db_cfg[redmine_mode] }}"
+- name: tbls用変数を設定
+  ansible.builtin.set_fact:
+    tbls_dsn: mariadb://{{ tmp_db_cfg.username }}:{{ tmp_db_cfg.password }}@{{ tmp_db_cfg.host }}/{{ tmp_db_cfg.database }}
+    tbls_doc_path: "{{ document_schema_dir }}"
 - name: データベースドキュメント格納ディレクトリを生成
   ansible.builtin.command:
     cmd: tbls doc -c {{ document_dir | dirname }}/.tbls.yml -f --rm-dist {{ tbls_dsn }} {{ tbls_doc_path }}
     chdir: "{{ document_dir | dirname }}"
-  vars:
-    tbls_dsn: mariadb://{{ tmp_db_cfg.username }}:{{ tmp_db_cfg.password }}@{{ tmp_db_cfg.host }}/{{ tmp_db_cfg.database }}
-    tbls_doc_path: "{{ document_schema_dir }}"
+- name: tbls用の環境変数を設定
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    mode: "0600"
+    marker: "# {mark} tbls ANSIBLE MANAGED BLOCK"
+    content: |
+      export TBLS_DSN="{{ tbls_dsn }}"
+      export TBLS_DOC_PATH="{{ tbls_doc_path }}"
