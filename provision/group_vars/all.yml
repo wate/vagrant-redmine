@@ -1767,3 +1767,16 @@ install_tools:
   - pandoc
   ## https://plantuml.com/ja/
   - plantuml
+
+## ----------
+## DNSレコード情報の出力先ディレクトリ
+## ----------
+dns_recode_output_dir: ../dns_info
+
+## ----------
+## DNS情報を取得するドメイン
+## ※収集されたDNSのレコード情報は「dns_recodes」変数にホスト名毎のディクショナリとして格納されます
+## -----------
+# dns_domains:
+#   "subdomain.example.com": null
+#   "subdomain.example.net": null

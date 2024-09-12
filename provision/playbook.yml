@@ -19,16 +19,21 @@
       tags: role_dehydrated
     - name: nginx
       tags: role_nginx
-    - name: mailpit
-      tags: role_mailpit
-    - name: spamassassin
-      tags: role_spamassassin
+    - name: opendkim
+      tags: role_opendkim
     - name: tools
       tags: role_tools
     - name: redmine
       tags: role_redmine
     - name: backup
       tags: role_backup
+    - name: dns
+      tags: role_dns
+    ## 以下、ローカル検証環境用
+    - name: mailpit
+      tags: role_mailpit
+    - name: spamassassin
+      tags: role_spamassassin
     - name: font
       tags: role_font
     - name: document
@@ -86,6 +91,6 @@
         name: "{{ item }}"
         state: restarted
       loop:
-        - redmine
         - mariadb
+        - redmine
         - nginx
