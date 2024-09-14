@@ -13,6 +13,8 @@
       tags: role_common
     - name: nodejs
       tags: role_nodejs
+    - name: logrotate
+      tags: role_logrotate
     - name: mariadb
       tags: role_mariadb
     - name: dehydrated

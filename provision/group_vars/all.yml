@@ -1697,6 +1697,41 @@ banner_text: "{{ redmine_hostname }}"
 postfix_cfg:
   myhostname: "{{ redmine_hostname }}"
 
+## --------------------
+## logrotateの設定
+## --------------------
+logrotate_settings:
+  nginx:
+    paths:
+      - /var/log/nginx/*.log
+    ## ローテーションの間隔： hourly / daily / weekly [曜日] / monthly / yearly
+    frequency: daily
+    missingok: true
+    # 14 => 35(1ヶ月+α)に引き上げ
+    rotate: 35
+    compress: true
+    delaycompress: true
+    notifempty: true
+    create: true
+    create_mode: "0640"
+    create_user: www-data
+    create_group: adm
+    sharedscripts: true
+    prerotate: |
+      if [ -d /etc/logrotate.d/httpd-prerotate ]; then \
+        run-parts /etc/logrotate.d/httpd-prerotate; \
+      fi \
+    postrotate: invoke-rc.d nginx rotate >/dev/null 2>&1
+  redmine:
+    paths:
+      - /opt/redmine/log/*.log
+    frequency: daily
+    missingok: true
+    rotate: 14
+    compress: true
+    delaycompress: true
+    notifempty: true
+    copytruncate: true
 
 ## --------------------
 ## 自動バックアップ設定
@@ -1716,10 +1751,8 @@ backup_settings:
       tar vcfz ${BACKUP_DATA_DIR}/files.tar.gz ./*
     restic:
       repo_password: auto_backup_password
-      forget_keep_type: hourly
-      forget_keep_value: "8"
-      forget_other_options:
-        - --keep-within-daily 3d
+      forget_keep_type: daily
+      forget_keep_value: 3
 
 ## --------------
 ## バーチャルホストの設定

@@ -20,7 +20,7 @@
         listen_udp_posts: "{{ ansible_facts.udp_listen | map(attribute='port') | unique | list }}"
     - name: Test common
       block:
-        - name: Asset packages
+        - name: Assert packages
           ansible.builtin.assert:
             that:
               - ansible_facts.packages['etckeeper']
@@ -86,13 +86,13 @@
                     path: /etc/postfix/main.cf
                     line: myhostname = {{ redmine_hostname }}
                   register: check_postfix_myhostname_result
-                - name: Asset myhostname
+                - name: Assert myhostname
                   ansible.builtin.assert:
                     that:
                       - check_postfix_myhostname_result is not changed
     - name: Test DKIM server
       block:
-        - name: Asset OpenDKIM packages
+        - name: Assert OpenDKIM packages
           ansible.builtin.assert:
             that:
               - ansible_facts.packages['opendkim']
@@ -106,48 +106,48 @@
           ansible.builtin.assert:
             that:
               - 8891 in listen_tcp_posts
-        - name: Test Postfix <-> OpenDKIM config
+        - name: Test Postfix <-> OpenDKIM setting
           check_mode: true
           block:
-            - name: Check Postfix milter_protocol config
+            - name: Check Postfix milter_protocol setting
               ansible.builtin.lineinfile:
                 path: /etc/postfix/main.cf
                 line: milter_protocol = 6
               register: check_postfix_milter_protocol_result
-            - name: Asset Postfix milter_protocol config
+            - name: Assert Postfix milter_protocol setting
               ansible.builtin.assert:
                 that:
                   - check_postfix_milter_protocol_result is not changed
-            - name: Check Postfix milter_default_action config
+            - name: Check Postfix milter_default_action setting
               ansible.builtin.lineinfile:
                 path: /etc/postfix/main.cf
                 line: milter_default_action = accept
               register: check_postfix_milter_default_action_result
-            - name: Asset Postfix milter_default_action config
+            - name: Assert Postfix milter_default_action setting
               ansible.builtin.assert:
                 that:
                   - check_postfix_milter_default_action_result is not changed
-            - name: Check Postfix smtpd_milters config
+            - name: Check Postfix smtpd_milters setting
               ansible.builtin.lineinfile:
                 path: /etc/postfix/main.cf
                 line: smtpd_milters = inet:localhost:8891
               register: check_postfix_smtpd_milters_result
-            - name: Asset Postfix smtpd_milters config
+            - name: Assert Postfix smtpd_milters setting
               ansible.builtin.assert:
                 that:
                   - check_postfix_smtpd_milters_result is not changed
-            - name: Check Postfix non_smtpd_milters config
+            - name: Check Postfix non_smtpd_milters setting
               ansible.builtin.lineinfile:
                 path: /etc/postfix/main.cf
                 line: non_smtpd_milters = inet:localhost:8891
               register: check_postfix_non_smtpd_milters_result
-            - name: Asset Postfix non_smtpd_milters config
+            - name: Assert Postfix non_smtpd_milters setting
               ansible.builtin.assert:
                 that:
                   - check_postfix_non_smtpd_milters_result is not changed
     - name: Test Databse server
       block:
-        - name: Asset packages
+        - name: Assert packages
           ansible.builtin.assert:
             that:
               - ansible_facts.packages['mariadb-server']
@@ -189,8 +189,43 @@
               - ansible_facts.services['redmine.service']
               - ansible_facts.services['redmine.service']['state'] == 'running'
               - ansible_facts.services['redmine.service']['status'] == 'enabled'
+    - name: Test dehydrated
+      block:
+        - name: Assert dehydrated package
+          ansible.builtin.assert:
+            that:
+              - ansible_facts.packages['dehydrated']
+        - name: Check additional settig file
+          ansible.builtin.stat:
+            path: /etc/dehydrated/conf.d/local.sh
+          register: additional_setting_file_result
+        - name: Assert additional settig file
+          ansible.builtin.assert:
+            that:
+              - additional_setting_file_result.stat.exists
+        - name: Check hook settig file
+          ansible.builtin.stat:
+            path: /etc/dehydrated/hook.sh
+          register: hook_setting_file_result
+        - name: Assert domain settig file
+          ansible.builtin.assert:
+            that:
+              - hook_setting_file_result.stat.exists
+              - hook_setting_file_result.stat.mode == '0750'
+        - name: Check domain settig file
+          ansible.builtin.stat:
+            path: /etc/dehydrated/domains.txt
+          register: domain_setting_file_result
+        - name: Assert domain settig file
+          ansible.builtin.assert:
+            that:
+              - domain_setting_file_result.stat.exists
     - name: Test Web server
       block:
+        - name: Assert Nginx package
+          ansible.builtin.assert:
+            that:
+              - ansible_facts.packages['nginx']
         - name: Assert Nginx service
           ansible.builtin.assert:
             that:
@@ -223,3 +258,35 @@
           ansible.builtin.assert:
             that:
               - crontab_result.rc == 0
+    - name: Test logrotate
+      block:
+        - name: Check Redmine log logrotate setting
+          ansible.builtin.stat:
+            path: /etc/logrotate.d/redmine
+          register: setting_file_result
+        - name: Assert Redmine log logrotate setting
+          ansible.builtin.assert:
+            that:
+              - setting_file_result.stat.exists
+        - name: Check Redmine logrotate setting detail
+          block:
+            - name: Check rotate file setting
+              ansible.builtin.command:
+                cmd: grep "/opt/redmine/log/\*.log" /etc/logrotate.d/redmine
+              failed_when: rotate_file_result.rc > 1
+              changed_when: false
+              register: rotate_file_result
+            - name: Assert rotate file setting
+              ansible.builtin.assert:
+                that:
+                  - rotate_file_result.rc == 0
+            - name: Check copytruncate setting
+              ansible.builtin.command:
+                cmd: grep copytruncate /etc/logrotate.d/redmine
+              failed_when: rotate_copytruncate_result.rc > 1
+              changed_when: false
+              register: rotate_copytruncate_result
+            - name: Assert copytruncate setting
+              ansible.builtin.assert:
+                that:
+                  - rotate_copytruncate_result.rc == 0
