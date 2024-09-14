@@ -1,0 +1,225 @@
+---
+# code: language=ansible
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: true
+  tags: verify
+  tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: auto
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+    - name: Gather facts on listening ports
+      community.general.listen_ports_facts:
+        command: ss
+    - name: Set assert variables
+      ansible.builtin.set_fact:
+        listen_tcp_posts: "{{ ansible_facts.tcp_listen | map(attribute='port') | unique | list }}"
+        listen_udp_posts: "{{ ansible_facts.udp_listen | map(attribute='port') | unique | list }}"
+    - name: Test common
+      block:
+        - name: Asset packages
+          ansible.builtin.assert:
+            that:
+              - ansible_facts.packages['etckeeper']
+              - ansible_facts.packages['postfix']
+              - ansible_facts.packages['fail2ban']
+              - ansible_facts.packages['ufw']
+              - ansible_facts.packages['cron-apt']
+              - ansible_facts.packages['vnstat']
+        - name: Assert services
+          block:
+            - name: Assert Postfix service
+              ansible.builtin.assert:
+                that:
+                  - ansible_facts.services['postfix.service']
+                  - ansible_facts.services['postfix.service']['status'] == 'enabled'
+                  - ansible_facts.services['postfix@-.service']['state'] == 'running'
+            - name: Assert fail2ban service
+              ansible.builtin.assert:
+                that:
+                  - ansible_facts.services['fail2ban.service']
+                  - ansible_facts.services['fail2ban.service']['state'] == 'running'
+                  - ansible_facts.services['fail2ban.service']['status'] == 'enabled'
+            - name: Assert vnstat service
+              ansible.builtin.assert:
+                that:
+                  - ansible_facts.services['vnstat.service']
+                  - ansible_facts.services['vnstat.service']['state'] == 'running'
+                  - ansible_facts.services['vnstat.service']['status'] == 'enabled'
+        - name: Test cron-apt status
+          block:
+            - name: Check cron-apt auto upgrade
+              ansible.builtin.command:
+                cmd: grep "dist-upgrade -y -o APT::Get::Show-Upgraded=true" /etc/cron-apt/action.d/3-download
+              failed_when: auto_upgrade_result.rc > 1
+              changed_when: false
+              register: auto_upgrade_result
+            - name: Check cron-apt auto upgrade
+              ansible.builtin.assert:
+                that:
+                  - auto_upgrade_result.rc == 0
+        - name: Test ufw status
+          block:
+            - name: Check ufw status
+              ansible.builtin.shell:
+                cmd: |
+                  set -o pipefail
+                  ufw status | grep "Status: active"
+                executable: /usr/bin/bash
+              failed_when: ufw_status_result.rc > 1
+              changed_when: false
+              register: ufw_status_result
+            - name: Assert ufw status
+              ansible.builtin.assert:
+                that:
+                  - ufw_status_result.rc == 0
+        - name: Test Postfix settting
+          block:
+            - name: Test Postfix config
+              check_mode: true
+              block:
+                - name: Check Postfix myhostname config
+                  ansible.builtin.lineinfile:
+                    path: /etc/postfix/main.cf
+                    line: myhostname = {{ redmine_hostname }}
+                  register: check_postfix_myhostname_result
+                - name: Asset myhostname
+                  ansible.builtin.assert:
+                    that:
+                      - check_postfix_myhostname_result is not changed
+    - name: Test DKIM server
+      block:
+        - name: Asset OpenDKIM packages
+          ansible.builtin.assert:
+            that:
+              - ansible_facts.packages['opendkim']
+        - name: Assert OpenDKIM service
+          ansible.builtin.assert:
+            that:
+              - ansible_facts.services['opendkim.service']
+              - ansible_facts.services['opendkim.service']['state'] == 'running'
+              - ansible_facts.services['opendkim.service']['status'] == 'enabled'
+        - name: Assert DKIM server port
+          ansible.builtin.assert:
+            that:
+              - 8891 in listen_tcp_posts
+        - name: Test Postfix <-> OpenDKIM config
+          check_mode: true
+          block:
+            - name: Check Postfix milter_protocol config
+              ansible.builtin.lineinfile:
+                path: /etc/postfix/main.cf
+                line: milter_protocol = 6
+              register: check_postfix_milter_protocol_result
+            - name: Asset Postfix milter_protocol config
+              ansible.builtin.assert:
+                that:
+                  - check_postfix_milter_protocol_result is not changed
+            - name: Check Postfix milter_default_action config
+              ansible.builtin.lineinfile:
+                path: /etc/postfix/main.cf
+                line: milter_default_action = accept
+              register: check_postfix_milter_default_action_result
+            - name: Asset Postfix milter_default_action config
+              ansible.builtin.assert:
+                that:
+                  - check_postfix_milter_default_action_result is not changed
+            - name: Check Postfix smtpd_milters config
+              ansible.builtin.lineinfile:
+                path: /etc/postfix/main.cf
+                line: smtpd_milters = inet:localhost:8891
+              register: check_postfix_smtpd_milters_result
+            - name: Asset Postfix smtpd_milters config
+              ansible.builtin.assert:
+                that:
+                  - check_postfix_smtpd_milters_result is not changed
+            - name: Check Postfix non_smtpd_milters config
+              ansible.builtin.lineinfile:
+                path: /etc/postfix/main.cf
+                line: non_smtpd_milters = inet:localhost:8891
+              register: check_postfix_non_smtpd_milters_result
+            - name: Asset Postfix non_smtpd_milters config
+              ansible.builtin.assert:
+                that:
+                  - check_postfix_non_smtpd_milters_result is not changed
+    - name: Test Databse server
+      block:
+        - name: Asset packages
+          ansible.builtin.assert:
+            that:
+              - ansible_facts.packages['mariadb-server']
+        - name: Assert service
+          ansible.builtin.assert:
+            that:
+              - ansible_facts.services['mariadb.service']
+              - ansible_facts.services['mariadb.service']['state'] == 'running'
+              - ansible_facts.services['mariadb.service']['status'] == 'enabled'
+        - name: Assert port
+          ansible.builtin.assert:
+            that:
+              - 3306 in listen_tcp_posts
+    - name: Test Redmine
+      block:
+        - name: Check user
+          ansible.builtin.user:
+            name: redmine
+            system: true
+          check_mode: true
+          register: check_user_result
+        - name: Assert user
+          ansible.builtin.assert:
+            that:
+              - check_user_result is not changed
+        - name: Check group
+          ansible.builtin.group:
+            name: redmine
+            system: true
+          register: check_group_result
+          check_mode: true
+        - name: Assert group
+          ansible.builtin.assert:
+            that:
+              - check_group_result is not changed
+        - name: Assert Redmine service
+          ansible.builtin.assert:
+            that:
+              - ansible_facts.services['redmine.service']
+              - ansible_facts.services['redmine.service']['state'] == 'running'
+              - ansible_facts.services['redmine.service']['status'] == 'enabled'
+    - name: Test Web server
+      block:
+        - name: Assert Nginx service
+          ansible.builtin.assert:
+            that:
+              - ansible_facts.services['nginx.service']
+              - ansible_facts.services['nginx.service']['state'] == 'running'
+              - ansible_facts.services['nginx.service']['status'] == 'enabled'
+        - name: Assert Web server port(HTTP)
+          ansible.builtin.assert:
+            that:
+              - 80 in listen_tcp_posts
+        - name: Assert Web server port(HTTPS)
+          ansible.builtin.assert:
+            that:
+              - 443 in listen_tcp_posts
+          when: dehydrated_domains | default([]) | length > 0
+    - name: Test backup
+      become: true
+      become_user: redmine
+      block:
+        - name: Check Redmine data backup cron job
+          ansible.builtin.shell:
+            cmd: |
+              set -o pipefail
+              crontab -l | grep "Ansible: role:backup/setting:"
+            executable: /usr/bin/bash
+          failed_when: crontab_result.rc > 1
+          changed_when: false
+          register: crontab_result
+        - name: Assert Redmine data backup cron job
+          ansible.builtin.assert:
+            that:
+              - crontab_result.rc == 0

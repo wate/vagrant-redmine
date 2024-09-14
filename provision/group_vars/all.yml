@@ -1,4 +1,7 @@
 ---
+redmine_hostname: "redmine.example.com"
+# redmine_hostname: "{{ inventory_hostname }}"
+
 ## --------------------
 ## Redmineのバージョン
 ## --------------------
@@ -1686,13 +1689,20 @@ redmine_note_templates:
 ## ---------
 ## ログインバナーに表示するテキスト
 ## ---------
-banner_text: "Redmine"
+banner_text: "{{ redmine_hostname }}"
+
+## --------------------
+## Postfixの設定
+## --------------------
+postfix_cfg:
+  myhostname: "{{ redmine_hostname }}"
+
 
 ## --------------------
 ## 自動バックアップ設定
 ## --------------------
 backup_settings:
-  auto_backup:
+  redmine_backup:
     user: redmine
     cron:
       minute: "0"

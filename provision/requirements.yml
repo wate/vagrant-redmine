@@ -18,6 +18,9 @@ roles:
   - name: redmine
     src: https://github.com/wate/ansible-role-redmine
     version: develop
+  - name: logrotate
+    src: https://github.com/wate/ansible-role-logrotate
+    version: develop
   - name: opendkim
     src: https://github.com/wate/ansible-role-opendkim
     version: develop
@@ -30,6 +33,7 @@ roles:
   - name: dns
     src: https://github.com/wate/ansible-role-dns
     version: develop
+  ### 以下、ローカル検証環境用
   - name: mailpit
     src: https://github.com/wate/ansible-role-mailpit
     version: develop
