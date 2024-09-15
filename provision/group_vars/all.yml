@@ -1775,10 +1775,10 @@ opendkim_domains:
 ## 自動バックアップ設定
 ## --------------------
 backup_settings:
-  redmine_backup:
+  auto_backup:
     user: redmine
     cron:
-      hour: 3
+      # hour: 2
       minute: "0"
       job_suffix: "1>/dev/null"
     command: |
@@ -1790,8 +1790,10 @@ backup_settings:
       tar vcfz ${BACKUP_DATA_DIR}/files.tar.gz ./*
     restic:
       repo_password: auto_backup_password
-      forget_keep_type: daily
-      forget_keep_value: 3
+      forget_keep_type: hourly
+      forget_keep_value: 8
+      foeget_other_options:
+        - --keep-within-daily 2d
 
 ## --------------
 ## バーチャルホストの設定
