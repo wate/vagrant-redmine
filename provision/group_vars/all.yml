@@ -1,6 +1,6 @@
 ---
-redmine_hostname: "redmine.example.com"
 # redmine_hostname: "{{ inventory_hostname }}"
+redmine_hostname: redmine.example.com
 
 ## --------------------
 ## Redmineのバージョン
@@ -1742,6 +1742,12 @@ logrotate_settings:
     copytruncate: true
 
 ## --------------------
+## OpenDKIMにより認証するドメイン
+## --------------------
+opendkim_domains:
+  - "{{ redmine_hostname }}"
+
+## --------------------
 ## 自動バックアップ設定
 ## --------------------
 backup_settings:
@@ -1787,12 +1793,57 @@ nginx_vhosts:
       - pattern: "/\\.ht"
         match_type: "~"
         content: "deny all;"
+  - name: status
+    server_name: localhost
+    listen: 8080
+    access_log: "off"
+    locations:
+      - pattern: /nginx_status
+        content: |
+          stub_status on;
 
-## --------------
-## maipitの環境変数の設定
-## --------------
-mailpit_envs:
-  MP_ENABLE_SPAMASSASSIN: "127.0.0.1:783"
+## -------------------
+## MariaDBのrootのパスワード
+## -------------------
+# mariadb_root_password: r00tP@55w0rd
+
+## -------------------
+## データベースユーザーの設定
+## -------------------
+mariadb_users:
+  - name: mackerel_agent
+    password: very_very_5tr0ng_p455w0rd
+    hosts:
+      - 127.0.0.1
+      - ::1
+      - localhost
+    privs:
+      - "*.*:PROCESS,SUPER,REPLICATION CLIENT"
+
+## ---------
+## Mackerelエージェントの環境変数
+## ---------
+mackerel_envs:
+  MYSQL_PASSWORD: very_very_5tr0ng_p455w0rd
+
+## ---------
+## Mackerelエージェントの追加設定(プラグインの設定など)
+## ---------
+mackerel_agent_extra_setting: |
+    ## https://mackerel.io/ja/docs/entry/plugins/mackerel-plugin-linux
+    [plugin.metrics.linux]
+    command = "/usr/bin/mackerel-plugin-linux"
+
+    [plugin.metrics.mailq]
+    command = "/usr/bin/mackerel-plugin-mailq -M postfix"
+
+    ## https://mackerel.io/ja/docs/entry/plugins/mackerel-plugin-nginx
+    [plugin.metrics.nginx]
+    command = "/usr/bin/mackerel-plugin-nginx"
+
+    ## https://mackerel.io/ja/docs/entry/plugins/mackerel-plugin-mysql
+    [plugin.metrics.mysql]
+    command = "/usr/bin/ackerel-plugin-mysql --username=mackerel_agent --password --enable_extended=true"
 
 ## --------------------------
 ## インストールするツール
@@ -1831,3 +1882,9 @@ dns_recode_output_dir: ../dns_info
 # dns_domains:
 #   "subdomain.example.com": null
 #   "subdomain.example.net": null
+
+## --------------
+## maipitの環境変数の設定
+## --------------
+mailpit_envs:
+  MP_ENABLE_SPAMASSASSIN: "127.0.0.1:783"

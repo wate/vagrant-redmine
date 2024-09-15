@@ -135,6 +135,11 @@
                 that:
                   - ansible_facts.packages['cron-apt']
             ## 要追記
+            # - name: Assert apt-daily service
+            #   ansible.builtin.assert:
+            #     that:
+            #       - ansible_facts.services['apt-daily.service']
+            #       - ansible_facts.services['apt-daily-upgrade.service']
             - name: Check cron-apt auto upgrade
               ansible.builtin.command:
                 cmd: grep "dist-upgrade -y -o APT::Get::Show-Upgraded=true" /etc/cron-apt/action.d/3-download
@@ -152,6 +157,10 @@
             that:
               - ansible_facts.packages['opendkim']
         ## 要追記
+        # - name:
+        #   when: opendkim_domains | default([]) | length > 0
+        #   block:
+        #     - name:
         - name: Assert OpenDKIM service
           ansible.builtin.assert:
             that:
@@ -201,6 +210,38 @@
               ansible.builtin.assert:
                 that:
                   - check_postfix_non_smtpd_milters_result is not changed
+    - name: Test logrotate
+      block:
+        - name: Check Redmine log logrotate setting
+          ansible.builtin.stat:
+            path: /etc/logrotate.d/redmine
+          register: setting_file_result
+        - name: Assert Redmine log logrotate setting
+          ansible.builtin.assert:
+            that:
+              - setting_file_result.stat.exists
+        - name: Check Redmine logrotate setting detail
+          block:
+            - name: Check rotate file setting
+              ansible.builtin.command:
+                cmd: grep "/opt/redmine/log/\*.log" /etc/logrotate.d/redmine
+              failed_when: rotate_file_setting_result.rc > 1
+              changed_when: false
+              register: rotate_file_setting_result
+            - name: Assert rotate file setting
+              ansible.builtin.assert:
+                that:
+                  - rotate_file_setting_result.rc == 0
+            - name: Check copytruncate setting
+              ansible.builtin.command:
+                cmd: grep copytruncate /etc/logrotate.d/redmine
+              failed_when: rotate_copytruncate_setting_result.rc > 1
+              changed_when: false
+              register: rotate_copytruncate_setting_result
+            - name: Assert copytruncate setting
+              ansible.builtin.assert:
+                that:
+                  - rotate_copytruncate_setting_result.rc == 0
     - name: Test Databse server
       block:
         - name: Assert packages
@@ -298,51 +339,54 @@
               - 443 in listen_tcp_posts
           when: dehydrated_domains | default([]) | length > 0
     - name: Test backup
-      become: true
-      become_user: redmine
       block:
-        - name: Check Redmine data backup cron job
-          ansible.builtin.shell:
-            cmd: |
-              set -o pipefail
-              crontab -l | grep "Ansible: role:backup/setting:"
-            executable: /usr/bin/bash
-          failed_when: crontab_result.rc > 1
-          changed_when: false
-          register: crontab_result
-        - name: Assert Redmine data backup cron job
+        - name: Assert packages
           ansible.builtin.assert:
             that:
-              - crontab_result.rc == 0
-    - name: Test logrotate
-      block:
-        - name: Check Redmine log logrotate setting
-          ansible.builtin.stat:
-            path: /etc/logrotate.d/redmine
-          register: setting_file_result
-        - name: Assert Redmine log logrotate setting
-          ansible.builtin.assert:
-            that:
-              - setting_file_result.stat.exists
-        - name: Check Redmine logrotate setting detail
+              - ansible_facts.packages['rclone']
+              - ansible_facts.packages['restic']
+        - name: Test cron job
+          become: true
+          become_user: redmine
           block:
-            - name: Check logrotate file setting
-              ansible.builtin.command:
-                cmd: grep "/opt/redmine/log/\*.log" /etc/logrotate.d/redmine
-              failed_when: rotate_file_result.rc > 1
+            - name: Check Redmine data backup cron job
+              ansible.builtin.shell:
+                cmd: |
+                  set -o pipefail
+                  crontab -l | grep "Ansible: role:backup/setting:"
+                executable: /usr/bin/bash
+              failed_when: crontab_result.rc > 1
               changed_when: false
-              register: rotate_file_result
-            - name: Assert logrotate file setting
+              register: crontab_result
+            - name: Assert Redmine data backup cron job
               ansible.builtin.assert:
                 that:
-                  - rotate_file_result.rc == 0
-            - name: Check logrotate copytruncate setting
-              ansible.builtin.command:
-                cmd: grep copytruncate /etc/logrotate.d/redmine
-              failed_when: rotate_copytruncate_result.rc > 1
-              changed_when: false
-              register: rotate_copytruncate_result
-            - name: Assert logrotate copytruncate setting
+                  - crontab_result.rc == 0
+        - name: Test mackerel-agent
+          block:
+            - name: Assert mackerel-agent package
               ansible.builtin.assert:
                 that:
-                  - rotate_copytruncate_result.rc == 0
+                  - ansible_facts.packages['mackerel-agent']
+                  - ansible_facts.packages['mackerel-agent-plugins']
+                  - ansible_facts.packages['mackerel-check-plugins']
+            - name: Check environment variable
+              ansible.builtin.command:
+                cmd: grep MYSQL_PASSWORD= /etc/default/mackerel-agent
+              failed_when: env_var_result.rc > 1
+              changed_when: false
+              register: env_var_result
+            - name: Assert environment variable
+              ansible.builtin.assert:
+                that:
+                  - env_var_result.rc == 0
+            - name: Assert mackerel-agent service
+              ansible.builtin.assert:
+                that:
+                  - ansible_facts.services['mackerel-agent.service']
+            - name: Assert running mackerel-agent service
+              ansible.builtin.assert:
+                that:
+                  - ansible_facts.services['mackerel-agent.service']['status'] == 'enabled'
+                  - ansible_facts.services['mackerel-agent.service']['state'] == 'running'
+              when: mackerel_agent_api_key | default('') | length > 0
