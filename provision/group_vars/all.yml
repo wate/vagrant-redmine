@@ -1685,6 +1685,30 @@ redmine_note_templates:
 
 ## 以下、Redmine以外の設定
 ## =================================
+## --------------------------
+## インストールするツール
+## --------------------------
+install_tools:
+  # https://direnv.net/
+  - direnv
+  ## https://github.com/eza-community/eza
+  - eza
+  ## https://github.com/k1LoW/tbls
+  - tbls
+  ## https://github.com/k1LoW/runn
+  - runn
+  ## https://github.com/terrastruct/d2
+  - d2
+  ## https://github.com/google/osv-scanner
+  - osv-scanner
+  ## https://www.mycli.net/
+  - mycli
+  ## https://graphviz.org/
+  - graphviz
+  ## https://github.com/jgm/pandoc
+  - pandoc
+  ## https://plantuml.com/ja/
+  - plantuml
 
 ## ---------
 ## ログインバナーに表示するロゴのテキスト
@@ -1845,30 +1869,53 @@ mackerel_agent_extra_setting: |
     [plugin.metrics.mysql]
     command = "/usr/bin/ackerel-plugin-mysql --username=mackerel_agent --password --enable_extended=true"
 
-## --------------------------
-## インストールするツール
-## --------------------------
-install_tools:
-  # https://direnv.net/
-  - direnv
-  ## https://github.com/eza-community/eza
-  - eza
-  ## https://github.com/k1LoW/tbls
-  - tbls
-  ## https://github.com/k1LoW/runn
-  - runn
-  ## https://github.com/terrastruct/d2
-  - d2
-  ## https://github.com/google/osv-scanner
-  - osv-scanner
-  ## https://www.mycli.net/
-  - mycli
-  ## https://graphviz.org/
-  - graphviz
-  ## https://github.com/jgm/pandoc
-  - pandoc
-  ## https://plantuml.com/ja/
-  - plantuml
+## -----------------
+## dehydratedで管理するドメインの設定
+## -----------------
+# dehydrated_domains: "{{ { redmine_hostname: None } }}"
+
+## -----------------
+## dehydrated実行時のフック設定(initialize)
+## -----------------
+# dehydrated_hook_initialize: |
+#   export PROVIDER_UPDATE_DELAY=${PROVIDER_UPDATE_DELAY:-"30"}
+#   export PROVIDER=${PROVIDER:-"cloudflare"}
+#   export LEXICON_CLOUDFLARE_USERNAME={{ lookup('env', 'CLOUDFLARE_USERNAME') }}
+#   export LEXICON_CLOUDFLARE_TOKEN={{ lookup('env', 'CLOUDFLARE_TOKEN') }}
+
+## -----------------
+## dehydrated実行時のフック設定(deploy challenge)
+## -----------------
+# dehydrated_hook_deploy_challenge: |
+#   local DOMAIN="${1}" TOKEN_FILENAME="${2}" TOKEN_VALUE="${3}"
+#   echo "deploy_challenge called: ${DOMAIN}, ${TOKEN_FILENAME}, ${TOKEN_VALUE}"
+#   lexicon $PROVIDER create ${DOMAIN} TXT --name="_acme-challenge.${DOMAIN}." --content="${TOKEN_VALUE}"
+#   local DELAY_COUNTDOWN=$PROVIDER_UPDATE_DELAY
+#   while [ $DELAY_COUNTDOWN -gt 0 ]; do
+#       echo -ne "${DELAY_COUNTDOWN}\033[0K\r"
+#       sleep 1
+#       : $((DELAY_COUNTDOWN--))
+#   done
+
+## -----------------
+## dehydrated実行時のフック設定(clean challenge)
+## -----------------
+# dehydrated_hook_clean_challenge: |
+#   local DOMAIN="${1}" TOKEN_FILENAME="${2}" TOKEN_VALUE="${3}"
+#   echo "clean_challenge called: ${DOMAIN}, ${TOKEN_FILENAME}, ${TOKEN_VALUE}"
+#   lexicon $PROVIDER delete ${DOMAIN} TXT --name="_acme-challenge.${DOMAIN}." --content="${TOKEN_VALUE}"
+
+## -----------------
+## dehydrated実行時のフック設定(deploy cert)
+## -----------------
+# dehydrated_hook_deploy_cert: |
+#   systemctl reload nginx
+
+## -----------------
+## dehydrated実行時のフック設定(deploy ocsp)
+## -----------------
+# dehydrated_hook_deploy_ocsp: |
+#   systemctl reload nginx
 
 ## ----------
 ## DNSレコード情報の出力先ディレクトリ
@@ -1879,9 +1926,7 @@ dns_recode_output_dir: ../dns_info
 ## DNS情報を取得するドメイン
 ## ※収集されたDNSのレコード情報は「dns_recodes」変数にホスト名毎のディクショナリとして格納されます
 ## -----------
-# dns_domains:
-#   "subdomain.example.com": null
-#   "subdomain.example.net": null
+dns_domains: "{{ { redmine_hostname: None } }}"
 
 ## --------------
 ## maipitの環境変数の設定

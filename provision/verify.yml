@@ -337,7 +337,7 @@
           ansible.builtin.assert:
             that:
               - 443 in listen_tcp_posts
-          when: dehydrated_domains | default([]) | length > 0
+          when: dehydrated_domains | default({}) | dict2items | length > 0
     - name: Test backup
       block:
         - name: Assert packages
@@ -390,3 +390,15 @@
                   - ansible_facts.services['mackerel-agent.service']['status'] == 'enabled'
                   - ansible_facts.services['mackerel-agent.service']['state'] == 'running'
               when: mackerel_agent_api_key | default('') | length > 0
+        # - name: Test DNS
+        #   block:
+        #     - name: Assert A recode
+        #       ansible.builtin.assert:
+        #         that:
+        #           - ansible_facts.default_ipv4.address in {{ query('community.dns.lookup', redminehostname + '.') }}
+        #       when: ansible_facts.default_ipv4.address is defined
+        #     - name: Assert AAAA recode
+        #       ansible.builtin.assert:
+        #         that:
+        #           - ansible_facts.default_ipv6.address in {{ query('community.dns.lookup', redminehostname + '.', type='AAAA') }}
+        #       when: ansible_facts.default_ipv6.address is defined
