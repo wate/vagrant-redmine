@@ -1778,6 +1778,7 @@ backup_settings:
   redmine_backup:
     user: redmine
     cron:
+      hour: 3
       minute: "0"
       job_suffix: "1>/dev/null"
     command: |
