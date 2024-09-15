@@ -1845,6 +1845,11 @@ mariadb_users:
       - "*.*:PROCESS,SUPER,REPLICATION CLIENT"
 
 ## ---------
+## APIキー
+## ---------
+# mackerel_agent_api_key: ""
+
+## ---------
 ## Mackerelエージェントの環境変数
 ## ---------
 mackerel_envs:
