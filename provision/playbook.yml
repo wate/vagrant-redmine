@@ -15,20 +15,24 @@
       tags: role_nodejs
     - name: logrotate
       tags: role_logrotate
+    - name: opendkim
+      tags: role_opendkim
     - name: mariadb
       tags: role_mariadb
     - name: dehydrated
       tags: role_dehydrated
     - name: nginx
       tags: role_nginx
-    - name: opendkim
-      tags: role_opendkim
-    - name: tools
-      tags: role_tools
     - name: redmine
       tags: role_redmine
+    - name: tools
+      tags: role_tools
     - name: backup
       tags: role_backup
+    - name: mackerel_agent
+      tags:
+        - role_mackerel
+        - role_mackerel_agent
     - name: dns
       tags: role_dns
     ## 以下、ローカル検証環境用

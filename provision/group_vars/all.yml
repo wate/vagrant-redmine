@@ -1687,9 +1687,19 @@ redmine_note_templates:
 ## =================================
 
 ## ---------
-## ログインバナーに表示するテキスト
+## ログインバナーに表示するロゴのテキスト
 ## ---------
-banner_text: "{{ redmine_hostname }}"
+banner_logo_text: "{{ redmine_hostname }}"
+
+## ---------
+## ログインバナーに表示する追加テキスト
+## ---------
+banner_additional_text: |
+  Repository:
+  https://github.com/redmine/redmine
+
+  Redmine:
+  https://www.redmine.org/
 
 ## --------------------
 ## Postfixの設定
@@ -1704,10 +1714,8 @@ logrotate_settings:
   nginx:
     paths:
       - /var/log/nginx/*.log
-    ## ローテーションの間隔： hourly / daily / weekly [曜日] / monthly / yearly
     frequency: daily
     missingok: true
-    # 14 => 35(1ヶ月+α)に引き上げ
     rotate: 35
     compress: true
     delaycompress: true

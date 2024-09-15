@@ -18,84 +18,140 @@
       ansible.builtin.set_fact:
         listen_tcp_posts: "{{ ansible_facts.tcp_listen | map(attribute='port') | unique | list }}"
         listen_udp_posts: "{{ ansible_facts.udp_listen | map(attribute='port') | unique | list }}"
-    - name: Test common
+    - name: Test base
       block:
         - name: Assert packages
           ansible.builtin.assert:
             that:
               - ansible_facts.packages['etckeeper']
               - ansible_facts.packages['postfix']
-              - ansible_facts.packages['fail2ban']
-              - ansible_facts.packages['ufw']
-              - ansible_facts.packages['cron-apt']
               - ansible_facts.packages['vnstat']
-        - name: Assert services
+        - name: Test Postfix config
+          check_mode: true
           block:
-            - name: Assert Postfix service
+            - name: Check Postfix myhostname config
+              ansible.builtin.lineinfile:
+                path: /etc/postfix/main.cf
+                line: myhostname = {{ redmine_hostname }}
+              register: check_postfix_myhostname_result
+            - name: Assert myhostname
               ansible.builtin.assert:
                 that:
-                  - ansible_facts.services['postfix.service']
-                  - ansible_facts.services['postfix.service']['status'] == 'enabled'
-                  - ansible_facts.services['postfix@-.service']['state'] == 'running'
-            - name: Assert fail2ban service
-              ansible.builtin.assert:
-                that:
-                  - ansible_facts.services['fail2ban.service']
-                  - ansible_facts.services['fail2ban.service']['state'] == 'running'
-                  - ansible_facts.services['fail2ban.service']['status'] == 'enabled'
-            - name: Assert vnstat service
-              ansible.builtin.assert:
-                that:
-                  - ansible_facts.services['vnstat.service']
-                  - ansible_facts.services['vnstat.service']['state'] == 'running'
-                  - ansible_facts.services['vnstat.service']['status'] == 'enabled'
-        - name: Test cron-apt status
+                  - check_postfix_myhostname_result is not changed
+        - name: Assert etckeeper service
+          ansible.builtin.assert:
+            that:
+              - ansible_facts.services['etckeeper.service']
+        - name: Assert Postfix service
+          ansible.builtin.assert:
+            that:
+              - ansible_facts.services['postfix.service']
+              - ansible_facts.services['postfix.service']['status'] == 'enabled'
+              - ansible_facts.services['postfix@-.service']['state'] == 'running'
+        - name: Assert vnstat service
+          ansible.builtin.assert:
+            that:
+              - ansible_facts.services['vnstat.service']
+              - ansible_facts.services['vnstat.service']['state'] == 'running'
+              - ansible_facts.services['vnstat.service']['status'] == 'enabled'
+        - name: Test security
           block:
+            - name: Assert packages
+              ansible.builtin.assert:
+                that:
+                  - ansible_facts.packages['ufw']
+                  - ansible_facts.packages['fail2ban']
+            - name: Test SSH geoip filter
+              block:
+                - name: Assert geoip filter dependency packages
+                  ansible.builtin.assert:
+                    that:
+                      - ansible_facts.packages['geoip-bin']
+                      - ansible_facts.packages['geoip-database']
+                - name: Check geoip database update script
+                  ansible.builtin.stat:
+                    path: /etc/cron.weekly/geoip_update
+                  register: geoip_update_script_result
+                - name: Assert geoip database update script
+                  ansible.builtin.assert:
+                    that:
+                      - geoip_update_script_result.stat.exists
+                      - geoip_update_script_result.stat.mode == '0755'
+                - name: Check geoip ssh filter script
+                  ansible.builtin.stat:
+                    path: /usr/local/bin/sshfilter
+                  register: sshfilter_script_result
+                - name: Assert geoip ssh filter script
+                  ansible.builtin.assert:
+                    that:
+                      - sshfilter_script_result.stat.exists
+                      - sshfilter_script_result.stat.mode == '0755'
+                - name: Check ssh geoip filter setting
+                  ansible.builtin.command:
+                    cmd: 'grep "sshd: ALL: spawn /usr/local/bin/sshfilter %a" /etc/hosts.allow'
+                  failed_when: ssh_geoip_filter_result.rc > 1
+                  changed_when: false
+                  register: ssh_geoip_filter_result
+                - name: Assert ssh geoip filter setting
+                  ansible.builtin.assert:
+                    that:
+                      - ssh_geoip_filter_result.rc == 0
+            - name: Test fail2ban
+              block:
+                - name: Check fail2ban sshd enable
+                  ansible.builtin.command:
+                    cmd: fail2ban-client status sshd
+                  changed_when: false
+                  register: fail2ban_ssh_enable_result
+                - name: Assert cfail2ban sshd enable
+                  ansible.builtin.assert:
+                    that:
+                      - fail2ban_ssh_enable_result.rc == 0
+                - name: Assert fail2ban service
+                  ansible.builtin.assert:
+                    that:
+                      - ansible_facts.services['fail2ban.service']
+                      - ansible_facts.services['fail2ban.service']['state'] == 'running'
+                      - ansible_facts.services['fail2ban.service']['status'] == 'enabled'
+            - name: Test ufw
+              block:
+                - name: Check ufw status
+                  ansible.builtin.shell:
+                    cmd: |
+                      set -o pipefail
+                      ufw status | grep "Status: active"
+                    executable: /usr/bin/bash
+                  failed_when: ufw_status_result.rc > 1
+                  changed_when: false
+                  register: ufw_status_result
+                - name: Assert ufw status
+                  ansible.builtin.assert:
+                    that:
+                      - ufw_status_result.rc == 0
+        - name: Test package auto upgrade
+          block:
+            - name: Assert cron-apt package
+              ansible.builtin.assert:
+                that:
+                  - ansible_facts.packages['cron-apt']
+            ## 要追記
             - name: Check cron-apt auto upgrade
               ansible.builtin.command:
                 cmd: grep "dist-upgrade -y -o APT::Get::Show-Upgraded=true" /etc/cron-apt/action.d/3-download
               failed_when: auto_upgrade_result.rc > 1
               changed_when: false
               register: auto_upgrade_result
-            - name: Check cron-apt auto upgrade
+            - name: Assert cron-apt auto upgrade
               ansible.builtin.assert:
                 that:
                   - auto_upgrade_result.rc == 0
-        - name: Test ufw status
-          block:
-            - name: Check ufw status
-              ansible.builtin.shell:
-                cmd: |
-                  set -o pipefail
-                  ufw status | grep "Status: active"
-                executable: /usr/bin/bash
-              failed_when: ufw_status_result.rc > 1
-              changed_when: false
-              register: ufw_status_result
-            - name: Assert ufw status
-              ansible.builtin.assert:
-                that:
-                  - ufw_status_result.rc == 0
-        - name: Test Postfix settting
-          block:
-            - name: Test Postfix config
-              check_mode: true
-              block:
-                - name: Check Postfix myhostname config
-                  ansible.builtin.lineinfile:
-                    path: /etc/postfix/main.cf
-                    line: myhostname = {{ redmine_hostname }}
-                  register: check_postfix_myhostname_result
-                - name: Assert myhostname
-                  ansible.builtin.assert:
-                    that:
-                      - check_postfix_myhostname_result is not changed
     - name: Test DKIM server
       block:
         - name: Assert OpenDKIM packages
           ansible.builtin.assert:
             that:
               - ansible_facts.packages['opendkim']
+        ## 要追記
         - name: Assert OpenDKIM service
           ansible.builtin.assert:
             that:
@@ -270,23 +326,23 @@
               - setting_file_result.stat.exists
         - name: Check Redmine logrotate setting detail
           block:
-            - name: Check rotate file setting
+            - name: Check logrotate file setting
               ansible.builtin.command:
                 cmd: grep "/opt/redmine/log/\*.log" /etc/logrotate.d/redmine
               failed_when: rotate_file_result.rc > 1
               changed_when: false
               register: rotate_file_result
-            - name: Assert rotate file setting
+            - name: Assert logrotate file setting
               ansible.builtin.assert:
                 that:
                   - rotate_file_result.rc == 0
-            - name: Check copytruncate setting
+            - name: Check logrotate copytruncate setting
               ansible.builtin.command:
                 cmd: grep copytruncate /etc/logrotate.d/redmine
               failed_when: rotate_copytruncate_result.rc > 1
               changed_when: false
               register: rotate_copytruncate_result
-            - name: Assert copytruncate setting
+            - name: Assert logrotate copytruncate setting
               ansible.builtin.assert:
                 that:
                   - rotate_copytruncate_result.rc == 0
