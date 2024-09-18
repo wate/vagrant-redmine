@@ -1802,8 +1802,8 @@ nginx_packages:
   - nginx
   - goaccess
   - libnginx-mod-http-geoip
-  # - libnginx-mod-http-modsecurity
-  # - modsecurity-crs
+  - libnginx-mod-http-modsecurity
+  - modsecurity-crs
 
 ## --------------
 ## Nginxの全体設定
@@ -1835,7 +1835,7 @@ nginx_vhosts:
     # client_max_body_size: 100M
     includes:
       - snippets/letsencrypt_dehydrated.conf
-      - snippets/modsecurity.conf
+      # - snippets/modsecurity.conf
     add_headers:
       X-geoip-country-code: $geoip_country_code
       X-allowed-country: $allowed_country
