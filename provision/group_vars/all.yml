@@ -8,6 +8,13 @@ redmine_hostname: redmine.example.com
 redmine_version: 5.1-stable
 
 ## --------------------
+## 追加の環境設定
+## --------------------
+# redmine_additional_environment: |
+#   config.logger = Logger.new("log/#{Rails.env}.log", 'daily')
+redmine_additional_environment: ""
+
+## --------------------
 ## 追加インストールするgemパッケージ
 ## --------------------
 redmine_gemfile_local_packages:
