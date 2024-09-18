@@ -1796,31 +1796,61 @@ backup_settings:
         - --keep-within-daily 2d
 
 ## --------------
+## インストールするNginx関連パッケージ
+## --------------
+nginx_packages:
+  - nginx
+  - goaccess
+  - libnginx-mod-http-geoip
+  # - libnginx-mod-http-modsecurity
+  # - modsecurity-crs
+
+## --------------
+## Nginxの全体設定
+## --------------
+nginx_cfg:
+  extra_setting: |
+    ## ------
+    ## GeoIP
+    ## ------
+    geoip_country /usr/share/GeoIP/GeoIP.dat;
+    map $geoip_country_code $allowed_country {
+      default yes;
+      CN no;
+      RU no;
+    }
+
+## --------------
 ## バーチャルホストの設定
 ## --------------
 nginx_vhosts:
-  - name: default
-    default: true
+  default:
+    default_server: true
     server_name: redmine.local
     upstream:
       name: redmine
       content: |
         server unix:///opt/redmine/tmp/redmine.sock;
-    client_max_body_size: 100M
+    client_max_body_size: 0
+    # client_max_body_size: 100M
+    includes:
+      - snippets/letsencrypt_dehydrated.conf
+      - snippets/modsecurity.conf
+    add_headers:
+      X-geoip-country-code: $geoip_country_code
+      X-allowed-country: $allowed_country
     locations:
-      - pattern: /.well-known/acme-challenge/
-        match_type: ^~
-        content: |
-          default_type "text/plain";
-          alias /var/lib/dehydrated/acme-challenges/;
       - pattern: /
         content: |
+          if ($allowed_country = no) {
+            return 403;
+          }
           proxy_pass http://redmine;
           include proxy_params;
       - pattern: "/\\.ht"
         match_type: "~"
         content: "deny all;"
-  - name: status
+  status:
     server_name: localhost
     listen: 8080
     access_log: "off"

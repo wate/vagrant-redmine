@@ -16,7 +16,9 @@
     - name: logrotate
       tags: role_logrotate
     - name: opendkim
-      tags: role_opendkim
+      tags:
+        - role_dkim
+        - role_opendkim
     - name: mariadb
       tags: role_mariadb
     - name: dehydrated
