@@ -8,12 +8,6 @@ redmine_hostname: redmine.example.com
 redmine_version: 5.1-stable
 
 ## --------------------
-## 追加の環境設定
-## --------------------
-# redmine_additional_environment: |
-#   config.logger = Logger.new("log/#{Rails.env}.log", 'daily')
-
-## --------------------
 ## 追加インストールするgemパッケージ
 ## --------------------
 redmine_gemfile_local_packages:
@@ -1750,26 +1744,26 @@ logrotate_settings:
     compress: true
     delaycompress: true
     notifempty: true
-    create: true
-    create_mode: "0640"
-    create_user: www-data
-    create_group: adm
+    create:
+      mode: "0640"
+      user: www-data
+      group: adm
     sharedscripts: true
     prerotate: |
       if [ -d /etc/logrotate.d/httpd-prerotate ]; then \
         run-parts /etc/logrotate.d/httpd-prerotate; \
       fi \
     postrotate: invoke-rc.d nginx rotate >/dev/null 2>&1
-  # redmine:
-  #   paths:
-  #     - /opt/redmine/log/*.log
-  #   frequency: daily
-  #   missingok: true
-  #   rotate: 14
-  #   compress: true
-  #   delaycompress: true
-  #   notifempty: true
-  #   copytruncate: true
+  redmine:
+    paths:
+      - /opt/redmine/log/*.log
+    frequency: daily
+    missingok: true
+    rotate: 14
+    compress: true
+    delaycompress: true
+    notifempty: true
+    copytruncate: true
 
 ## --------------------
 ## OpenDKIMにより認証するドメイン
