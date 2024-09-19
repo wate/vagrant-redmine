@@ -1785,8 +1785,8 @@ backup_settings:
   auto_backup:
     user: redmine
     cron:
-      # hour: 2
-      minute: "0"
+      hour: "1"
+      minute: "15"
       job_suffix: "1>/dev/null"
     command: |
       {% set db_name = redmine_db_cfg[redmine_mode].database -%}
@@ -1797,10 +1797,8 @@ backup_settings:
       tar vcfz ${BACKUP_DATA_DIR}/files.tar.gz ./*
     restic:
       repo_password: auto_backup_password
-      forget_keep_type: hourly
-      forget_keep_value: 8
-      foeget_other_options:
-        - --keep-within-daily 2d
+      forget_keep_type: daily
+      forget_keep_value: 3
 
 ## --------------
 ## インストールするNginx関連パッケージ
@@ -1809,8 +1807,8 @@ nginx_packages:
   - nginx
   - goaccess
   - libnginx-mod-http-geoip
-  # - libnginx-mod-http-modsecurity
-  # - modsecurity-crs
+  - libnginx-mod-http-modsecurity
+  - modsecurity-crs
 
 ## --------------
 ## Nginxの全体設定
