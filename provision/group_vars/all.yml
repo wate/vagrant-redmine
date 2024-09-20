@@ -1778,8 +1778,8 @@ backup_settings:
   auto_backup:
     user: redmine
     cron:
-      hour: "1"
-      minute: "15"
+      hour: "23"
+      minute: "55"
       job_suffix: "1>/dev/null"
     command: |
       {% set db_name = redmine_db_cfg[redmine_mode].database -%}
