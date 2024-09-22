@@ -9,45 +9,45 @@
       ansible.builtin.apt:
         update_cache: true
   roles:
-    - name: common
+    - role: common
       tags: role_common
-    - name: nodejs
+    - role: nodejs
       tags: role_nodejs
-    - name: logrotate
+    - role: logrotate
       tags: role_logrotate
-    - name: opendkim
+    - role: opendkim
       tags:
         - role_dkim
         - role_opendkim
-    - name: mariadb
+    - role: mariadb
       tags: role_mariadb
-    - name: dehydrated
+    - role: dehydrated
       tags: role_dehydrated
-    - name: nginx
+    - role: nginx
       tags: role_nginx
-    - name: redmine
+    - role: redmine
       tags: role_redmine
-    - name: tools
+    - role: tools
       tags: role_tools
-    - name: backup
+    - role: backup
       tags: role_backup
-    - name: mackerel_agent
+    - role: mackerel_agent
       tags:
         - role_mackerel
         - role_mackerel_agent
-    - name: dns
+    - role: dns
       tags: role_dns
     ## 以下、ローカル検証環境用
-    - name: mailpit
+    - role: mailpit
       tags: role_mailpit
-    - name: spamassassin
+    - role: spamassassin
       tags: role_spamassassin
-    - name: font
+    - role: font
       tags: role_font
-    - name: document
+    - role: document
       tags: role_docment
       become: false
-    - name: other
+    - role: other
       tags: role_other
       become: false
   tasks:
