@@ -7,10 +7,14 @@ It checks the Ruby interpreter, the RubyGems package manager, the Rails framewor
 URLs
 -----------------------
 
-### Rednmine
+### Redmine
 
 http://localhost:8080/
 
 ### mailpit
 
 http://localhost:8025/
+
+### HedgeDoc
+
+http://localhost:3000/

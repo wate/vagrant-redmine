@@ -12,6 +12,8 @@
     - role: common
       tags: role_common
     - role: nodejs
+      vars:
+        nodejs_global_install_yarn: true
       tags: role_nodejs
     - role: logrotate
       tags: role_logrotate
@@ -38,6 +40,8 @@
     - role: dns
       tags: role_dns
     ## 以下、ローカル検証環境用
+    - role: hedgedoc
+      tags: role_hedgedoc
     - role: mailpit
       tags: role_mailpit
     - role: spamassassin

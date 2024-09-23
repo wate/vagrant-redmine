@@ -46,4 +46,7 @@ roles:
   - name: font
     src: https://github.com/wate/ansible-role-font
     version: develop
+  - name: hedgedoc
+    src: https://github.com/wate/ansible-role-hedgedoc
+    version: develop
 collections: []

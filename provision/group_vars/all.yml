@@ -82,9 +82,31 @@ redmine_plugins:
   redmine_sudo:
     repo: https://github.com/AlphaNodes/redmine_sudo.git
     version: stable
+  # redmine_hedgedoc:
+  #   repo: https://github.com/alphanodes/redmine_hedgedoc.git
+  #   version: main
   # toggl2redmine:
   #   repo: https://github.com/jigarius/toggl2redmine.git
   #   version: 5.x
+
+## --------------------
+## Redmineのデータベース設定(config/database.yml)
+## --------------------
+redmine_db_cfg:
+  production:
+    adapter: mysql2
+    database: redmine
+    host: localhost
+    username: redmine_user
+    password: redmine_password
+    encoding: utf8mb4
+  # hedgedoc:
+  #   adapter: mysql2
+  #   database: hedgedoc
+  #   host: localhost
+  #   username: hedgedoc_user
+  #   password: hedgedoc_password
+  #   encoding: utf8mb4
 
 ## --------------------
 ## デフォルトのシステム管理者
@@ -1877,6 +1899,30 @@ nginx_vhosts:
       - pattern: "/\\.ht"
         match_type: "~"
         content: "deny all;"
+  hedgedoc:
+    pre_extra_setting: |
+      map $http_upgrade $connection_upgrade {
+          default upgrade;
+          ''      close;
+      }
+    upstream:
+      name: hedgedoc
+      content: |
+        server 127.0.0.1:3000;
+    server_name: hedgedoc.redmine.local
+    client_max_body_size: 0
+    locations:
+      - pattern: /
+        content: |
+          proxy_pass http://hedgedoc;
+          include proxy_params;
+      - pattern: /socket.io/
+        content: |
+          proxy_pass http://hedgedoc;
+          include snippets/websocket.conf;
+      - pattern: "/\\.ht"
+        match_type: "~"
+        content: "deny all;"
   status:
     server_name: localhost
     listen: 8080
@@ -1890,6 +1936,27 @@ nginx_vhosts:
 ## MariaDBのrootのパスワード
 ## -------------------
 # mariadb_root_password: r00tP@55w0rd
+
+## -------------------
+## データベースの設定
+## -------------------
+mariadb_databases:
+  - name: redmine
+    encoding: utf8mb4
+    collation: utf8mb4_general_ci
+    hosts:
+      - "127.0.0.1"
+      - localhost
+    user: redmine_user
+    password: redmine_password
+  - name: hedgedoc
+    encoding: utf8mb4
+    collation: utf8mb4_general_ci
+    hosts:
+      - "127.0.0.1"
+      - localhost
+    user: hedgedoc_user
+    password: hedgedoc_password
 
 ## -------------------
 ## データベースユーザーの設定
@@ -1919,20 +1986,20 @@ mackerel_envs:
 ## Mackerelエージェントの追加設定(プラグインの設定など)
 ## ---------
 mackerel_agent_extra_setting: |
-    ## https://mackerel.io/ja/docs/entry/plugins/mackerel-plugin-linux
-    [plugin.metrics.linux]
-    command = "/usr/bin/mackerel-plugin-linux"
+  ## https://mackerel.io/ja/docs/entry/plugins/mackerel-plugin-linux
+  [plugin.metrics.linux]
+  command = "/usr/bin/mackerel-plugin-linux"
 
-    [plugin.metrics.mailq]
-    command = "/usr/bin/mackerel-plugin-mailq -M postfix"
+  [plugin.metrics.mailq]
+  command = "/usr/bin/mackerel-plugin-mailq -M postfix"
 
-    ## https://mackerel.io/ja/docs/entry/plugins/mackerel-plugin-nginx
-    [plugin.metrics.nginx]
-    command = "/usr/bin/mackerel-plugin-nginx"
+  ## https://mackerel.io/ja/docs/entry/plugins/mackerel-plugin-nginx
+  [plugin.metrics.nginx]
+  command = "/usr/bin/mackerel-plugin-nginx"
 
-    ## https://mackerel.io/ja/docs/entry/plugins/mackerel-plugin-mysql
-    [plugin.metrics.mysql]
-    command = "/usr/bin/ackerel-plugin-mysql --username=mackerel_agent --password --enable_extended=true"
+  ## https://mackerel.io/ja/docs/entry/plugins/mackerel-plugin-mysql
+  [plugin.metrics.mysql]
+  command = "/usr/bin/ackerel-plugin-mysql --username=mackerel_agent --password --enable_extended=true"
 
 ## -----------------
 ## dehydratedで管理するドメインの設定
@@ -1998,3 +2065,29 @@ dns_domains: "{{ { redmine_hostname: None } }}"
 ## --------------
 mailpit_envs:
   MP_ENABLE_SPAMASSASSIN: "127.0.0.1:783"
+
+## --------------
+## HedgeDocの設定
+## --------------
+hedgedoc_cfg:
+  production:
+    domain: localhost
+    # host: localhost
+    port: 3000
+    # protocolUseSSL: true
+    urlAddPort: true
+    # path: /var/run/hedgedoc/hedgedoc.sock
+    sessionSecret: "{{ inventory_hostname | hash('sha1') }}"
+    db:
+      ## dialect: mysql / mariadb / postgres / sqlite
+      dialect: mariadb
+      host: localhost
+      port: 3306
+      database: hedgedoc
+      username: hedgedoc_user
+      password: hedgedoc_password
+      ## MySQL or MariaDB database setting for localhost
+      encoding: utf8mb4
+      collation: utf8mb4_general_ci
+
+hedgedoc_allow_connect_other_host: true
