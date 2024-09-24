@@ -585,6 +585,8 @@ redmine_settings:
   ### ----------
   ### 表示
   ### ----------
+  # テーマ
+  ui_theme: gitmike
   # デフォルトの言語
   default_language: ja
   # 時間の形式
