@@ -2,24 +2,39 @@
 - name: ドメインモデルのドキュメントを生成
   ansible.builtin.import_tasks:
     file: domain_model.yml
+  tags: role_document_domain_model
 - name: ルーティングのドキュメントを生成
   ansible.builtin.import_tasks:
     file: routes.yml
+  tags:
+    - role_document_route
+    - role_document_routes
 - name: データベーススキーマの生成
   ansible.builtin.import_tasks:
     file: schema.yml
+  tags: role_document_schema
 - name: Rakeタスク一覧のドキュメントを生成
   ansible.builtin.import_tasks:
     file: rake_tasks.yml
+  tags:
+    - role_document_rake_task
+    - role_document_rake_tasks
 - name: Webフォントを生成生成
   ansible.builtin.import_tasks:
     file: webfont.yml
+  tags: role_document_web_font
 - name: YARDドキュメントを生成
   ansible.builtin.import_tasks:
     file: yard.yml
+  tags:
+    - role_document_yard
+    - role_document_api
 # - name: REST APIのドキュメントを生成
 #   ansible.builtin.import_tasks:
 #     file: rest_api.yml
 - name: ドキュメントサイトを生成
   ansible.builtin.import_tasks:
     file: site.yml
+  tags:
+    - role_document_site
+    - role_document_mkdocs
