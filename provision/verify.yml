@@ -286,6 +286,16 @@
               - ansible_facts.services['redmine.service']
               - ansible_facts.services['redmine.service']['state'] == 'running'
               - ansible_facts.services['redmine.service']['status'] == 'enabled'
+        - name: Test puma state
+          block:
+            - name: Check puma pid file
+              ansible.builtin.stat:
+                path: /opt/redmine/tmp/puma.pid
+              register: puma_pid_result
+            - name: Assert puma pid file
+              ansible.builtin.assert:
+                that:
+                  - puma_pid_result.stat.exists
     - name: Test dehydrated
       block:
         - name: Assert dehydrated package

@@ -100,13 +100,13 @@ redmine_db_cfg:
     username: redmine_user
     password: redmine_password
     encoding: utf8mb4
-  # hedgedoc:
-  #   adapter: mysql2
-  #   database: hedgedoc
-  #   host: localhost
-  #   username: hedgedoc_user
-  #   password: hedgedoc_password
-  #   encoding: utf8mb4
+  hedgedoc:
+    adapter: mysql2
+    database: hedgedoc
+    host: localhost
+    username: hedgedoc_user
+    password: hedgedoc_password
+    encoding: utf8mb4
 
 ## --------------------
 ## デフォルトのシステム管理者
