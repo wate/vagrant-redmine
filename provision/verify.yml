@@ -3,6 +3,9 @@
 - name: Verify
   hosts: all
   become: true
+  module_defaults:
+    ansible.builtin.shell:
+      executable: /bin/bash
   gather_facts: true
   tags: verify
   tasks:
@@ -27,17 +30,19 @@
               - ansible_facts.packages['postfix']
               - ansible_facts.packages['vnstat']
         - name: Test Postfix config
-          check_mode: true
           block:
-            - name: Check Postfix myhostname config
-              ansible.builtin.lineinfile:
-                path: /etc/postfix/main.cf
-                line: myhostname = {{ redmine_hostname }}
-              register: check_postfix_myhostname_result
-            - name: Assert myhostname
+            - name: Gather Postfix myhostname setting
+              ansible.builtin.shell:
+                cmd: |
+                  set -o pipefail
+                  postconf | grep "^myhostname ="
+              failed_when: myhostname_result.rc > 1
+              changed_when: false
+              register: myhostname_result
+            - name: Assert Postfix myhostname setting
               ansible.builtin.assert:
                 that:
-                  - check_postfix_myhostname_result is not changed
+                  - redmine_hostname == (myhostname_result.stdout | split(' = '))[1]
         - name: Assert etckeeper service
           ansible.builtin.assert:
             that:
@@ -134,12 +139,11 @@
               ansible.builtin.assert:
                 that:
                   - ansible_facts.packages['cron-apt']
-            ## 要追記
-            # - name: Assert apt-daily service
-            #   ansible.builtin.assert:
-            #     that:
-            #       - ansible_facts.services['apt-daily.service']
-            #       - ansible_facts.services['apt-daily-upgrade.service']
+            - name: Assert apt-daily service
+              ansible.builtin.assert:
+                that:
+                  - ansible_facts.services['apt-daily.service']
+                  - ansible_facts.services['apt-daily-upgrade.service']
             - name: Check cron-apt auto upgrade
               ansible.builtin.command:
                 cmd: grep "dist-upgrade -y -o APT::Get::Show-Upgraded=true" /etc/cron-apt/action.d/3-download
@@ -157,7 +161,7 @@
             that:
               - ansible_facts.packages['opendkim']
         ## 要追記
-        # - name:
+        # - name: Check
         #   when: opendkim_domains | default([]) | length > 0
         #   block:
         #     - name:
@@ -172,44 +176,55 @@
             that:
               - 8891 in listen_tcp_posts
         - name: Test Postfix <-> OpenDKIM setting
-          check_mode: true
           block:
-            - name: Check Postfix milter_protocol setting
-              ansible.builtin.lineinfile:
-                path: /etc/postfix/main.cf
-                line: milter_protocol = 6
-              register: check_postfix_milter_protocol_result
+            - name: Gather Postfix milter_protocol setting
+              ansible.builtin.shell:
+                cmd: |
+                  set -o pipefail
+                  postconf | grep "^milter_protocol ="
+              failed_when: milter_protocol_result.rc > 1
+              changed_when: false
+              register: milter_protocol_result
             - name: Assert Postfix milter_protocol setting
               ansible.builtin.assert:
                 that:
-                  - check_postfix_milter_protocol_result is not changed
-            - name: Check Postfix milter_default_action setting
-              ansible.builtin.lineinfile:
-                path: /etc/postfix/main.cf
-                line: milter_default_action = accept
-              register: check_postfix_milter_default_action_result
+                  - "'6' == (milter_protocol_result.stdout | split(' = '))[1]"
+            - name: Gather Postfix milter_default_action setting
+              ansible.builtin.shell:
+                cmd: |
+                  set -o pipefail
+                  postconf | grep "^milter_default_action ="
+              failed_when: milter_default_action_result.rc > 1
+              changed_when: false
+              register: milter_default_action_result
             - name: Assert Postfix milter_default_action setting
               ansible.builtin.assert:
                 that:
-                  - check_postfix_milter_default_action_result is not changed
-            - name: Check Postfix smtpd_milters setting
-              ansible.builtin.lineinfile:
-                path: /etc/postfix/main.cf
-                line: smtpd_milters = inet:localhost:8891
-              register: check_postfix_smtpd_milters_result
+                  - "'accept' == (milter_default_action_result.stdout | split(' = '))[1]"
+            - name: Gather Postfix smtpd_milters setting
+              ansible.builtin.shell:
+                cmd: |
+                  set -o pipefail
+                  postconf | grep "^smtpd_milters ="
+              failed_when: smtpd_milters_result.rc > 1
+              changed_when: false
+              register: smtpd_milters_result
             - name: Assert Postfix smtpd_milters setting
               ansible.builtin.assert:
                 that:
-                  - check_postfix_smtpd_milters_result is not changed
-            - name: Check Postfix non_smtpd_milters setting
-              ansible.builtin.lineinfile:
-                path: /etc/postfix/main.cf
-                line: non_smtpd_milters = inet:localhost:8891
-              register: check_postfix_non_smtpd_milters_result
+                  - "'inet:localhost:8891' == (smtpd_milters_result.stdout | split(' = '))[1]"
+            - name: Gather Postfix non_smtpd_milters setting
+              ansible.builtin.shell:
+                cmd: |
+                  set -o pipefail
+                  postconf | grep "^non_smtpd_milters ="
+              failed_when: non_smtpd_milters_result.rc > 1
+              changed_when: false
+              register: non_smtpd_milters_result
             - name: Assert Postfix non_smtpd_milters setting
               ansible.builtin.assert:
                 that:
-                  - check_postfix_non_smtpd_milters_result is not changed
+                  - "'inet:localhost:8891' == (non_smtpd_milters_result.stdout | split(' = '))[1]"
     - name: Test logrotate
       block:
         - name: Check Redmine log logrotate setting

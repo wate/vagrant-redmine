@@ -1,6 +1,6 @@
 ---
-# redmine_hostname: "{{ inventory_hostname }}"
-redmine_hostname: redmine.example.com
+redmine_domain: redmine.local
+redmine_hostname: "{{ redmine_domain }}"
 
 ## --------------------
 ## Redmineのバージョン
@@ -1793,6 +1793,7 @@ logrotate_settings:
 ## OpenDKIMにより認証するドメイン
 ## --------------------
 opendkim_domains:
+  - "{{ redmine_domain }}"
   - "{{ redmine_hostname }}"
 
 ## --------------------
