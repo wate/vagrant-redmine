@@ -160,17 +160,77 @@
           ansible.builtin.assert:
             that:
               - ansible_facts.packages['opendkim']
-        ## 要追記
-        # - name: Check
-        #   when: opendkim_domains | default([]) | length > 0
-        #   block:
-        #     - name:
         - name: Assert OpenDKIM service
           ansible.builtin.assert:
             that:
               - ansible_facts.services['opendkim.service']
               - ansible_facts.services['opendkim.service']['state'] == 'running'
               - ansible_facts.services['opendkim.service']['status'] == 'enabled'
+        - name: Test OpenDKIM Setting
+          block:
+            - name: Gather OpenDKIM Socket setting
+              ansible.builtin.command:
+                cmd: grep "^Socket " /etc/opendkim.conf
+              failed_when: socket_result.rc > 1
+              changed_when: false
+              register: socket_result
+            - name: Assert OpenDKIM Socket setting
+              ansible.builtin.assert:
+                that:
+                  - "'inet:8891@localhost' == (socket_result.stdout | split(' '))[-1]"
+            - name: Gather OpenDKIM KeyTable setting
+              ansible.builtin.command:
+                cmd: grep "^KeyTable " /etc/opendkim.conf
+              failed_when: keytable_result.rc > 1
+              changed_when: false
+              register: keytable_result
+            - name: Assert OpenDKIM KeyTable setting
+              ansible.builtin.assert:
+                that:
+                  - "'refile:/etc/opendkim/KeyTable' == (keytable_result.stdout | split(' '))[-1]"
+            - name: Gather OpenDKIM SigningTable setting
+              ansible.builtin.command:
+                cmd: grep "^SigningTable " /etc/opendkim.conf
+              failed_when: signingtable_result.rc > 1
+              changed_when: false
+              register: signingtable_result
+            - name: Assert OpenDKIM KeyTable setting
+              ansible.builtin.assert:
+                that:
+                  - "'refile:/etc/opendkim/SigningTable' == (signingtable_result.stdout | split(' '))[-1]"
+            - name: Gather OpenDKIM ExternalIgnoreList setting
+              ansible.builtin.command:
+                cmd: grep "^ExternalIgnoreList " /etc/opendkim.conf
+              failed_when: externalignorelist_result.rc > 1
+              changed_when: false
+              register: externalignorelist_result
+            - name: Assert OpenDKIM ExternalIgnoreList setting
+              ansible.builtin.assert:
+                that:
+                  - "'refile:/etc/opendkim/TrustedHosts' == (externalignorelist_result.stdout | split(' '))[-1]"
+            - name: Gather OpenDKIM InternalHosts setting
+              ansible.builtin.command:
+                cmd: grep "^InternalHosts " /etc/opendkim.conf
+              failed_when: internalhosts_result.rc > 1
+              changed_when: false
+              register: internalhosts_result
+            - name: Assert OpenDKIM ExternalIgnoreList setting
+              ansible.builtin.assert:
+                that:
+                  - "'refile:/etc/opendkim/TrustedHosts' == (internalhosts_result.stdout | split(' '))[-1]"
+            - name: Test KeyTable setting
+              ansible.builtin.stat:
+                path: /etc/opendkim/KeyTable
+            - name: Test SigningTable setting
+              ansible.builtin.stat:
+                path: /etc/opendkim/SigningTable
+            - name: Test TrustedHosts setting
+              ansible.builtin.stat:
+                path: /etc/opendkim/TrustedHosts
+
+
+
+
         - name: Assert DKIM server port
           ansible.builtin.assert:
             that:
@@ -257,7 +317,7 @@
               ansible.builtin.assert:
                 that:
                   - rotate_copytruncate_setting_result.rc == 0
-    - name: Test Databse server
+    - name: Test Database server
       block:
         - name: Assert packages
           ansible.builtin.assert:
