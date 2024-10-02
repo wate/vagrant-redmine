@@ -78,12 +78,15 @@ redmine_plugins:
     version: master
   additionals:
     repo: https://github.com/AlphaNodes/additionals.git
-    version: stable
+    version: main
   redmine_sudo:
     repo: https://github.com/AlphaNodes/redmine_sudo.git
-    version: stable
+    version: main
   # redmine_hedgedoc:
   #   repo: https://github.com/alphanodes/redmine_hedgedoc.git
+  #   version: main
+  # redmine_saml:
+  #   repo: https://github.com/alphanodes/redmine_saml.git
   #   version: main
   # toggl2redmine:
   #   repo: https://github.com/jigarius/toggl2redmine.git
@@ -679,6 +682,11 @@ redmine_settings:
   attachment_max_size: 10240
   # 添付ファイルとリポジトリのエンコーディング
   repositories_encodings: "utf-8,cp932,euc-jp"
+  ### ----------
+  ### メール通知
+  ### ----------
+  # 送信元メールアドレス
+  mail_from: "redmine@{{ redmine_domain }}"
   ## --------------------
   ## プラグインの設定
   ## --------------------
@@ -1720,7 +1728,7 @@ install_tools:
   ## https://github.com/k1LoW/tbls
   - tbls
   ## https://github.com/k1LoW/runn
-  - runn
+  # - runn
   ## https://github.com/terrastruct/d2
   - d2
   ## https://github.com/google/osv-scanner
@@ -1794,7 +1802,6 @@ logrotate_settings:
 ## --------------------
 opendkim_domains:
   - "{{ redmine_domain }}"
-  - "{{ redmine_hostname }}"
 
 ## --------------------
 ## 自動バックアップ設定

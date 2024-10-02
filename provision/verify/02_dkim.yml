@@ -1,0 +1,134 @@
+---
+# code: language=ansible
+- name: Assert OpenDKIM packages
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.packages['opendkim']
+- name: Assert OpenDKIM service
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.services['opendkim.service']
+      - ansible_facts.services['opendkim.service']['state'] == 'running'
+      - ansible_facts.services['opendkim.service']['status'] == 'enabled'
+- name: Test OpenDKIM Setting
+  block:
+    - name: Gather OpenDKIM Socket setting
+      ansible.builtin.command:
+        cmd: grep "^Socket " /etc/opendkim.conf
+      failed_when: socket_result.rc > 1
+      changed_when: false
+      register: socket_result
+    - name: Assert OpenDKIM Socket setting
+      ansible.builtin.assert:
+        that:
+          - "'inet:8891@localhost' == (socket_result.stdout | split(' '))[-1]"
+    - name: Gather OpenDKIM KeyTable setting
+      ansible.builtin.command:
+        cmd: grep "^KeyTable " /etc/opendkim.conf
+      failed_when: keytable_result.rc > 1
+      changed_when: false
+      register: keytable_result
+    - name: Assert OpenDKIM KeyTable setting
+      ansible.builtin.assert:
+        that:
+          - "'refile:/etc/opendkim/KeyTable' == (keytable_result.stdout | split(' '))[-1]"
+    - name: Gather OpenDKIM SigningTable setting
+      ansible.builtin.command:
+        cmd: grep "^SigningTable " /etc/opendkim.conf
+      failed_when: signingtable_result.rc > 1
+      changed_when: false
+      register: signingtable_result
+    - name: Assert OpenDKIM KeyTable setting
+      ansible.builtin.assert:
+        that:
+          - "'refile:/etc/opendkim/SigningTable' == (signingtable_result.stdout | split(' '))[-1]"
+    - name: Gather OpenDKIM ExternalIgnoreList setting
+      ansible.builtin.command:
+        cmd: grep "^ExternalIgnoreList " /etc/opendkim.conf
+      failed_when: externalignorelist_result.rc > 1
+      changed_when: false
+      register: externalignorelist_result
+    - name: Assert OpenDKIM ExternalIgnoreList setting
+      ansible.builtin.assert:
+        that:
+          - "'refile:/etc/opendkim/TrustedHosts' == (externalignorelist_result.stdout | split(' '))[-1]"
+    - name: Gather OpenDKIM InternalHosts setting
+      ansible.builtin.command:
+        cmd: grep "^InternalHosts " /etc/opendkim.conf
+      failed_when: internalhosts_result.rc > 1
+      changed_when: false
+      register: internalhosts_result
+    - name: Assert OpenDKIM ExternalIgnoreList setting
+      ansible.builtin.assert:
+        that:
+          - "'refile:/etc/opendkim/TrustedHosts' == (internalhosts_result.stdout | split(' '))[-1]"
+    - name: Test KeyTable setting
+      ansible.builtin.stat:
+        path: /etc/opendkim/KeyTable
+    - name: Test SigningTable setting
+      ansible.builtin.stat:
+        path: /etc/opendkim/SigningTable
+    - name: Test TrustedHosts setting
+      ansible.builtin.stat:
+        path: /etc/opendkim/TrustedHosts
+- name: Assert DKIM server port
+  ansible.builtin.assert:
+    that:
+      - 8891 in listen_tcp_posts
+- name: Test Postfix <-> OpenDKIM setting
+  block:
+    - name: Gather Postfix milter_protocol setting
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          postconf | grep "^milter_protocol ="
+      failed_when: milter_protocol_result.rc > 1
+      changed_when: false
+      register: milter_protocol_result
+    - name: Assert Postfix milter_protocol setting
+      ansible.builtin.assert:
+        that:
+          - "'6' == (milter_protocol_result.stdout | split(' = '))[1]"
+    - name: Gather Postfix milter_default_action setting
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          postconf | grep "^milter_default_action ="
+      failed_when: milter_default_action_result.rc > 1
+      changed_when: false
+      register: milter_default_action_result
+    - name: Assert Postfix milter_default_action setting
+      ansible.builtin.assert:
+        that:
+          - "'accept' == (milter_default_action_result.stdout | split(' = '))[1]"
+    - name: Gather Postfix smtpd_milters setting
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          postconf | grep "^smtpd_milters ="
+      failed_when: smtpd_milters_result.rc > 1
+      changed_when: false
+      register: smtpd_milters_result
+    - name: Assert Postfix smtpd_milters setting
+      ansible.builtin.assert:
+        that:
+          - "'inet:localhost:8891' == (smtpd_milters_result.stdout | split(' = '))[1]"
+    - name: Gather Postfix non_smtpd_milters setting
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          postconf | grep "^non_smtpd_milters ="
+      failed_when: non_smtpd_milters_result.rc > 1
+      changed_when: false
+      register: non_smtpd_milters_result
+    - name: Assert Postfix non_smtpd_milters setting
+      ansible.builtin.assert:
+        that:
+          - "'inet:localhost:8891' == (non_smtpd_milters_result.stdout | split(' = '))[1]"
+##
+# expect_dkim_domains
+# /etc/opendkim/SigningTable
+# *@redmine.local default._domainkey.redmine.local
+# /etc/opendkim/KeyTable
+# default._domainkey.redmine.local redmine.local:default:/etc/dkimkeys/redmine.local/default.private
+

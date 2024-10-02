@@ -1,0 +1,32 @@
+---
+# code: language=ansible
+- name: Check Redmine log logrotate setting
+  ansible.builtin.stat:
+    path: /etc/logrotate.d/redmine
+  register: setting_file_result
+- name: Assert Redmine log logrotate setting
+  ansible.builtin.assert:
+    that:
+      - setting_file_result.stat.exists
+- name: Check Redmine logrotate setting detail
+  block:
+    - name: Check rotate file setting
+      ansible.builtin.command:
+        cmd: grep "/opt/redmine/log/\*.log" /etc/logrotate.d/redmine
+      failed_when: rotate_file_setting_result.rc > 1
+      changed_when: false
+      register: rotate_file_setting_result
+    - name: Assert rotate file setting
+      ansible.builtin.assert:
+        that:
+          - rotate_file_setting_result.rc == 0
+    - name: Check copytruncate setting
+      ansible.builtin.command:
+        cmd: grep copytruncate /etc/logrotate.d/redmine
+      failed_when: rotate_copytruncate_setting_result.rc > 1
+      changed_when: false
+      register: rotate_copytruncate_setting_result
+    - name: Assert copytruncate setting
+      ansible.builtin.assert:
+        that:
+          - rotate_copytruncate_setting_result.rc == 0

@@ -1,0 +1,16 @@
+---
+# code: language=ansible
+- name: Assert packages
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.packages['mariadb-server']
+- name: Assert service
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.services['mariadb.service']
+      - ansible_facts.services['mariadb.service']['state'] == 'running'
+      - ansible_facts.services['mariadb.service']['status'] == 'enabled'
+- name: Assert port
+  ansible.builtin.assert:
+    that:
+      - 3306 in listen_tcp_posts

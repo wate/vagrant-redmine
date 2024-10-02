@@ -1,0 +1,38 @@
+---
+# code: language=ansible
+- name: Check user
+  ansible.builtin.user:
+    name: redmine
+    system: true
+  check_mode: true
+  register: check_user_result
+- name: Assert user
+  ansible.builtin.assert:
+    that:
+      - check_user_result is not changed
+- name: Check group
+  ansible.builtin.group:
+    name: redmine
+    system: true
+  register: check_group_result
+  check_mode: true
+- name: Assert group
+  ansible.builtin.assert:
+    that:
+      - check_group_result is not changed
+- name: Assert Redmine service
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.services['redmine.service']
+      - ansible_facts.services['redmine.service']['state'] == 'running'
+      - ansible_facts.services['redmine.service']['status'] == 'enabled'
+- name: Test puma state
+  block:
+    - name: Check puma pid file
+      ansible.builtin.stat:
+        path: /opt/redmine/tmp/puma.pid
+      register: puma_pid_result
+    - name: Assert puma pid file
+      ansible.builtin.assert:
+        that:
+          - puma_pid_result.stat.exists

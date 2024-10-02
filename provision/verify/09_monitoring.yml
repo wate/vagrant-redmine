@@ -1,0 +1,28 @@
+---
+# code: language=ansible
+- name: Assert mackerel-agent package
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.packages['mackerel-agent']
+      - ansible_facts.packages['mackerel-agent-plugins']
+      - ansible_facts.packages['mackerel-check-plugins']
+- name: Check environment variable
+  ansible.builtin.command:
+    cmd: grep MYSQL_PASSWORD= /etc/default/mackerel-agent
+  failed_when: env_var_result.rc > 1
+  changed_when: false
+  register: env_var_result
+- name: Assert environment variable
+  ansible.builtin.assert:
+    that:
+      - env_var_result.rc == 0
+- name: Assert mackerel-agent service
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.services['mackerel-agent.service']
+- name: Assert running mackerel-agent service
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.services['mackerel-agent.service']['status'] == 'enabled'
+      - ansible_facts.services['mackerel-agent.service']['state'] == 'running'
+  when: mackerel_agent_api_key | default('') | length > 0

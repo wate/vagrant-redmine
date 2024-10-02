@@ -1,0 +1,33 @@
+---
+# code: language=ansible
+- name: Assert dehydrated package
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.packages['dehydrated']
+- name: Check additional settig file
+  ansible.builtin.stat:
+    path: /etc/dehydrated/conf.d/local.sh
+  register: additional_setting_file_result
+- name: Assert additional settig file
+  ansible.builtin.assert:
+    that:
+      - additional_setting_file_result.stat.exists
+- name: Check hook settig file
+  ansible.builtin.stat:
+    path: /etc/dehydrated/hook.sh
+  register: hook_setting_file_result
+- name: Assert domain settig file
+  ansible.builtin.assert:
+    that:
+      - hook_setting_file_result.stat.exists
+      - hook_setting_file_result.stat.mode == '0750'
+- name: Check domain settig file
+  ansible.builtin.stat:
+    path: /etc/dehydrated/domains.txt
+  register: domain_setting_file_result
+- name: Assert domain settig file
+  ansible.builtin.assert:
+    that:
+      - domain_setting_file_result.stat.exists
+## 要追記
+# expect_ssl_domains
