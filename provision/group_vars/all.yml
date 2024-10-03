@@ -82,9 +82,9 @@ redmine_plugins:
   redmine_sudo:
     repo: https://github.com/AlphaNodes/redmine_sudo.git
     version: main
-  # redmine_hedgedoc:
-  #   repo: https://github.com/alphanodes/redmine_hedgedoc.git
-  #   version: main
+  redmine_hedgedoc:
+    repo: https://github.com/alphanodes/redmine_hedgedoc.git
+    version: main
   # redmine_saml:
   #   repo: https://github.com/alphanodes/redmine_saml.git
   #   version: main

@@ -125,7 +125,7 @@
       ansible.builtin.assert:
         that:
           - "'inet:localhost:8891' == (non_smtpd_milters_result.stdout | split(' = '))[1]"
-##
+## 要追記
 # expect_dkim_domains
 # /etc/opendkim/SigningTable
 # *@redmine.local default._domainkey.redmine.local
