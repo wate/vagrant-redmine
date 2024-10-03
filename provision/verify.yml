@@ -10,8 +10,8 @@
   tags: verify
   vars:
     expect_hostname: redmine.local
-    expect_dkim_domains:
-      - rdmine.local
+    expect_dkim_sign_domains:
+      - redmine.local
     # expect_ssl_domains:
     #   "redmine.local": null
     verify_lookup_dns: false

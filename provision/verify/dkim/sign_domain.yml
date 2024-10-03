@@ -1,0 +1,39 @@
+---
+# code: language=ansible
+- name: Test SigningTable({{ sign_domain }})
+  block:
+    - name: Chack SigningTable setting({{ sign_domain }})
+      ansible.builtin.command:
+        cmd: grep "^*@{{ sign_domain }} " /etc/opendkim/SigningTable
+      failed_when: dkim_sign_table.rc > 1
+      changed_when: false
+      register: dkim_sign_table
+    - name: Assert SigningTable setting({{ sign_domain }})
+      ansible.builtin.assert:
+        that: dkim_sign_table.rc == 0
+- name: Test KeyTable({{ sign_domain }})
+  block:
+    - name: Set KeyTable string({{ sign_domain }})
+      ansible.builtin.set_fact:
+        find_dkim_keytable_string: "{{ (dkim_sign_table.stdout | split(' '))[-1] }}"
+    - name: Check KeyTable setting({{ sign_domain }})
+      ansible.builtin.command:
+        cmd: grep "^{{ find_dkim_keytable_string }} " /etc/opendkim/KeyTable
+      failed_when: dkim_key_table.rc > 1
+      changed_when: false
+      register: dkim_key_table
+    - name: Assert KeyTable setting({{ sign_domain }})
+      ansible.builtin.assert:
+        that: dkim_key_table.rc == 0
+- name: Test KeyTable({{ sign_domain }})
+  block:
+    - name: Set KeyTable string({{ sign_domain }})
+      ansible.builtin.set_fact:
+        sign_domain_private_key_path: "{{ (dkim_key_table.stdout | split(':'))[-1] }}"
+    - name: Check sign domain private key
+      ansible.builtin.stat:
+        path: "{{ sign_domain_private_key_path }}"
+      register: sign_domain_private_key_result
+    - name: Assert Private key
+      ansible.builtin.assert:
+        that: sign_domain_private_key_result.stat.exists

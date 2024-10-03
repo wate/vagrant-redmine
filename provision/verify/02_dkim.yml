@@ -125,10 +125,10 @@
       ansible.builtin.assert:
         that:
           - "'inet:localhost:8891' == (non_smtpd_milters_result.stdout | split(' = '))[1]"
-## 要追記
-# expect_dkim_domains
-# /etc/opendkim/SigningTable
-# *@redmine.local default._domainkey.redmine.local
-# /etc/opendkim/KeyTable
-# default._domainkey.redmine.local redmine.local:default:/etc/dkimkeys/redmine.local/default.private
-
+- name: Test sing domain setting
+  ansible.builtin.include_tasks:
+    file: dkim/sign_domain.yml
+  loop: "{{ expect_dkim_sign_domains }}"
+  loop_control:
+    loop_var: sign_domain
+    label: "{{ sign_domain }}"
