@@ -29,5 +29,18 @@
   ansible.builtin.assert:
     that:
       - domain_setting_file_result.stat.exists
-## 要追記
-# expect_ssl_domains
+
+- name: Test SSL domain setting
+  block:
+    - name: Check SSL domain setting
+      ansible.builtin.command:
+        cmd: cat /etc/dehydrated/domains.txt
+      changed_when: false
+      register: dehydrated_domains_txt_result
+    - name: Assert SSL domain setting
+      ansible.builtin.assert:
+        that: "ssl_domain_txt in dehydrated_domains_txt_result.stdout_lines"
+      loop: "{{ expect_dehydrated_ssl_domains }}"
+      loop_control:
+        loop_var: ssl_domain_txt
+        label: "{{ ssl_domain_txt }}"

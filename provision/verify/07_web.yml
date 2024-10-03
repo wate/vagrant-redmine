@@ -18,4 +18,4 @@
   ansible.builtin.assert:
     that:
       - 443 in listen_tcp_posts
-  when: dehydrated_domains | default({}) | dict2items | length > 0
+  when: verify_https_port | default(true)

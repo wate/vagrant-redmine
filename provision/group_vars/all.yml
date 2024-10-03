@@ -2009,12 +2009,18 @@ mackerel_agent_extra_setting: |
 
   ## https://mackerel.io/ja/docs/entry/plugins/mackerel-plugin-mysql
   [plugin.metrics.mysql]
-  command = "/usr/bin/ackerel-plugin-mysql --username=mackerel_agent --password --enable_extended=true"
+  command = "/usr/bin/ackerel-plugin-mysql --username=mackerel_agent --enable_extended=true"
 
 ## -----------------
 ## dehydratedで管理するドメインの設定
 ## -----------------
-# dehydrated_domains: "{{ { redmine_hostname: None } }}"
+# dehydrated_domains: "{{ {redmine_hostname: None} }}"
+# dehydrated_domains:
+#   redmine.dev:
+#   redmine.page: redmine.page
+#   redmine.community:
+#     - redmine.community
+#     - "*.redmine.community"
 
 ## -----------------
 ## dehydrated実行時のフック設定(initialize)
