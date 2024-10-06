@@ -21,6 +21,24 @@ Vagrant.configure('2') do |config|
     vb.memory = 2048
   end
 
+  vm_domain = ENV["VAGRANT_VM_DOMAIN"] || "redmine.local"
+  vm_host_aliases = [
+    "hedgedoc." + vm_domain,
+    "mailpit." + vm_domain
+  ]
+  ## plugin vagrant-hostsupdater
+  if Vagrant.has_plugin?("vagrant-hostsupdater")
+    config.vm.hostname = vm_domain
+    config.hostsupdater.aliases = vm_host_aliases
+  end
+  ## plugin vagrant-hostmanager
+  if Vagrant.has_plugin?("vagrant-hostmanager")
+    config.hostmanager.enabled = false
+    config.hostmanager.manage_host = true
+    config.hostmanager.manage_guest = true
+    config.hostmanager.aliases = vm_host_aliases
+  end
+
   LDE_CONFIG_DIR = 'provision'
   ANSIBLR_CONFIG_FILE = File.expand_path(File.join(LDE_CONFIG_DIR, 'ansible.cfg'))
   ANSIBLR_GALAXY_ROLE_FILE = File.expand_path(File.join(LDE_CONFIG_DIR, 'requirements.yml'))

@@ -581,6 +581,8 @@ redmine_settings:
   ### ----------
   # ホスト名とパス
   # host_name: "{{ inventory_hostname }}"
+  # プロトコル
+  protocol: http
   # テキスト書式
   text_formatting: common_mark
   # ウェルカムメッセージ
@@ -1933,6 +1935,23 @@ nginx_vhosts:
       - pattern: "/\\.ht"
         match_type: "~"
         content: "deny all;"
+  mailpit:
+    pre_extra_setting: |
+      map $http_upgrade $connection_upgrade {
+          default upgrade;
+          ''      close;
+      }
+    upstream:
+      name: mailpit
+      content: |
+        server 127.0.0.1:8025;
+    server_name: mailpit.redmine.local
+    locations:
+      - pattern: /
+        content: |
+          proxy_pass http://hedgedoc;
+          include proxy_params;
+          include snippets/websocket.conf;
   status:
     server_name: localhost
     listen: 8080

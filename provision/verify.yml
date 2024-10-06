@@ -9,9 +9,9 @@
   gather_facts: true
   tags: verify
   vars:
-    expect_hostname: redmine.local
+    expect_hostname: "{{ lookup('env', 'VAGRANT_VM_DOMAIN') | default('redmine.local', true) }}"
     expect_dkim_sign_domains:
-      - redmine.local
+      - "{{ lookup('env', 'VAGRANT_VM_DOMAIN') | default('redmine.local', true) }}"
     # expect_dehydrated_ssl_domains:
     #   - redmine.dev
     #   - redmine.page > redmine.page
