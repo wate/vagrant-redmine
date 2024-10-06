@@ -762,6 +762,12 @@ redmine_settings:
     dmsf_webdav: 0
     # CJKテキストから n-grams の生成を有効にする
     dmsf_enable_cjk_ngrams: "true"
+  ### ----------
+  ### HedgeDoc
+  ### ----------
+  plugin_redmine_hedgedoc:
+    hedgedoc_url: http://localhost:3000
+    hedgedoc_in_menu: top
 
 ## --------------------
 ## ワークフロー
