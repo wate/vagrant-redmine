@@ -93,9 +93,9 @@ redmine_plugins:
       - uuid
       # LibreOffice
       - libreoffice
-    cron_job:
-      cmd: XAPIAN_CJK_NGRAM=true ruby {{ redmine_root }}/plugins/redmine_dmsf/extra/xapian_indexer.rb -v
-      minute: 10
+    # cron_job:
+    #   cmd: cd {{ redmine_root }} && XAPIAN_CJK_NGRAM=true ruby plugins/redmine_dmsf/extra/xapian_indexer.rb -v
+    #   minute: 10
   additionals:
     repo: https://github.com/AlphaNodes/additionals.git
     version: main
