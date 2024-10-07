@@ -94,7 +94,7 @@ redmine_plugins:
       # LibreOffice
       - libreoffice
     cron_job:
-      cmd: XAPIAN_CJK_NGRAM=true ruby {{ redmine_root }}/plugins/redmine_dmsf/extra/xapian_indexer.rb -fv
+      cmd: XAPIAN_CJK_NGRAM=true ruby {{ redmine_root }}/plugins/redmine_dmsf/extra/xapian_indexer.rb -v
       minute: 10
   additionals:
     repo: https://github.com/AlphaNodes/additionals.git
@@ -812,6 +812,8 @@ redmine_settings:
     dmsf_documents_email_from: redmine@redmine.local
     ## WebDAV
     dmsf_webdav: 0
+    ## 語幹抽出する言語
+    dmsf_stemming_lang: english
     ## CJKテキストから n-grams の生成を有効にする
     dmsf_enable_cjk_ngrams: "true"
   ### ----------
