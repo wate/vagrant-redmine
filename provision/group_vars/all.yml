@@ -626,17 +626,21 @@ redmine_settings:
     # ニュース
     - news
     # ファイル
-    - files
+    # - files
     # Wiki
     - wiki
     # カレンダー
     - calendar
     # ガントチャート
-    - gantt
+    # - gantt
     # チケットテンプレート
     - issue_templates
     # ダッシュボード
     - dashboard
+    # DMSF
+    - dmsf
+    # HedgeDoc
+    - hedgedoc
   # 新規プロジェクトにおいてデフォルトで有効になるトラッカー
   default_projects_trackers:
     - 要望
@@ -758,9 +762,24 @@ redmine_settings:
   ### DMSF(文書管理)
   ### ----------
   plugin_redmine_dmsf:
-    # WebDAV
+    ## 物理ファイルの削除
+    # dmsf_really_delete_files: 0
+    ## Sub-projects as sub-folders
+    # dmsf_projects_as_subfolders: 0
+    ## Global DMS menu disabled
+    # dmsf_global_menu_disabled: 0
+    ## DMS Columns
+    dmsf_columns:
+      - title
+      - size
+      - modified
+      - version
+      - author
+    ## 送信者
+    dmsf_documents_email_from: redmine@redmine.local
+    ## WebDAV
     dmsf_webdav: 0
-    # CJKテキストから n-grams の生成を有効にする
+    ## CJKテキストから n-grams の生成を有効にする
     dmsf_enable_cjk_ngrams: "true"
   ### ----------
   ### HedgeDoc
@@ -1498,20 +1517,12 @@ redmine_projects:
       - time_tracking
       ## ニュース
       - news
-      ## 文書
-      - documents
-      # ファイル
-      - files
       ## Wiki
       - wiki
       ## カレンダー
       - calendar
-      # ガントチャート
-      - gantt
       ## チケットテンプレート
       - issue_templates
-      ## ダッシュボード
-      - dashboard
       ## DMSF
       - dmsf
     ## メンバーを継承
@@ -1618,25 +1629,21 @@ redmine_projects:
 # 置換内容
 # ------------------
 # トラッカー => 分類
-# チケットトラッキング => 課題管理
-# チケット => 課題
 # 文書 => ドキュメント
 # ニュース => お知らせ
-# デフォルト値 => 初期値
-# プライベート => 下書き
 # カスタムクエリ => 検索条件
 # 新しいクエリ => 新しい検索条件
 # アノテート => 注釈
 # ------------------
-# redmine_reimport_message_customize: true
+redmine_reimport_message_customize: true
 redmine_message_customize:
   error_scm_annotate: "エントリが存在しない、もしくは注釈できません。"
-  error_no_tracker_in_project: 'このプロジェクトにはチケット種別が登録されていません。プロジェクト設定を確認してください。'
-  error_workflow_copy_source: 'コピー元となるチケット種別またはロールを選択してください'
-  error_workflow_copy_target: 'コピー先となるチケット種別とロールを選択してください'
-  error_can_not_delete_tracker: 'このチケット種別は使用中です。削除できません。'
-  field_tracker: チケット種別
-  setting_default_projects_tracker_ids: 新規プロジェクトにおいてデフォルトで有効になるチケット種別
+  error_no_tracker_in_project: 'このプロジェクトには分類が登録されていません。プロジェクト設定を確認してください。'
+  error_workflow_copy_source: 'コピー元となる分類またはロールを選択してください'
+  error_workflow_copy_target: 'コピー先となる分類とロールを選択してください'
+  error_can_not_delete_tracker: 'この分類は使用中です。削除できません。'
+  field_tracker: 分類
+  setting_default_projects_tracker_ids: 新規プロジェクトにおいてデフォルトで有効になる分類
   permission_view_news: お知らせの閲覧
   permission_manage_news: お知らせの管理
   permission_comment_news: お知らせへのコメント
@@ -1647,9 +1654,9 @@ redmine_message_customize:
   label_document_new: 新しいドキュメント
   label_document_plural: ドキュメント
   label_document_added: ドキュメントの追加
-  label_tracker: チケット種別
-  label_tracker_plural: チケット種別
-  label_tracker_new: 新しいチケット種別
+  label_tracker: 分類
+  label_tracker_plural: 分類
+  label_tracker_new: 新しい分類
   label_news: お知らせ
   label_news_new: お知らせを追加
   label_news_plural: お知らせ
@@ -1661,11 +1668,11 @@ redmine_message_customize:
   label_query_plural: 検索条件
   label_query_new: 新しい検索条件
   label_my_queries: マイ検索条件
-  label_display_used_statuses_only: このチケット種別で使用中のステータスのみ表示
+  label_display_used_statuses_only: この分類で使用中のステータスのみ表示
   button_annotate: 注釈
-  text_workflow_edit: ワークフローを編集するロールとチケット種別を選んでください
-  text_tracker_no_workflow: このチケット種別にワークフローが定義されていません
-  text_no_configuration_data: "ロール、チケット種別、チケットのステータス、ワークフローがまだ設定されていません。\nデフォルト設定のロードを強くお勧めします。ロードした後、それを修正することができます。"
+  text_workflow_edit: ワークフローを編集するロールと分類を選んでください
+  text_tracker_no_workflow: この分類にワークフローが定義されていません
+  text_no_configuration_data: "ロール、分類、チケットのステータス、ワークフローがまだ設定されていません。\nデフォルト設定のロードを強くお勧めします。ロードした後、それを修正することができます。"
   default_doc_category_user: ユーザードキュメント
   default_doc_category_tech: 技術ドキュメント
   enumeration_doc_categories: ドキュメントカテゴリー
@@ -1674,13 +1681,42 @@ redmine_message_customize:
   permission_add_documents: ドキュメントの追加
   permission_edit_documents: ドキュメントの編集
   permission_delete_documents: ドキュメントの削除
-  error_no_tracker_allowed_for_new_issue_in_project: このプロジェクトにはチケットの追加が許可されているチケット種別がありません
-  label_tracker_all: すべてのチケット種別
-  text_status_no_workflow: このステータスはどのチケット種別のワークフローでも使われていません
-  label_trackers_description: チケット種別の説明
-  label_open_trackers_description: すべてのチケット種別の説明を表示
-  text_select_apply_tracker: このチケット種別を適用
+  error_no_tracker_allowed_for_new_issue_in_project: このプロジェクトにはチケットの追加が許可されている分類がありません
+  label_tracker_all: すべての分類
+  text_status_no_workflow: このステータスはどの分類のワークフローでも使われていません
+  label_trackers_description: 分類の説明
+  label_open_trackers_description: すべての分類の説明を表示
+  text_select_apply_tracker: この分類を適用
   label_view_previous_annotation: この更新以前の注釈
+  ## ----------
+  ## DMSF
+  ## ----------
+  ## Custom fields tab title
+  dmsf: ファイル管理
+  menu_dmsf: ファイル管理
+  ## Email subject & Search options
+  label_dmsf_file_plural: ファイル管理からのファイル送信
+  label_dmsf_updated: ファイル管理 更新
+  label_dmsf_downloaded: ファイル管理 ダウンロード
+  project_module_dmsf: ファイル管理
+  permission_email_documents: ファイルをメールで送信
+  link_user_preferences: ファイル管理の設定
+  heading_send_documents_by_email: メールでファイルを送信する
+  label_email_documents: ファイル
+  link_documents: ファイル管理
+  dmsf_and: 及び
+  dmsf_or: または
+  label_empty_trash_bin: ゴミ箱を空にする
+  label_dmsf_columns: ファイルの表示項目
+  field_modified: 更新日
+  field_updated: 更新日
+  field_count: ダウンロード数
+  field_first_at: 最初へ
+  field_last_at: 最後へ
+  field_locked: ロックする
+  label_column_modified: 更新日時
+  label_dmsf_permissions: アクセス制限
+  option_version_patch: パッチ
 
 ## --------------------
 ## view customizeプラグイン
@@ -1762,7 +1798,7 @@ banner_additional_text: |
   Repository:
   https://github.com/redmine/redmine
 
-  Redmine:
+  Issue Tracking System:
   https://www.redmine.org/
 
 ## --------------------
