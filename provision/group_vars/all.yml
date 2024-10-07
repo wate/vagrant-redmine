@@ -76,6 +76,26 @@ redmine_plugins:
   redmine_dmsf:
     repo: https://github.com/danmunn/redmine_dmsf.git
     version: master
+    required_packages:
+      # CGI search interface and indexers using Xapian
+      - xapian-omega
+      # Xapian 検索エンジンライブラリ用開発ファイル
+      - libxapian-dev
+      # Xapian search engine interface for Ruby
+      - ruby-xapian
+      # Converts MS Word files to text, PS, PDF and XML
+      - antiword
+      # text extractor for MS-Office files
+      - catdoc
+      # PDF 向けユーティリティ
+      - poppler-utils
+      # Universally Unique Identifier Command-Line Tool
+      - uuid
+      # LibreOffice
+      - libreoffice
+    cron_job:
+      cmd: XAPIAN_CJK_NGRAM=true ruby {{ redmine_root }}/plugins/redmine_dmsf/extra/xapian_indexer.rb -fv
+      minute: 10
   additionals:
     repo: https://github.com/AlphaNodes/additionals.git
     version: main
@@ -302,6 +322,11 @@ redmine_roles:
       - file_approval
       # ワークフローの管理
       - manage_workflows
+      ## HedgeDoc
+      # Show HedgeDoc pads
+      - show_hedgedoc_pads
+      # Import HedgeDoc pads
+      - import_hedgedoc_pads
   - name: 開発者
     id: 4
     append_permissions:
@@ -376,6 +401,11 @@ redmine_roles:
       - file_delete
       # ファイルの承認
       - file_approval
+      ## HedgeDoc
+      # Show HedgeDoc pads
+      - show_hedgedoc_pads
+      # Import HedgeDoc pads
+      - import_hedgedoc_pads
   - name: 報告者
     id: 5
     ## 権限
@@ -400,6 +430,9 @@ redmine_roles:
       - view_dmsf_folders
       # ファイルの表示
       - view_dmsf_files
+      ## HedgeDoc
+      # Show HedgeDoc pads
+      - show_hedgedoc_pads
 
 ## --------------------
 ## チケットの優先度
@@ -767,7 +800,7 @@ redmine_settings:
     ## Sub-projects as sub-folders
     # dmsf_projects_as_subfolders: 0
     ## Global DMS menu disabled
-    # dmsf_global_menu_disabled: 0
+    dmsf_global_menu_disabled: "true"
     ## DMS Columns
     dmsf_columns:
       - title
@@ -786,7 +819,7 @@ redmine_settings:
   ### ----------
   plugin_redmine_hedgedoc:
     hedgedoc_url: http://localhost:3000
-    hedgedoc_in_menu: top
+    hedgedoc_in_menu: ""
 
 ## --------------------
 ## ワークフロー
@@ -1635,7 +1668,7 @@ redmine_projects:
 # 新しいクエリ => 新しい検索条件
 # アノテート => 注釈
 # ------------------
-redmine_reimport_message_customize: true
+# redmine_reimport_message_customize: true
 redmine_message_customize:
   error_scm_annotate: "エントリが存在しない、もしくは注釈できません。"
   error_no_tracker_in_project: 'このプロジェクトには分類が登録されていません。プロジェクト設定を確認してください。'
@@ -1695,7 +1728,7 @@ redmine_message_customize:
   dmsf: ファイル管理
   menu_dmsf: ファイル管理
   ## Email subject & Search options
-  label_dmsf_file_plural: ファイル管理からのファイル送信
+  label_dmsf_file_plural: ファイル管理のファイル
   label_dmsf_updated: ファイル管理 更新
   label_dmsf_downloaded: ファイル管理 ダウンロード
   project_module_dmsf: ファイル管理
