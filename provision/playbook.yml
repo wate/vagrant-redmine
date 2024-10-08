@@ -106,3 +106,4 @@
         - mariadb
         - redmine
         - nginx
+      tags: always
