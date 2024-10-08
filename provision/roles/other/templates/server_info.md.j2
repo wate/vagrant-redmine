@@ -61,7 +61,6 @@ IPアドレス一覧
 {% for ip_address in ansible_facts.all_ipv4_addresses -%}
 * {{ (ip_address == ansible_facts.default_ipv4.address) | ternary('**' + ip_address + '**', ip_address) }}
 {% endfor %}
-
 {% endif %}
 {% if ansible_facts.default_ipv6 | length > 0 %}
 
@@ -70,7 +69,6 @@ IPアドレス一覧
 {% for ip_address in ansible_facts.all_ipv6_addresses -%}
 * {{ (ip_address == ansible_facts.default_ipv6.address | default('')) | ternary('**' + ip_address + '**', ip_address) }}
 {% endfor %}
-
 {% endif %}
 {% endif %}
 {% if running_services | default([]) | length > 0 %}
@@ -103,4 +101,3 @@ IPアドレス一覧
 {% endfor %}
 {% endfor %}
 {% endif %}
-
