@@ -81,7 +81,7 @@ Vagrant.configure('2') do |config|
   if File.exists?(ANSIBLR_VERITY_PLAYBOOK)
     config.vm.provision 'ansible' do |ansible|
       ansible.playbook = ANSIBLR_VERITY_PLAYBOOK
-      ansible.config_file = ANSIBLR_CONFIG_FILE if File.exists?(ANSIBLR_CONFIG_FILE) && provision_role_update
+      ansible.config_file = ANSIBLR_CONFIG_FILE if File.exists?(ANSIBLR_CONFIG_FILE)
       ansible.galaxy_roles_path = ANSIBLE_GALAXY_ROLES_PATH
       ansible.compatibility_mode = '2.0'
       ansible.tags = provision_tags if provision_tags.length > 0
