@@ -1,0 +1,106 @@
+サーバー情報
+==================================
+
+ホスト情報
+----------------------------------
+
+### ホスト名
+
+{{ ansible_facts.hostname }}
+
+### FQDN
+
+{{ ansible_facts.fqdn }}
+
+OS
+----------------------------------
+
+### ディストリビューション
+
+{{ ansible_facts.distribution }} {{ ansible_facts.distribution_version }}
+
+### アーキティクチャ
+
+{{ ansible_facts.architecture }}
+
+スペック
+----------------------------------
+
+### CPU
+
+{{ ansible_facts.processor_vcpus }}
+
+### メモリ
+
+* 空き：{{ ansible_facts.memfree_mb }} MB
+* 合計：{{ ansible_facts.memtotal_mb }} MB
+
+### スワップ
+
+* 空き：{{ ansible_facts.swapfree_mb }} MB
+* 合計：{{ ansible_facts.swaptotal_mb }} MB
+
+### ディスク
+
+| マウントポイント          | 使用量   | サイズ   | 使用率   | デバイス                       |
+| ------------------------- | --------:| --------:| --------:| ------------------------------ |
+{% for mnt in ansible_facts.mounts -%}
+{% set disk_used = ((mnt.size_total - mnt.size_available) / 1024 / 1024 / 1024) | round(1) | string -%}
+{% set disk_total = (mnt.size_total / 1024 / 1024 / 1024) | round | string -%}
+{% set used_rate = ((mnt.size_total - mnt.size_available) / mnt.size_total * 100) | round(1) | string -%}
+| {{ "%-25s" | format(mnt.mount) }} | {{ "%8s" | format(disk_used + ' GB') }} | {{ "%8s" | format(disk_total + ' GB') }} | {{ "%8s" | format(used_rate + ' %') }} | {{ "%-30s"| format('`' + mnt.device + '`') }} |
+{% endfor %}
+{% if ansible_facts.all_ipv4_addresses | length > 0 or ansible_facts.all_ipv6_addresses | length > 0 %}
+
+IPアドレス一覧
+----------------------------------
+{% if ansible_facts.all_ipv4_addresses | length > 0 %}
+
+### IPv4
+
+{% for ip_address in ansible_facts.all_ipv4_addresses -%}
+* {{ (ip_address == ansible_facts.default_ipv4.address) | ternary('**' + ip_address + '**', ip_address) }}
+{% endfor %}
+
+{% endif %}
+{% if ansible_facts.default_ipv6 | length > 0 %}
+
+### IPv6
+
+{% for ip_address in ansible_facts.all_ipv6_addresses -%}
+* {{ (ip_address == ansible_facts.default_ipv6.address | default('')) | ternary('**' + ip_address + '**', ip_address) }}
+{% endfor %}
+
+{% endif %}
+{% endif %}
+{% if running_services | default([]) | length > 0 %}
+
+稼働中のサービス
+----------------------------------
+
+| サービス名                          | 有効 / 無効 | 取得元   |
+| ----------------------------------- | ----------- | -------- |
+{% for service in running_services | default([]) -%}
+| {{ "%-35s" | format(service.value.name) }} | {{ "%-11s" | format(service.value.status) }} | {{"%-8s" | format(service.value.source) }} |
+{% endfor %}
+{% endif %}
+{% if disk_usages | default([]) | length > 0 %}
+
+ディスク使用量
+----------------------------------
+{% for target_dir in disk_usages %}
+
+### `{{ target_dir }}`
+{% set disk_usage_total = disk_usages_results[target_dir] | first %}
+{% set disk_usage_paths = disk_usages_results[target_dir][1:] %}
+
+合計： **{{ disk_usage_total.size | human_readable }}**
+
+| 使用量          | パス                                                         |
+| ---------------:| ------------------------------------------------------------ |
+{% for disk_usage_path in disk_usage_paths -%}
+| {{ "%15s" | format(disk_usage_path.size | human_readable) }} | {{ "%-60s" | format('`' + disk_usage_path.name + '`') }} |
+{% endfor %}
+{% endfor %}
+{% endif %}
+

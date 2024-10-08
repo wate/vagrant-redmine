@@ -1,0 +1,26 @@
+---
+## -------------
+## サービスの稼働状況のフィルター変数
+## -------------
+## サービスの取得元
+service_filter_sources:
+  - systemd
+
+## 稼働中を表すステート
+service_filter_running_states:
+  - running
+
+## 除外するステータス
+service_reject_statuses:
+  - static
+  - unknown
+
+## ----------
+## ディスク使用量の監視対象ディレクトリ
+## ----------
+disk_usages:
+  - /var/log
+  - /var/spool
+  - /var/lib/mysql
+  - /opt/redmine
+  - /opt/hedgedoc

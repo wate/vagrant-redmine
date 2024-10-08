@@ -51,6 +51,7 @@ composer.phar
 provision/host_vars/default.yml
 **/dns_info/
 provision_config.yml
+server_info.md
 docs/api/
 docs/rest_api/
 docs/schema/

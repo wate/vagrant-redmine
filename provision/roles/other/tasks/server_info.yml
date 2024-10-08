@@ -1,0 +1,62 @@
+---
+- name: サーバー情報の生成
+  become: true
+  block:
+    - name: サーバー情報の収集
+      ansible.builtin.setup:
+        gather_subset:
+          - all_ipv4_addresses
+          - default_ipv4
+          - all_ipv4_addresses
+          - default_ipv6
+          - distribution
+          - distribution_major_version
+          - distribution_release
+          - distribution_version
+          - architecture
+          - hardware
+          - mounts
+    - name: サービスの稼働状況を取得
+      ansible.builtin.service_facts:
+    - name: 稼働中の全サービスを変数に割り当て
+      ansible.builtin.set_fact:
+        all_services: "{{ ansible_facts.services | dict2items | list }}"
+    - name: サービスの取得元によるフィルタリング
+      ansible.builtin.set_fact:
+        all_services: "{{ all_services | selectattr('value.source', 'in', filter_values) | list }}"
+      vars:
+        filter_values: "{{ service_filter_sources }}"
+      when: service_filter_sources | default([]) | length > 0
+    - name: 稼働中の全サービスを変数に割り当て
+      ansible.builtin.set_fact:
+        all_running_services: "{{ all_services | selectattr('value.state', 'in', filter_values) | list }}"
+      vars:
+        filter_values: "{{ service_filter_running_states }}"
+    - name: ステータスによるフィルタリング
+      ansible.builtin.set_fact:
+        running_services: "{{ all_running_services | rejectattr('value.status', 'in', filter_values) | list }}"
+      vars:
+        filter_values: "{{ service_reject_statuses }}"
+    - name: ディスク使用量の取得
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          du -b -d 1 {{ disk_usage_target }} | sort -r -n | jc --du
+        executable: /bin/bash
+      loop: "{{ disk_usages | default([]) }}"
+      loop_control:
+        loop_var: disk_usage_target
+        label: "{{ disk_usage_target }}"
+      changed_when: false
+      register: du_result
+      become: true
+    - name: ディスク使用量調査結果を変数に設定
+      ansible.builtin.set_fact:
+        disk_usages_results: "{{ dict(disk_usages | zip(du_result.results | map(attribute='stdout') | map('from_json'))) }}"
+- name: サーバー情報を出力
+  ansible.builtin.template:
+    src: server_info.md.j2
+    dest: ../server_info.md
+    mode: "0644"
+  become: false
+  delegate_to: localhost
