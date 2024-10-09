@@ -1,0 +1,28 @@
+---
+# code: language=ansible
+- name: Check user
+  ansible.builtin.user:
+    name: hedgedoc
+    system: true
+  check_mode: true
+  register: check_user_result
+- name: Assert user
+  ansible.builtin.assert:
+    that:
+      - check_user_result is not changed
+- name: Check group
+  ansible.builtin.group:
+    name: hedgedoc
+    system: true
+  register: check_group_result
+  check_mode: true
+- name: Assert group
+  ansible.builtin.assert:
+    that:
+      - check_group_result is not changed
+- name: Assert HedgeDoc service
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.services['hedgedoc.service']
+      - ansible_facts.services['hedgedoc.service']['state'] == 'running'
+      - ansible_facts.services['hedgedoc.service']['status'] == 'enabled'
