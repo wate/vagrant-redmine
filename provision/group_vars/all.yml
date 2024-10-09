@@ -1824,6 +1824,8 @@ install_tools:
   - rclone
   ## https://github.com/kellyjonbrazil/jc
   - jc
+  ## https://httpie.io/
+  - httpie
   ## https://duckdb.org/
   - duckdb
   ## https://github.com/charmbracelet/glow
