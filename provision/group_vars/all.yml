@@ -1971,11 +1971,7 @@ nginx_cfg:
       # CN no;
       # RU no;
       # HK no;
-      # SG no;
-      # IN no;
       # BR no;
-      # NL no;
-      # FR no;
     }
 
 ## --------------
