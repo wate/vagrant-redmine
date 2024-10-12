@@ -105,6 +105,9 @@ redmine_plugins:
   redmine_hedgedoc:
     repo: https://github.com/alphanodes/redmine_hedgedoc.git
     version: main
+  redmine_oauth:
+    repo: https://github.com/kontron/redmine_oauth.git
+    version: main
   # redmine_saml:
   #   repo: https://github.com/alphanodes/redmine_saml.git
   #   version: main
