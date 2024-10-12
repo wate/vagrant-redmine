@@ -2220,5 +2220,3 @@ hedgedoc_cfg:
       ## MySQL or MariaDB database setting for localhost
       encoding: utf8mb4
       collation: utf8mb4_general_ci
-
-hedgedoc_allow_connect_other_host: true
