@@ -824,7 +824,7 @@ redmine_settings:
   ### ----------
   plugin_redmine_hedgedoc:
     hedgedoc_url: http://localhost:3000
-    hedgedoc_in_menu: ""
+    hedgedoc_in_menu: top
 
 ## --------------------
 ## ワークフロー
@@ -1755,6 +1755,73 @@ redmine_message_customize:
   label_column_modified: 更新日時
   label_dmsf_permissions: アクセス制限
   option_version_patch: パッチ
+  ## ----------
+  ## HedgeDoc
+  ## ----------
+  permission_show_hedgedoc_pads: HedgeDocノートの表示
+  permission_import_hedgedoc_pads: HedgeDocノートのインポート
+  project_module_hedgedoc: HedgeDoc
+  label_hedgedoc_url: HedgeDoc URL
+  label_show_hedgedoc_in_menu: メニューにHedgeDocを表示
+  label_new_hedgedoc_pad: 新しいHedgeDocノート
+  label_hedgedoc_pad_plural: HedgeDocノート
+  label_switch_to_hedgedoc: HedgeDocに切り替え
+  label_hedgedoc_list_info_html: '<strong>重要:</strong> All your own PADs and all non-private PADs are listed here if they use a Redmine project identifier as prefix in the PAD title (e.g. "testprojekt: My PAD"). If you have access in Redmine to the projects with this project identifier, these PADs will be displayed to <em>all</em> project members.<br />Inform your HedgeDoc users that PADs with a correct project prefix are automatically listed in Redmine if the author is also a Redmine user.'
+  label_hedgedoc_project_list_info_html: '<strong>重要:</strong> Lists all PADs with the prefix "%{prefix}" that are not marked as private or they are your own (例: "%{prefix}: My PAD").<br />Inform your HedgeDoc users that PADs with this project prefix will automatically be listed in Redmine if the author is also a Redmine user.'
+  field_hedgedoc_permission: 権限
+  label_hedgedoc_pads: ノート
+  ## ----------
+  ## Oauth
+  ## ----------
+  # oauth_login_via: "Continue with <b>%{oauth}</b>"
+  # oauth_login_with: Login with OAuth
+  # oauth_no_verified_email: No verified email provided, check your settings on OAuth provider site.
+  # oauth_invalid_provider: Invalid OAuth provider
+  # oauth_none: None
+  oauth_provider: プロバイダー
+  oauth_provider_info: OAuthプロバイダー
+  # oauth_site: Site
+  # oauth_site_info: OAuth provider's authentication URL.
+  oauth_client_id: クライアントID
+  # oauth_client_id_info: Application (client) ID.
+  oauth_client_secret: クライアントシークレット
+  # oauth_client_secret_info: Application password.
+  # oauth_tenant_id: Tenant ID / Realm
+  # oauth_tenant_id_info: Directory (tenant) ID.
+  # oauth_button_info: Colour and icon (Awesome font class) of the OAuth login button (Empty for no button).
+  oauth_login_button: ログインボタン
+  oauth_custom_name: プロバイダー名
+  # oauth_custom_name_info: Title to be shown on the OAuth login button.
+  # oauth_custom_auth_endpoint: Auth endpoint
+  # oauth_custom_auth_endpoint_info: Application Auth endpoint.
+  # oauth_custom_token_endpoint: Token endpoint
+  # oauth_custom_token_endpoint_info: Application Token endpoint.
+  # oauth_custom_profile_endpoint: Profile endpoint
+  # oauth_custom_profile_endpoint_info: Application Profile endpoint.
+  # oauth_custom_scope: OAuth scope
+  # oauth_custom_scope_info: "OAuth scope (default: 'openid profile email')."
+  # oauth_custom_uid_field: UID field
+  # oauth_custom_uid_field_info: "UID field (default: preferred_username)."
+  # oauth_custom_email_field: Email field
+  # oauth_custom_email_field_info: "Email field (default: email)."
+  # oauth_hide_login_form: Hide login form
+  # oauth_custom_firstname_field: Provider's firstname field
+  # oauth_custom_lastname_field: Provider's lastname field
+  # oauth_update_login: Update login
+  # oauth_update_login_info: Update the user's login after a successful login.
+  # oauth_logout: OAuth logout
+  # oauth_logout_info: Log out from the OAuth provider too after Redmine logout.
+  # oauth_login: OAuth login
+  # oauth_login_info: Allow users to log in automatically via OAuth provider skipping the login form.
+  # oauth_custom_logout_endpoint: Logout endpoint
+  # oauth_custom_logout_endpoint_info: Application Logout endpoint.
+  # oauth_validate_user_roles: Validate user roles
+  # oauth_validate_user_roles_info: "A key, where user roles are present in the token. If set, 'user' role grants access,
+  #   'admin' grants admin rights. If 'user' role is not present, access is denied. If 'admin role is missing, admin
+  #   rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
+  #   'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
+  # oauth_autologin: "Autologin with %{oauth}"
+
 
 ## --------------------
 ## view customizeプラグイン
@@ -2211,7 +2278,7 @@ hedgedoc_cfg:
     # path: /var/run/hedgedoc/hedgedoc.sock
     sessionSecret: "{{ inventory_hostname | hash('sha1') }}"
     allowAnonymous: false
-    allowEmailRegister: false
+    # allowEmailRegister: false
     db:
       ## dialect: mysql / mariadb / postgres / sqlite
       dialect: mariadb
