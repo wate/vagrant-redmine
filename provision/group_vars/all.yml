@@ -111,9 +111,11 @@ redmine_plugins:
   redmine_oauth:
     repo: https://github.com/kontron/redmine_oauth.git
     version: main
-  # redmine_saml:
-  #   repo: https://github.com/alphanodes/redmine_saml.git
-  #   version: main
+  redmine_saml:
+    repo: https://github.com/alphanodes/redmine_saml.git
+    version: main
+    post_install_action: |
+      cp plugins/redmine_saml/contrib/sample_saml_initializers.rb config/initializers/saml.rb
 
 ## --------------------
 ## Redmineのデータベース設定(config/database.yml)
@@ -326,9 +328,7 @@ redmine_roles:
       # ワークフローの管理
       - manage_workflows
       ## HedgeDoc
-      # Show HedgeDoc pads
       - show_hedgedoc_pads
-      # Import HedgeDoc pads
       - import_hedgedoc_pads
   - name: 開発者
     id: 4
@@ -405,9 +405,7 @@ redmine_roles:
       # ファイルの承認
       - file_approval
       ## HedgeDoc
-      # Show HedgeDoc pads
       - show_hedgedoc_pads
-      # Import HedgeDoc pads
       - import_hedgedoc_pads
   - name: 報告者
     id: 5
@@ -434,7 +432,6 @@ redmine_roles:
       # ファイルの表示
       - view_dmsf_files
       ## HedgeDoc
-      # Show HedgeDoc pads
       - show_hedgedoc_pads
 
 ## --------------------
@@ -825,6 +822,12 @@ redmine_settings:
   plugin_redmine_hedgedoc:
     hedgedoc_url: http://localhost:3000
     hedgedoc_in_menu: top
+  ### ----------
+  ### SAML
+  ### ----------
+  plugin_redmine_saml:
+    saml_enabled: 0
+    saml_login_label: SSOでログイン
 
 ## --------------------
 ## ワークフロー
@@ -1860,7 +1863,19 @@ redmine_message_customize:
   #   rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
   #   'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
   # oauth_autologin: "Autologin with %{oauth}"
-
+  ## ----------
+  ## SAML
+  ## ----------
+  error_saml_authenticity_error: SAML認証エラー
+  error_saml_invalid_ticket: 無効なSAMLチケット
+  label_onthefly_creation: ユーザーを自動で作成する
+  label_replace_redmine_login: Redmineのログインページを置き換える
+  label_saml_enabled: SAML認証を有効にする
+  label_saml_login_label: ログインページに表示するテキスト
+  label_saml_test_plural: テスト
+  saml_login_label: SSOでログイン
+  text_full_logout_proposal: 他のユーザー名を試す前に、%{value}を設定することをお勧めします
+  text_logout_from_saml: SSOセッションを閉じる
 
 ## --------------------
 ## view customizeプラグイン
