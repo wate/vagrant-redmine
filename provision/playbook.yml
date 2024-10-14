@@ -23,6 +23,8 @@
         - role_opendkim
     - role: mariadb
       tags: role_mariadb
+    - role: redis
+      tags: role_redis
     - role: dehydrated
       tags: role_dehydrated
     - role: nginx
@@ -98,6 +100,9 @@
                 loop_var: custom_script_template
                 label: "{{ (custom_script_template | basename)[:-6] }}"
   post_tasks:
+    - name: Cleanup package
+      ansible.builtin.apt:
+        autoremove: true
     - name: Restart services
       ansible.builtin.systemd_service:
         name: "{{ item }}"

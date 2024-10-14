@@ -18,6 +18,9 @@ roles:
   - name: nginx
     src: https://github.com/wate/ansible-role-nginx
     version: develop
+  - name: redis
+    src: https://github.com/wate/ansible-role-redis
+    version: develop
   - name: mariadb
     src: https://github.com/wate/ansible-role-mariadb
     version: develop
@@ -36,6 +39,9 @@ roles:
   - name: dns
     src: https://github.com/wate/ansible-role-dns
     version: develop
+  - name: hedgedoc
+    src: https://github.com/wate/ansible-role-hedgedoc
+    version: develop
   ### 以下、ローカル検証環境用
   - name: mailpit
     src: https://github.com/wate/ansible-role-mailpit
@@ -45,8 +51,5 @@ roles:
     version: develop
   - name: font
     src: https://github.com/wate/ansible-role-font
-    version: develop
-  - name: hedgedoc
-    src: https://github.com/wate/ansible-role-hedgedoc
     version: develop
 collections: []

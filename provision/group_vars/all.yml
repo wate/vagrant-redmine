@@ -11,8 +11,15 @@ redmine_version: 5.1-stable
 ## 追加インストールするgemパッケージ
 ## --------------------
 redmine_gemfile_local_packages:
+  sidekiq:
   yard:
   rails-erd:
+
+## --------------------
+## 追加の環境設定
+## --------------------
+redmine_additional_environment: |
+  config.active_job.queue_adapter = :sidekiq
 
 ## --------------------
 ## config/configuration.ymlの設定
@@ -94,7 +101,7 @@ redmine_plugins:
       # LibreOffice
       - libreoffice
     # cron_job:
-    #   cmd: cd {{ redmine_root }} && XAPIAN_CJK_NGRAM=true ruby plugins/redmine_dmsf/extra/xapian_indexer.rb -v
+    #   cmd: cd {{ redmine_root }}/plugins && XAPIAN_CJK_NGRAM=true ruby redmine_dmsf/extra/xapian_indexer.rb -v
     #   minute: 10
   redmine_toggl:
     repo: https://github.com/ozguryazilimas/redmine_toggl.git
@@ -116,6 +123,9 @@ redmine_plugins:
     version: main
     post_install_action: |
       cp plugins/redmine_saml/contrib/sample_saml_initializers.rb config/initializers/saml.rb
+  # redmine_oidc:
+  #   repo: https://github.com/Contargo/redmine_oidc.git
+  #   version: master
 
 ## --------------------
 ## Redmineのデータベース設定(config/database.yml)
@@ -135,6 +145,24 @@ redmine_db_cfg:
     username: hedgedoc_user
     password: hedgedoc_password
     encoding: utf8mb4
+
+## --------------------------
+## sidekiqのサービス化を行うか否か
+## --------------------------
+redmine_register_sidekiq_service: true
+
+## --------------------------
+## sidekiqサービスの依存関係
+## ※SystemdのユニットファイルのAfter句に定義する依存サービスを指定します
+## --------------------------
+redmine_sidekiq_service_dependencies:
+  - redis-server.service
+
+## --------------------------
+## その他の環境変数
+## --------------------------
+redmine_envs:
+  REDIS_URL: redis://localhost:6379/0
 
 ## --------------------
 ## デフォルトのシステム管理者

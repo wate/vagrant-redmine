@@ -1,0 +1,16 @@
+---
+# code: language=ansible
+- name: Assert packages
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.packages['redis-server']
+- name: Assert service
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.services['redis-server.service']
+      - ansible_facts.services['redis-server.service']['state'] == 'running'
+      - ansible_facts.services['redis-server.service']['status'] == 'enabled'
+- name: Assert port
+  ansible.builtin.assert:
+    that:
+      - 6379 in listen_tcp_posts
