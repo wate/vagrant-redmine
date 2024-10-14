@@ -96,6 +96,9 @@ redmine_plugins:
     # cron_job:
     #   cmd: cd {{ redmine_root }} && XAPIAN_CJK_NGRAM=true ruby plugins/redmine_dmsf/extra/xapian_indexer.rb -v
     #   minute: 10
+  redmine_toggl:
+    repo: https://github.com/ozguryazilimas/redmine_toggl.git
+    version: master
   additionals:
     repo: https://github.com/AlphaNodes/additionals.git
     version: main
@@ -111,9 +114,6 @@ redmine_plugins:
   # redmine_saml:
   #   repo: https://github.com/alphanodes/redmine_saml.git
   #   version: main
-  redmine_toggl:
-    repo: https://github.com/ozguryazilimas/redmine_toggl.git
-    version: master
 
 ## --------------------
 ## Redmineのデータベース設定(config/database.yml)
@@ -1729,11 +1729,9 @@ redmine_message_customize:
   ## ----------
   ## DMSF
   ## ----------
-  ## Custom fields tab title
-  dmsf: ファイル管理
+  dmsf: ファイル管理   ## Custom fields tab title
   menu_dmsf: ファイル管理
-  ## Email subject & Search options
-  label_dmsf_file_plural: ファイル管理のファイル
+  label_dmsf_file_plural: ファイル管理のファイル ## Email subject & Search options
   label_dmsf_updated: ファイル管理 更新
   label_dmsf_downloaded: ファイル管理 ダウンロード
   project_module_dmsf: ファイル管理
@@ -1760,8 +1758,8 @@ redmine_message_customize:
   ## ----------
   permission_show_hedgedoc_pads: HedgeDocノートの表示
   permission_import_hedgedoc_pads: HedgeDocノートのインポート
-  project_module_hedgedoc: HedgeDoc
-  label_hedgedoc_url: HedgeDoc URL
+  # project_module_hedgedoc: HedgeDoc
+  # label_hedgedoc_url: HedgeDoc URL
   label_show_hedgedoc_in_menu: メニューにHedgeDocを表示
   label_new_hedgedoc_pad: 新しいHedgeDocノート
   label_hedgedoc_pad_plural: HedgeDocノート
@@ -1777,8 +1775,8 @@ redmine_message_customize:
   permission_edit_all_toggl_entries: すべてのTogglエントリーの編集
   permission_toggl_log_time_to_all_issues: すべてのチケットのTogglエントリーの作成
   permission_view_toggl_entries: Togglエントリーの表示
-  redmine_toggl: Redmine Toggl
-  toggl_entries_title: Toggl
+  # redmine_toggl: Redmine Toggl
+  # toggl_entries_title: Toggl
   toggl:
     all_entries: すべてのエントリー
     are_you_sure_you_want_to_delete_toggl_entry: "TogglとRedmineの両方のエントリーを削除していいですか?"
@@ -1810,53 +1808,53 @@ redmine_message_customize:
     toggl_tags: タグ
     toggl_task: タスク
     toggl_workspace: ワークスペース
-    user_is_not_authorized_for_issue: "User %{user} is not authorized for issue %{issue}"
+    # user_is_not_authorized_for_issue: "User %{user} is not authorized for issue %{issue}"
   ## ----------
   ## OAuth
   ## ----------
-  # oauth_login_via: "Continue with <b>%{oauth}</b>"
-  # oauth_login_with: Login with OAuth
+  oauth_login_via: "<b>%{oauth}</b>でログイン"
+  oauth_login_with: OAuthによるログイン
   # oauth_no_verified_email: No verified email provided, check your settings on OAuth provider site.
-  # oauth_invalid_provider: Invalid OAuth provider
-  # oauth_none: None
-  oauth_provider: プロバイダー
+  oauth_invalid_provider: 無効なOAuthプロバイダー
+  oauth_none: 無し
+  oauth_provider: OAuthプロバイダー
   oauth_provider_info: OAuthプロバイダー
-  # oauth_site: Site
-  # oauth_site_info: OAuth provider's authentication URL.
+  oauth_site: 認証URL
+  oauth_site_info: OAuthプロバイダーの認証URL
   oauth_client_id: クライアントID
-  # oauth_client_id_info: Application (client) ID.
+  oauth_client_id_info: クライアントIDを設定します
   oauth_client_secret: クライアントシークレット
-  # oauth_client_secret_info: Application password.
-  # oauth_tenant_id: Tenant ID / Realm
-  # oauth_tenant_id_info: Directory (tenant) ID.
-  # oauth_button_info: Colour and icon (Awesome font class) of the OAuth login button (Empty for no button).
+  oauth_client_secret_info: クライアントシークレットを設定します
+  oauth_tenant_id: テナントID / Realm
+  oauth_tenant_id_info: "ディレクトリー(テナント)IDを設定します"
+  oauth_button_info: "OAuthログインボタンの色とアイコンを設定します(未指定の場合ボタンは表示されません)"
   oauth_login_button: ログインボタン
   oauth_custom_name: プロバイダー名
-  # oauth_custom_name_info: Title to be shown on the OAuth login button.
-  # oauth_custom_auth_endpoint: Auth endpoint
-  # oauth_custom_auth_endpoint_info: Application Auth endpoint.
-  # oauth_custom_token_endpoint: Token endpoint
-  # oauth_custom_token_endpoint_info: Application Token endpoint.
-  # oauth_custom_profile_endpoint: Profile endpoint
-  # oauth_custom_profile_endpoint_info: Application Profile endpoint.
-  # oauth_custom_scope: OAuth scope
-  # oauth_custom_scope_info: "OAuth scope (default: 'openid profile email')."
-  # oauth_custom_uid_field: UID field
-  # oauth_custom_uid_field_info: "UID field (default: preferred_username)."
-  # oauth_custom_email_field: Email field
-  # oauth_custom_email_field_info: "Email field (default: email)."
-  # oauth_hide_login_form: Hide login form
-  # oauth_custom_firstname_field: Provider's firstname field
-  # oauth_custom_lastname_field: Provider's lastname field
-  # oauth_update_login: Update login
-  # oauth_update_login_info: Update the user's login after a successful login.
-  # oauth_logout: OAuth logout
-  # oauth_logout_info: Log out from the OAuth provider too after Redmine logout.
-  # oauth_login: OAuth login
-  # oauth_login_info: Allow users to log in automatically via OAuth provider skipping the login form.
-  # oauth_custom_logout_endpoint: Logout endpoint
-  # oauth_custom_logout_endpoint_info: Application Logout endpoint.
-  # oauth_validate_user_roles: Validate user roles
+  oauth_custom_name_info: OAuthログインボタンに表示するプロバイダー名
+  oauth_custom_auth_endpoint: 認証エンドポイント
+  oauth_custom_auth_endpoint_info: 認証エンドポイントのURLを設定します
+  oauth_custom_token_endpoint: トークンエンドポイント
+  oauth_custom_token_endpoint_info: トークンエンドポイントのURLを設定します
+  oauth_custom_profile_endpoint: プロフィールエンドポイント
+  oauth_custom_profile_endpoint_info: プロフィールエンドポイントのURLを設定します
+  oauth_custom_scope: OAuthスコープ
+  oauth_custom_scope_info: "OAuthスコープ (デフォルト: 'openid profile email')"
+  oauth_custom_uid_field: UIDフィールド
+  oauth_custom_uid_field_info: "UIDフィールド (デフォルト: preferred_username)"
+  oauth_custom_email_field: Emailフィールド
+  oauth_custom_email_field_info: "Emailフィールド (デフォルト: email)"
+  oauth_hide_login_form: ログインフォームを隠す
+  oauth_custom_firstname_field: "プロバイダーの名前(名)フィールド"
+  oauth_custom_lastname_field: "プロバイダーの名前(性)フィールド"
+  oauth_update_login: ログイン情報の更新
+  oauth_update_login_info: ログイン成功後、ユーザーのログイン情報を更新します
+  oauth_logout: OAuthログアウト
+  oauth_logout_info: Redmineログアウト後にOAuthプロバイダからもログアウトする
+  oauth_login: OAuthログイン
+  oauth_login_info: ログインフォームをスキップしてOAuthプロバイダ経由でユーザーが自動的にログインできるようにする
+  oauth_custom_logout_endpoint: ログアウトエンドポイント
+  oauth_custom_logout_endpoint_info: ログアウトエンドポイントのURLを設定します
+  oauth_validate_user_roles: ユーザーロールの検証
   # oauth_validate_user_roles_info: "A key, where user roles are present in the token. If set, 'user' role grants access,
   #   'admin' grants admin rights. If 'user' role is not present, access is denied. If 'admin role is missing, admin
   #   rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
