@@ -100,9 +100,6 @@
                 loop_var: custom_script_template
                 label: "{{ (custom_script_template | basename)[:-6] }}"
   post_tasks:
-    - name: Cleanup package
-      ansible.builtin.apt:
-        autoremove: true
     - name: Restart services
       ansible.builtin.systemd_service:
         name: "{{ item }}"
