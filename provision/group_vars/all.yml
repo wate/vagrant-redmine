@@ -65,9 +65,6 @@ redmine_plugins:
   redmine_issue_templates:
     repo: https://github.com/agileware-jp/redmine_issue_templates.git
     version: master
-  redmine_message_customize:
-    repo: https://github.com/farend/redmine_message_customize.git
-    version: master
   redmine_messenger:
     repo: https://github.com/alphanodes/redmine_messenger.git
     version: main
@@ -115,6 +112,9 @@ redmine_plugins:
   redmine_oauth:
     repo: https://github.com/kontron/redmine_oauth.git
     version: main
+  # redmine_message_customize:
+  #   repo: https://github.com/farend/redmine_message_customize.git
+  #   version: master
   # redmine_saml:
   #   repo: https://github.com/alphanodes/redmine_saml.git
   #   version: main
@@ -1805,44 +1805,44 @@ redmine_message_customize:
   ## ----------
   ## Toggl
   ## ----------
-  # label_no_results_found: 結果は見つかりませんでした
-  # permission_edit_all_toggl_entries: すべてのTogglエントリーの編集
-  # permission_toggl_log_time_to_all_issues: すべてのチケットのTogglエントリーの作成
-  # permission_view_toggl_entries: Togglエントリーの表示
-  # # redmine_toggl: Redmine Toggl
-  # # toggl_entries_title: Toggl
-  # toggl:
-  #   all_entries: すべてのエントリー
-  #   are_you_sure_you_want_to_delete_toggl_entry: "TogglとRedmineの両方のエントリーを削除していいですか?"
-  #   description: 説明
-  #   duration: 期間
-  #   first: 最初へ
-  #   invalid_duration: 無効な期間
-  #   last: 最後へ
-  #   my_entries: マイエントリー
-  #   new_toggl_entry: 新しいTogglエントリー
-  #   settings:
-  #     header: Redmine Togglの設定
-  #     info: Togglエントリーのタグをどの作業分類にマッピングするかを設定します、複数のTogglエントリーのタグをカンマ区切りで指定できます。
-  #   start: スタート
-  #   stop: ストップ
-  #   time_entry: 作業時間
-  #   toggl_could_not_fetch: Togglエントリーを取得できませんでした、 APIトークンが正しいことを確認してください。
-  #   toggl_entries: Togglエントリー
-  #   toggl_entry: Togglエントリー
-  #   toggl_entry_created: Togglエントリーを作成しました
-  #   toggl_entry_deleted: Togglエントリーを削除しました
-  #   toggl_entry_updated: Togglエントリーを更新しました
-  #   toggl_invalid_user_toggl_entry_info: 無効なTogglエントリーを検出しました、チケット番号が正しいことを確認してください。
-  #   toggl_invalid_user_toggl_entry_subject: 無効なTogglエントリーがあります
-  #   toggl_project: プロジェクト
-  #   toggl_report_no_match_found: 該当なし
-  #   toggl_report_without_issue_subject: Redmine Toggl Entries Without Issue
-  #   toggl_report_without_project_subject: Redmine Toggl Entries Without Toggl Project
-  #   toggl_tags: タグ
-  #   toggl_task: タスク
-  #   toggl_workspace: ワークスペース
-  #   # user_is_not_authorized_for_issue: "User %{user} is not authorized for issue %{issue}"
+  label_no_results_found: 結果は見つかりませんでした
+  permission_edit_all_toggl_entries: すべてのTogglエントリーの編集
+  permission_toggl_log_time_to_all_issues: すべてのチケットのTogglエントリーの作成
+  permission_view_toggl_entries: Togglエントリーの表示
+  # redmine_toggl: Redmine Toggl
+  # toggl_entries_title: Toggl
+  toggl:
+    all_entries: すべてのエントリー
+    are_you_sure_you_want_to_delete_toggl_entry: "TogglとRedmineの両方のエントリーを削除していいですか?"
+    description: 説明
+    duration: 期間
+    first: 最初へ
+    invalid_duration: 無効な期間
+    last: 最後へ
+    my_entries: マイエントリー
+    new_toggl_entry: 新しいTogglエントリー
+    settings:
+      header: Redmine Togglの設定
+      info: Togglエントリーのタグをどの作業分類にマッピングするかを設定します、複数のTogglエントリーのタグをカンマ区切りで指定できます。
+    start: スタート
+    stop: ストップ
+    time_entry: 作業時間
+    toggl_could_not_fetch: Togglエントリーを取得できませんでした、 APIトークンが正しいことを確認してください。
+    toggl_entries: Togglエントリー
+    toggl_entry: Togglエントリー
+    toggl_entry_created: Togglエントリーを作成しました
+    toggl_entry_deleted: Togglエントリーを削除しました
+    toggl_entry_updated: Togglエントリーを更新しました
+    toggl_invalid_user_toggl_entry_info: 無効なTogglエントリーを検出しました、チケット番号が正しいことを確認してください。
+    toggl_invalid_user_toggl_entry_subject: 無効なTogglエントリーがあります
+    toggl_project: プロジェクト
+    toggl_report_no_match_found: 該当なし
+    # toggl_report_without_issue_subject: Redmine Toggl Entries Without Issue
+    # toggl_report_without_project_subject: Redmine Toggl Entries Without Toggl Project
+    toggl_tags: タグ
+    toggl_task: タスク
+    toggl_workspace: ワークスペース
+    # user_is_not_authorized_for_issue: "User %{user} is not authorized for issue %{issue}"
   ## ----------
   ## OAuth
   ## ----------
@@ -1897,16 +1897,16 @@ redmine_message_customize:
   ## ----------
   ## SAML
   ## ----------
-  # error_saml_authenticity_error: SAML認証エラー
-  # error_saml_invalid_ticket: 無効なSAMLチケット
-  # label_onthefly_creation: ユーザーを自動で作成する
-  # label_replace_redmine_login: Redmineのログインページを置き換える
-  # label_saml_enabled: SAML認証を有効にする
-  # label_saml_login_label: ログインページに表示するテキスト
-  # label_saml_test_plural: テスト
-  # saml_login_label: SSOでログイン
-  # text_full_logout_proposal: 他のユーザー名を試す前に、%{value}を設定することをお勧めします
-  # text_logout_from_saml: SSOセッションを閉じる
+  error_saml_authenticity_error: SAML認証エラー
+  error_saml_invalid_ticket: 無効なSAMLチケット
+  label_onthefly_creation: ユーザーを自動で作成する
+  label_replace_redmine_login: Redmineのログインページを置き換える
+  label_saml_enabled: SAML認証を有効にする
+  label_saml_login_label: ログインページに表示するテキスト
+  label_saml_test_plural: テスト
+  saml_login_label: SSOでログイン
+  text_full_logout_proposal: 他のユーザー名を試す前に、%{value}を設定することをお勧めします
+  text_logout_from_saml: SSOセッションを閉じる
 
 ## --------------------
 ## view customizeプラグイン
@@ -1948,6 +1948,13 @@ redmine_note_templates:
     name: レビュー結果
     description: "{{ lookup('file', 'files/template/note/review.md') }}"
     enabled: true
+
+## --------------------------
+## メッセージのカスタマイズ設定
+## --------------------------
+redmine_customize_message:
+  ja: "{{ redmine_message_customize }}"
+
 
 ## 以下、Redmine以外の設定
 ## =================================
