@@ -2343,7 +2343,7 @@ mackerel_agent_extra_setting: |
 ## ----------
 ## DNSレコード情報の出力先ディレクトリ
 ## ----------
-dns_recode_output_dir: ../dns_info
+dns_recode_output_dir: ./dns_info
 
 ## ----------
 ## DNS情報を取得するドメイン

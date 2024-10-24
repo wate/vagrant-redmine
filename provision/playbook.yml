@@ -15,8 +15,6 @@
       vars:
         nodejs_global_install_yarn: true
       tags: role_nodejs
-    - role: logrotate
-      tags: role_logrotate
     - role: opendkim
       tags:
         - role_dkim
@@ -33,6 +31,8 @@
       tags: role_redmine
     - role: tools
       tags: role_tools
+    - role: logrotate
+      tags: role_logrotate
     - role: backup
       tags: role_backup
     - role: mackerel_agent
@@ -43,7 +43,9 @@
       tags: role_hedgedoc
     - role: dns
       tags: role_dns
+    ## ------------------------
     ## 以下、ローカル検証環境用
+    ## ------------------------
     - role: mailpit
       tags: role_mailpit
     - role: spamassassin
