@@ -472,7 +472,7 @@ redmine_roles:
 redmine_priorities:
   - name: 低い
     id: 1
-  - name: 通常
+  - name: 普通
     id: 2
     is_default: true
   - name: 高い
