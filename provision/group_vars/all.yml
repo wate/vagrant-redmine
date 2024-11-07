@@ -562,10 +562,10 @@ redmine_user_custom_fields:
   - name: 自己紹介
     field_format: text
     visible: true
-  - name: 性格タイプ(MBTI)
+  - name: 性格タイプ
     field_format: list
     description: |
-      16personalities(MBTI)の性格タイプを設定します。
+      16personalitiesの性格タイプを設定します。
       https://www.16personalities.com/ja
     visible: true
     possible_values:
