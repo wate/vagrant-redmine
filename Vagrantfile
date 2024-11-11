@@ -47,12 +47,12 @@ Vagrant.configure('2') do |config|
   ANSIBLE_GALAXY_ROLES_PATH = File.join('.vagrant', 'provisioners', 'ansible', 'roles')
   provision_tags = []
   provision_skip_tags = []
-  provision_role_update = !File.exists?(ANSIBLE_GALAXY_ROLES_PATH)
+  provision_role_update = !File.exist?(ANSIBLE_GALAXY_ROLES_PATH)
   provision_config = nil
   provision_config_file_dirs = ['.', LDE_CONFIG_DIR]
   provision_config_file_dirs.each do |target_dir|
     provision_config_file = File.expand_path(File.join(target_dir.to_s, 'provision_config.yml'))
-    if File.exists?(File.expand_path(provision_config_file))
+    if File.exist?(File.expand_path(provision_config_file))
       provision_config = YAML.load_file(provision_config_file)
       break
     end
@@ -70,18 +70,18 @@ Vagrant.configure('2') do |config|
   end
   config.vm.provision 'ansible' do |ansible|
     ansible.playbook = ANSIBLR_PLAYBOOK
-    ansible.config_file = ANSIBLR_CONFIG_FILE if File.exists?(ANSIBLR_CONFIG_FILE)
-    ansible.galaxy_role_file = ANSIBLR_GALAXY_ROLE_FILE if File.exists?(ANSIBLR_GALAXY_ROLE_FILE) && provision_role_update
+    ansible.config_file = ANSIBLR_CONFIG_FILE if File.exist?(ANSIBLR_CONFIG_FILE)
+    ansible.galaxy_role_file = ANSIBLR_GALAXY_ROLE_FILE if File.exist?(ANSIBLR_GALAXY_ROLE_FILE) && provision_role_update
     ansible.galaxy_roles_path = ANSIBLE_GALAXY_ROLES_PATH
     ansible.compatibility_mode = '2.0'
     ansible.tags = provision_tags if provision_tags.length > 0
     ansible.skip_tags = provision_skip_tags if provision_skip_tags.length > 0
   end
 
-  if File.exists?(ANSIBLR_VERITY_PLAYBOOK)
+  if File.exist?(ANSIBLR_VERITY_PLAYBOOK)
     config.vm.provision 'ansible' do |ansible|
       ansible.playbook = ANSIBLR_VERITY_PLAYBOOK
-      ansible.config_file = ANSIBLR_CONFIG_FILE if File.exists?(ANSIBLR_CONFIG_FILE)
+      ansible.config_file = ANSIBLR_CONFIG_FILE if File.exist?(ANSIBLR_CONFIG_FILE)
       ansible.galaxy_roles_path = ANSIBLE_GALAXY_ROLES_PATH
       ansible.compatibility_mode = '2.0'
       ansible.tags = provision_tags if provision_tags.length > 0
