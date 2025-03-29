@@ -5,6 +5,7 @@
     that:
       - ansible_facts.packages['rclone']
       - ansible_facts.packages['restic']
+    quiet: true
 - name: Test cron job
   become: true
   become_user: redmine
@@ -22,3 +23,4 @@
       ansible.builtin.assert:
         that:
           - crontab_result.rc == 0
+        quiet: true

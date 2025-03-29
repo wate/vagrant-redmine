@@ -6,6 +6,7 @@
       - ansible_facts.packages['mackerel-agent']
       - ansible_facts.packages['mackerel-agent-plugins']
       - ansible_facts.packages['mackerel-check-plugins']
+    quiet: true
 - name: Check environment variable
   ansible.builtin.command:
     cmd: grep MYSQL_PASSWORD= /etc/default/mackerel-agent
@@ -16,13 +17,16 @@
   ansible.builtin.assert:
     that:
       - env_var_result.rc == 0
+    quiet: true
 - name: Assert mackerel-agent service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['mackerel-agent.service']
+    quiet: true
 - name: Assert running mackerel-agent service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['mackerel-agent.service']['status'] == 'enabled'
       - ansible_facts.services['mackerel-agent.service']['state'] == 'running'
+    quiet: true
   when: mackerel_agent_api_key | default('') | length > 0

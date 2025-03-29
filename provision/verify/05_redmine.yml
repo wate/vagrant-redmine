@@ -26,7 +26,7 @@
       - ansible_facts.services['redmine.service']
       - ansible_facts.services['redmine.service']['state'] == 'running'
       - ansible_facts.services['redmine.service']['status'] == 'enabled'
-- name: Assert Sidekiq service
+- name: Assert sidekiq service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['sidekiq.service']

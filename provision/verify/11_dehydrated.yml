@@ -4,6 +4,7 @@
   ansible.builtin.assert:
     that:
       - ansible_facts.packages['dehydrated']
+    quiet: true
 - name: Check additional setting file
   ansible.builtin.stat:
     path: /etc/dehydrated/conf.d/local.sh
@@ -12,6 +13,7 @@
   ansible.builtin.assert:
     that:
       - additional_setting_file_result.stat.exists
+    quiet: true
 - name: Check hook setting file
   ansible.builtin.stat:
     path: /etc/dehydrated/hook.sh
@@ -21,6 +23,7 @@
     that:
       - hook_setting_file_result.stat.exists
       - hook_setting_file_result.stat.mode == '0750'
+    quiet: true
 - name: Check domain setting file
   ansible.builtin.stat:
     path: /etc/dehydrated/domains.txt
@@ -29,7 +32,7 @@
   ansible.builtin.assert:
     that:
       - domain_setting_file_result.stat.exists
-
+    quiet: true
 - name: Test SSL domain setting
   block:
     - name: Check SSL domain setting
@@ -40,6 +43,7 @@
     - name: Assert SSL domain setting
       ansible.builtin.assert:
         that: "ssl_domain_txt in dehydrated_domains_txt_result.stdout_lines"
+        quiet: true
       loop: "{{ expect_dehydrated_ssl_domains | default([]) }}"
       loop_control:
         loop_var: ssl_domain_txt

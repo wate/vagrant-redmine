@@ -4,12 +4,14 @@
   ansible.builtin.assert:
     that:
       - ansible_facts.packages['opendkim']
+    quiet: true
 - name: Assert OpenDKIM service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['opendkim.service']
       - ansible_facts.services['opendkim.service']['state'] == 'running'
       - ansible_facts.services['opendkim.service']['status'] == 'enabled'
+    quiet: true
 - name: Test OpenDKIM Setting
   block:
     - name: Gather OpenDKIM Socket setting
@@ -22,6 +24,7 @@
       ansible.builtin.assert:
         that:
           - "'inet:8891@localhost' == (socket_result.stdout | split(' '))[-1]"
+        quiet: true
     - name: Gather OpenDKIM KeyTable setting
       ansible.builtin.command:
         cmd: grep "^KeyTable " /etc/opendkim.conf
@@ -32,6 +35,7 @@
       ansible.builtin.assert:
         that:
           - "'refile:/etc/opendkim/KeyTable' == (keytable_result.stdout | split(' '))[-1]"
+        quiet: true
     - name: Gather OpenDKIM SigningTable setting
       ansible.builtin.command:
         cmd: grep "^SigningTable " /etc/opendkim.conf
@@ -42,6 +46,7 @@
       ansible.builtin.assert:
         that:
           - "'refile:/etc/opendkim/SigningTable' == (signingtable_result.stdout | split(' '))[-1]"
+        quiet: true
     - name: Gather OpenDKIM ExternalIgnoreList setting
       ansible.builtin.command:
         cmd: grep "^ExternalIgnoreList " /etc/opendkim.conf
@@ -52,6 +57,7 @@
       ansible.builtin.assert:
         that:
           - "'refile:/etc/opendkim/TrustedHosts' == (externalignorelist_result.stdout | split(' '))[-1]"
+        quiet: true
     - name: Gather OpenDKIM InternalHosts setting
       ansible.builtin.command:
         cmd: grep "^InternalHosts " /etc/opendkim.conf
@@ -62,6 +68,7 @@
       ansible.builtin.assert:
         that:
           - "'refile:/etc/opendkim/TrustedHosts' == (internalhosts_result.stdout | split(' '))[-1]"
+        quiet: true
     - name: Test KeyTable setting
       ansible.builtin.stat:
         path: /etc/opendkim/KeyTable
@@ -75,6 +82,7 @@
   ansible.builtin.assert:
     that:
       - 8891 in listen_tcp_posts
+    quiet: true
 - name: Test Postfix <-> OpenDKIM setting
   block:
     - name: Gather Postfix milter_protocol setting
@@ -89,6 +97,7 @@
       ansible.builtin.assert:
         that:
           - "'6' == (milter_protocol_result.stdout | split(' = '))[1]"
+        quiet: true
     - name: Gather Postfix milter_default_action setting
       ansible.builtin.shell:
         cmd: |
@@ -101,6 +110,7 @@
       ansible.builtin.assert:
         that:
           - "'accept' == (milter_default_action_result.stdout | split(' = '))[1]"
+        quiet: true
     - name: Gather Postfix smtpd_milters setting
       ansible.builtin.shell:
         cmd: |
@@ -113,6 +123,7 @@
       ansible.builtin.assert:
         that:
           - "'inet:localhost:8891' == (smtpd_milters_result.stdout | split(' = '))[1]"
+        quiet: true
     - name: Gather Postfix non_smtpd_milters setting
       ansible.builtin.shell:
         cmd: |
@@ -125,6 +136,7 @@
       ansible.builtin.assert:
         that:
           - "'inet:localhost:8891' == (non_smtpd_milters_result.stdout | split(' = '))[1]"
+        quiet: true
 - name: Test sing domain setting
   ansible.builtin.include_tasks:
     file: dkim/sign_domain.yml

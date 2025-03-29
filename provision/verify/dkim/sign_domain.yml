@@ -11,6 +11,7 @@
     - name: Assert SigningTable setting({{ sign_domain }})
       ansible.builtin.assert:
         that: dkim_sign_table.rc == 0
+        quiet: true
 - name: Test KeyTable({{ sign_domain }})
   block:
     - name: Set KeyTable string({{ sign_domain }})
@@ -25,6 +26,7 @@
     - name: Assert KeyTable setting({{ sign_domain }})
       ansible.builtin.assert:
         that: dkim_key_table.rc == 0
+        quiet: true
 - name: Test KeyTable({{ sign_domain }})
   block:
     - name: Set KeyTable string({{ sign_domain }})
@@ -37,3 +39,4 @@
     - name: Assert Private key
       ansible.builtin.assert:
         that: sign_domain_private_key_result.stat.exists
+        quiet: true

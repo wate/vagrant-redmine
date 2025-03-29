@@ -4,18 +4,22 @@
   ansible.builtin.assert:
     that:
       - ansible_facts.packages['nginx']
+    quiet: true
 - name: Assert Nginx service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['nginx.service']
       - ansible_facts.services['nginx.service']['state'] == 'running'
       - ansible_facts.services['nginx.service']['status'] == 'enabled'
+    quiet: true
 - name: Assert Web server port(HTTP)
   ansible.builtin.assert:
     that:
       - 80 in listen_tcp_posts
+    quiet: true
 - name: Assert Web server port(HTTPS)
   ansible.builtin.assert:
     that:
       - 443 in listen_tcp_posts
+    quiet: true
   when: verify_https_port | default(true)
