@@ -4,28 +4,28 @@
   ansible.builtin.assert:
     that:
       - ansible_facts.packages['dehydrated']
-- name: Check additional settig file
+- name: Check additional setting file
   ansible.builtin.stat:
     path: /etc/dehydrated/conf.d/local.sh
   register: additional_setting_file_result
-- name: Assert additional settig file
+- name: Assert additional setting file
   ansible.builtin.assert:
     that:
       - additional_setting_file_result.stat.exists
-- name: Check hook settig file
+- name: Check hook setting file
   ansible.builtin.stat:
     path: /etc/dehydrated/hook.sh
   register: hook_setting_file_result
-- name: Assert domain settig file
+- name: Assert domain setting file
   ansible.builtin.assert:
     that:
       - hook_setting_file_result.stat.exists
       - hook_setting_file_result.stat.mode == '0750'
-- name: Check domain settig file
+- name: Check domain setting file
   ansible.builtin.stat:
     path: /etc/dehydrated/domains.txt
   register: domain_setting_file_result
-- name: Assert domain settig file
+- name: Assert domain setting file
   ansible.builtin.assert:
     that:
       - domain_setting_file_result.stat.exists
