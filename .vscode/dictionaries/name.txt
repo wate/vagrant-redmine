@@ -4,11 +4,13 @@ cakephp
 direnv
 dotenv
 duckdb
+etckeeper
 github
 gitleaks
 glightbox
 goaccess
 graphviz
+hedgedoc
 lazygit
 linux
 lnav
@@ -17,6 +19,7 @@ mariadb
 mkdocs
 mycli
 nginx
+opendkim
 pandoc
 phpdocumentor
 phpstorm
@@ -37,3 +40,4 @@ textlint
 tldr
 venv
 virtualbox
+vnstat

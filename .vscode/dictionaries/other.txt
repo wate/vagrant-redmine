@@ -13,9 +13,12 @@ hostsupdater
 keishikimeishis
 modifyvm
 myclirc
+myhostname
 nakaguro
 pipefail
+postconf
 quotepath
+sshfilter
 superfences
 vcfz
 venvs

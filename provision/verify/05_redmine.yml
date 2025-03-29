@@ -10,6 +10,7 @@
   ansible.builtin.assert:
     that:
       - check_user_result is not changed
+    quiet: true
 - name: Check group
   ansible.builtin.group:
     name: redmine
@@ -20,18 +21,21 @@
   ansible.builtin.assert:
     that:
       - check_group_result is not changed
+    quiet: true
 - name: Assert Redmine service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['redmine.service']
       - ansible_facts.services['redmine.service']['state'] == 'running'
       - ansible_facts.services['redmine.service']['status'] == 'enabled'
+    quiet: true
 - name: Assert sidekiq service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['sidekiq.service']
       - ansible_facts.services['sidekiq.service']['state'] == 'running'
       - ansible_facts.services['sidekiq.service']['status'] == 'enabled'
+    quiet: true
 - name: Test puma state
   block:
     - name: Check puma pid file
@@ -42,3 +46,4 @@
       ansible.builtin.assert:
         that:
           - puma_pid_result.stat.exists
+        quiet: true
