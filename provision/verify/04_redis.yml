@@ -4,16 +4,22 @@
   ansible.builtin.assert:
     that:
       - ansible_facts.packages['redis-server']
-    quiet: true
+    success_msg: "Redis package is installed"
+    fail_msg: "Redis package is not installed"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['redis-server.service']
       - ansible_facts.services['redis-server.service']['state'] == 'running'
       - ansible_facts.services['redis-server.service']['status'] == 'enabled'
-    quiet: true
+    success_msg: "Redis service is running and enabled"
+    fail_msg: "Redis service is not properly running or enabled"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert port
   ansible.builtin.assert:
     that:
       - 6379 in listen_tcp_posts
-    quiet: true
+    success_msg: "Redis port is listening"
+    fail_msg: "Redis port is not listening"
+    quiet: "{{ assert_quiet_mode | default(true) }}"

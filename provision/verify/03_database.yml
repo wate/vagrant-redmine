@@ -4,16 +4,22 @@
   ansible.builtin.assert:
     that:
       - ansible_facts.packages['mariadb-server']
-    quiet: true
+    success_msg: "MariaDB package is installed"
+    fail_msg: "MariaDB package is not installed"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['mariadb.service']
       - ansible_facts.services['mariadb.service']['state'] == 'running'
       - ansible_facts.services['mariadb.service']['status'] == 'enabled'
-    quiet: true
+    success_msg: "MariaDB service is running and enabled"
+    fail_msg: "MariaDB service is not properly running or enabled"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert port
   ansible.builtin.assert:
     that:
       - 3306 in listen_tcp_posts
-    quiet: true
+    success_msg: "MariaDB port is listening"
+    fail_msg: "MariaDB port is not listening"
+    quiet: "{{ assert_quiet_mode | default(true) }}"

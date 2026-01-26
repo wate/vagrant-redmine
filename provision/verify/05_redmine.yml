@@ -10,7 +10,9 @@
   ansible.builtin.assert:
     that:
       - check_user_result is not changed
-    quiet: true
+    success_msg: "Redmine user exists"
+    fail_msg: "Redmine user does not exist"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Check group
   ansible.builtin.group:
     name: redmine
@@ -21,21 +23,27 @@
   ansible.builtin.assert:
     that:
       - check_group_result is not changed
-    quiet: true
+    success_msg: "Redmine group exists"
+    fail_msg: "Redmine group does not exist"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert Redmine service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['redmine.service']
       - ansible_facts.services['redmine.service']['state'] == 'running'
       - ansible_facts.services['redmine.service']['status'] == 'enabled'
-    quiet: true
+    success_msg: "Redmine service is running and enabled"
+    fail_msg: "Redmine service is not properly running or enabled"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert sidekiq service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['sidekiq.service']
       - ansible_facts.services['sidekiq.service']['state'] == 'running'
       - ansible_facts.services['sidekiq.service']['status'] == 'enabled'
-    quiet: true
+    success_msg: "Sidekiq service is running and enabled"
+    fail_msg: "Sidekiq service is not properly running or enabled"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Test puma state
   block:
     - name: Check puma pid file
@@ -46,4 +54,6 @@
       ansible.builtin.assert:
         that:
           - puma_pid_result.stat.exists
-        quiet: true
+        success_msg: "Puma PID file exists"
+        fail_msg: "Puma PID file does not exist"
+        quiet: "{{ assert_quiet_mode | default(true) }}"

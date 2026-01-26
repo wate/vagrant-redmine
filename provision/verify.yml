@@ -18,6 +18,7 @@
     #   - redmine.community *.redmine.community > redmine.community
     verify_https_port: false
     verify_lookup_dns: false
+    assert_quiet_mode: false
   tasks:
     - name: Gather package facts
       ansible.builtin.package_facts:

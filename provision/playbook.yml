@@ -8,6 +8,9 @@
     - name: Update package cache
       ansible.builtin.apt:
         update_cache: true
+    - name: Upgrade install packages
+      ansible.builtin.apt:
+        upgrade: true
   roles:
     - role: common
       tags: role_common

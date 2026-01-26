@@ -8,7 +8,9 @@
   ansible.builtin.assert:
     that:
       - setting_file_result.stat.exists
-    quiet: true
+    success_msg: "Redmine logrotate setting file exists"
+    fail_msg: "Redmine logrotate setting file does not exist"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Check Redmine logrotate setting detail
   block:
     - name: Check rotate file setting
@@ -21,7 +23,9 @@
       ansible.builtin.assert:
         that:
           - rotate_file_setting_result.rc == 0
-        quiet: true
+        success_msg: "Logrotate file setting is configured"
+        fail_msg: "Logrotate file setting is not configured"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Check copytruncate setting
       ansible.builtin.command:
         cmd: grep copytruncate /etc/logrotate.d/redmine
@@ -32,4 +36,6 @@
       ansible.builtin.assert:
         that:
           - rotate_copytruncate_setting_result.rc == 0
-        quiet: true
+        success_msg: "Logrotate copytruncate setting is configured"
+        fail_msg: "Logrotate copytruncate setting is not configured"
+        quiet: "{{ assert_quiet_mode | default(true) }}"

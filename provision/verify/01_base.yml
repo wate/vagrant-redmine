@@ -7,19 +7,25 @@
       - ansible_facts.packages['postfix']
       - ansible_facts.packages['vnstat']
       - ansible_facts.packages['jc']
-    quiet: true
+    success_msg: "Required packages are installed"
+    fail_msg: "Required packages are not installed"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert etckeeper service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['etckeeper.service']
-    quiet: true
+    success_msg: "etckeeper service exists"
+    fail_msg: "etckeeper service does not exist"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert Postfix service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['postfix.service']
       - ansible_facts.services['postfix.service']['status'] == 'enabled'
       - ansible_facts.services['postfix@-.service']['state'] == 'running'
-    quiet: true
+    success_msg: "Postfix service is running and enabled"
+    fail_msg: "Postfix service is not properly running or enabled"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Test Postfix config
   block:
     - name: Gather Postfix myhostname setting
@@ -34,14 +40,18 @@
       ansible.builtin.assert:
         that:
           - expect_hostname == (myhostname_result.stdout | split(' = '))[1]
-        quiet: true
+        success_msg: "Postfix myhostname setting is correct"
+        fail_msg: "Postfix myhostname setting is incorrect"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert vnstat service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['vnstat.service']
       - ansible_facts.services['vnstat.service']['state'] == 'running'
       - ansible_facts.services['vnstat.service']['status'] == 'enabled'
-    quiet: true
+    success_msg: "vnstat service is running and enabled"
+    fail_msg: "vnstat service is not properly running or enabled"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Test security
   block:
     - name: Assert packages
@@ -49,7 +59,9 @@
         that:
           - ansible_facts.packages['ufw']
           - ansible_facts.packages['fail2ban']
-        quiet: true
+        success_msg: "Security packages are installed"
+        fail_msg: "Security packages are not installed"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Test SSH GeoIP filter
       block:
         - name: Assert GeoIP filter dependency packages
@@ -57,7 +69,9 @@
             that:
               - ansible_facts.packages['geoip-bin']
               - ansible_facts.packages['geoip-database']
-            quiet: true
+            success_msg: "GeoIP filter packages are installed"
+            fail_msg: "GeoIP filter packages are not installed"
+            quiet: "{{ assert_quiet_mode | default(true) }}"
         - name: Check GeoIP database update script
           ansible.builtin.stat:
             path: /etc/cron.weekly/geoip_update
@@ -67,7 +81,9 @@
             that:
               - geoip_update_script_result.stat.exists
               - geoip_update_script_result.stat.mode == '0755'
-            quiet: true
+            success_msg: "GeoIP database update script is properly configured"
+            fail_msg: "GeoIP database update script is not properly configured"
+            quiet: "{{ assert_quiet_mode | default(true) }}"
         - name: Check GeoIP ssh filter script
           ansible.builtin.stat:
             path: /usr/local/bin/sshfilter
@@ -77,7 +93,9 @@
             that:
               - sshfilter_script_result.stat.exists
               - sshfilter_script_result.stat.mode == '0755'
-            quiet: true
+            success_msg: "GeoIP SSH filter script is properly configured"
+            fail_msg: "GeoIP SSH filter script is not properly configured"
+            quiet: "{{ assert_quiet_mode | default(true) }}"
         - name: Check SSH GeoIP filter setting
           ansible.builtin.command:
             cmd: 'grep "sshd: ALL: spawn /usr/local/bin/sshfilter %a" /etc/hosts.allow'
@@ -88,7 +106,9 @@
           ansible.builtin.assert:
             that:
               - ssh_geoip_filter_result.rc == 0
-            quiet: true
+            success_msg: "SSH GeoIP filter setting is configured"
+            fail_msg: "SSH GeoIP filter setting is not configured"
+            quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Test fail2ban
       block:
         - name: Check fail2ban sshd enable
@@ -100,14 +120,18 @@
           ansible.builtin.assert:
             that:
               - fail2ban_ssh_enable_result.rc == 0
-            quiet: true
+            success_msg: "fail2ban SSHD monitoring is enabled"
+            fail_msg: "fail2ban SSHD monitoring is not enabled"
+            quiet: "{{ assert_quiet_mode | default(true) }}"
         - name: Assert fail2ban service
           ansible.builtin.assert:
             that:
               - ansible_facts.services['fail2ban.service']
               - ansible_facts.services['fail2ban.service']['state'] == 'running'
               - ansible_facts.services['fail2ban.service']['status'] == 'enabled'
-            quiet: true
+            success_msg: "fail2ban service is running and enabled"
+            fail_msg: "fail2ban service is not properly running or enabled"
+            quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Test ufw
       block:
         - name: Check ufw status
@@ -123,20 +147,26 @@
           ansible.builtin.assert:
             that:
               - ufw_status_result.rc == 0
-            quiet: true
+            success_msg: "ufw is active"
+            fail_msg: "ufw is not active"
+            quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Test package auto upgrade
   block:
     - name: Assert cron-apt package
       ansible.builtin.assert:
         that:
           - ansible_facts.packages['cron-apt']
-        quiet: true
+        success_msg: "cron-apt package is installed"
+        fail_msg: "cron-apt package is not installed"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Assert apt-daily service
       ansible.builtin.assert:
         that:
           - ansible_facts.services['apt-daily.service']
           - ansible_facts.services['apt-daily-upgrade.service']
-        quiet: true
+        success_msg: "apt-daily services exist"
+        fail_msg: "apt-daily services do not exist"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Check cron-apt auto upgrade
       ansible.builtin.command:
         cmd: grep "dist-upgrade -y -o APT::Get::Show-Upgraded=true" /etc/cron-apt/action.d/3-download
@@ -147,4 +177,6 @@
       ansible.builtin.assert:
         that:
           - auto_upgrade_result.rc == 0
-        quiet: true
+        success_msg: "cron-apt auto upgrade is configured"
+        fail_msg: "cron-apt auto upgrade is not configured"
+        quiet: "{{ assert_quiet_mode | default(true) }}"

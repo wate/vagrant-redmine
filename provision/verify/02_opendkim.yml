@@ -4,14 +4,18 @@
   ansible.builtin.assert:
     that:
       - ansible_facts.packages['opendkim']
-    quiet: true
+    success_msg: "OpenDKIM package is installed"
+    fail_msg: "OpenDKIM package is not installed"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert OpenDKIM service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['opendkim.service']
       - ansible_facts.services['opendkim.service']['state'] == 'running'
       - ansible_facts.services['opendkim.service']['status'] == 'enabled'
-    quiet: true
+    success_msg: "OpenDKIM service is running and enabled"
+    fail_msg: "OpenDKIM service is not properly running or enabled"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Test OpenDKIM Setting
   block:
     - name: Gather OpenDKIM Socket setting
@@ -24,7 +28,9 @@
       ansible.builtin.assert:
         that:
           - "'inet:8891@localhost' == (socket_result.stdout | split(' '))[-1]"
-        quiet: true
+        success_msg: "OpenDKIM Socket setting is correct"
+        fail_msg: "OpenDKIM Socket setting is incorrect"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Gather OpenDKIM KeyTable setting
       ansible.builtin.command:
         cmd: grep "^KeyTable " /etc/opendkim.conf
@@ -35,7 +41,9 @@
       ansible.builtin.assert:
         that:
           - "'refile:/etc/opendkim/KeyTable' == (keytable_result.stdout | split(' '))[-1]"
-        quiet: true
+        success_msg: "OpenDKIM KeyTable setting is correct"
+        fail_msg: "OpenDKIM KeyTable setting is incorrect"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Gather OpenDKIM SigningTable setting
       ansible.builtin.command:
         cmd: grep "^SigningTable " /etc/opendkim.conf
@@ -46,7 +54,9 @@
       ansible.builtin.assert:
         that:
           - "'refile:/etc/opendkim/SigningTable' == (signingtable_result.stdout | split(' '))[-1]"
-        quiet: true
+        success_msg: "OpenDKIM SigningTable setting is correct"
+        fail_msg: "OpenDKIM SigningTable setting is incorrect"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Gather OpenDKIM ExternalIgnoreList setting
       ansible.builtin.command:
         cmd: grep "^ExternalIgnoreList " /etc/opendkim.conf
@@ -57,7 +67,9 @@
       ansible.builtin.assert:
         that:
           - "'refile:/etc/opendkim/TrustedHosts' == (externalignorelist_result.stdout | split(' '))[-1]"
-        quiet: true
+        success_msg: "OpenDKIM ExternalIgnoreList setting is correct"
+        fail_msg: "OpenDKIM ExternalIgnoreList setting is incorrect"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Gather OpenDKIM InternalHosts setting
       ansible.builtin.command:
         cmd: grep "^InternalHosts " /etc/opendkim.conf
@@ -68,7 +80,9 @@
       ansible.builtin.assert:
         that:
           - "'refile:/etc/opendkim/TrustedHosts' == (internalhosts_result.stdout | split(' '))[-1]"
-        quiet: true
+        success_msg: "OpenDKIM InternalHosts setting is correct"
+        fail_msg: "OpenDKIM InternalHosts setting is incorrect"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Test KeyTable setting
       ansible.builtin.stat:
         path: /etc/opendkim/KeyTable
@@ -82,7 +96,9 @@
   ansible.builtin.assert:
     that:
       - 8891 in listen_tcp_posts
-    quiet: true
+    success_msg: "DKIM server port is listening"
+    fail_msg: "DKIM server port is not listening"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Test Postfix <-> OpenDKIM setting
   block:
     - name: Gather Postfix milter_protocol setting
@@ -97,7 +113,9 @@
       ansible.builtin.assert:
         that:
           - "'6' == (milter_protocol_result.stdout | split(' = '))[1]"
-        quiet: true
+        success_msg: "Postfix milter_protocol setting is correct"
+        fail_msg: "Postfix milter_protocol setting is incorrect"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Gather Postfix milter_default_action setting
       ansible.builtin.shell:
         cmd: |
@@ -110,7 +128,9 @@
       ansible.builtin.assert:
         that:
           - "'accept' == (milter_default_action_result.stdout | split(' = '))[1]"
-        quiet: true
+        success_msg: "Postfix milter_default_action setting is correct"
+        fail_msg: "Postfix milter_default_action setting is incorrect"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Gather Postfix smtpd_milters setting
       ansible.builtin.shell:
         cmd: |
@@ -123,7 +143,9 @@
       ansible.builtin.assert:
         that:
           - "'inet:localhost:8891' == (smtpd_milters_result.stdout | split(' = '))[1]"
-        quiet: true
+        success_msg: "Postfix smtpd_milters setting is correct"
+        fail_msg: "Postfix smtpd_milters setting is incorrect"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Gather Postfix non_smtpd_milters setting
       ansible.builtin.shell:
         cmd: |
@@ -136,7 +158,9 @@
       ansible.builtin.assert:
         that:
           - "'inet:localhost:8891' == (non_smtpd_milters_result.stdout | split(' = '))[1]"
-        quiet: true
+        success_msg: "Postfix non_smtpd_milters setting is correct"
+        fail_msg: "Postfix non_smtpd_milters setting is incorrect"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Test sing domain setting
   ansible.builtin.include_tasks:
     file: dkim/sign_domain.yml

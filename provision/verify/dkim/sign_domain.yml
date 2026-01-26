@@ -11,7 +11,9 @@
     - name: Assert SigningTable setting({{ sign_domain }})
       ansible.builtin.assert:
         that: dkim_sign_table.rc == 0
-        quiet: true
+        success_msg: "DKIM SigningTable setting for {{ sign_domain }} is configured"
+        fail_msg: "DKIM SigningTable setting for {{ sign_domain }} is not configured"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Test KeyTable({{ sign_domain }})
   block:
     - name: Set KeyTable string({{ sign_domain }})
@@ -26,7 +28,9 @@
     - name: Assert KeyTable setting({{ sign_domain }})
       ansible.builtin.assert:
         that: dkim_key_table.rc == 0
-        quiet: true
+        success_msg: "DKIM KeyTable setting for {{ sign_domain }} is configured"
+        fail_msg: "DKIM KeyTable setting for {{ sign_domain }} is not configured"
+        quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Test KeyTable({{ sign_domain }})
   block:
     - name: Set KeyTable string({{ sign_domain }})
@@ -39,4 +43,6 @@
     - name: Assert Private key
       ansible.builtin.assert:
         that: sign_domain_private_key_result.stat.exists
-        quiet: true
+        success_msg: "DKIM private key for {{ sign_domain }} exists"
+        fail_msg: "DKIM private key for {{ sign_domain }} does not exist"
+        quiet: "{{ assert_quiet_mode | default(true) }}"

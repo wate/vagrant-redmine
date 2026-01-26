@@ -4,22 +4,30 @@
   ansible.builtin.assert:
     that:
       - ansible_facts.packages['nginx']
-    quiet: true
+    success_msg: "Nginx package is installed"
+    fail_msg: "Nginx package is not installed"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert Nginx service
   ansible.builtin.assert:
     that:
       - ansible_facts.services['nginx.service']
       - ansible_facts.services['nginx.service']['state'] == 'running'
       - ansible_facts.services['nginx.service']['status'] == 'enabled'
-    quiet: true
+    success_msg: "Nginx service is running and enabled"
+    fail_msg: "Nginx service is not properly running or enabled"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert Web server port(HTTP)
   ansible.builtin.assert:
     that:
       - 80 in listen_tcp_posts
-    quiet: true
+    success_msg: "Web server HTTP port is listening"
+    fail_msg: "Web server HTTP port is not listening"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert Web server port(HTTPS)
   ansible.builtin.assert:
     that:
       - 443 in listen_tcp_posts
-    quiet: true
+    success_msg: "Web server HTTPS port is listening"
+    fail_msg: "Web server HTTPS port is not listening"
+    quiet: "{{ assert_quiet_mode | default(true) }}"
   when: verify_https_port | default(true)
