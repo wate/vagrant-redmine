@@ -3,17 +3,12 @@ redmine_domain: redmine.local
 redmine_hostname: "{{ redmine_domain }}"
 
 ## --------------------
-## Redmineのバージョン
-## --------------------
-redmine_version: 5.1-stable
-
-## --------------------
 ## 追加インストールするgemパッケージ
 ## --------------------
 redmine_gemfile_local_packages:
   sidekiq:
-  yard:
-  rails-erd:
+  # yard:
+  # rails-erd:
 
 ## --------------------
 ## 追加の環境設定
