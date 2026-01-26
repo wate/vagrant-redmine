@@ -12,8 +12,6 @@
     - role: common
       tags: role_common
     - role: nodejs
-      vars:
-        nodejs_global_install_yarn: true
       tags: role_nodejs
     - role: opendkim
       tags:
@@ -39,25 +37,15 @@
       tags:
         - role_mackerel
         - role_mackerel_agent
-    - role: hedgedoc
-      tags: role_hedgedoc
     - role: dns
       tags: role_dns
     ## ------------------------
     ## 以下、ローカル検証環境用
     ## ------------------------
-    - role: mailpit
-      tags: role_mailpit
     - role: spamassassin
       tags: role_spamassassin
-    - role: font
-      tags: role_font
-    - role: document
-      tags: role_docment
-      become: false
-    - role: other
-      tags: role_other
-      become: false
+    - role: mailpit
+      tags: role_mailpit
   tasks:
     - name: Allow mailpit port
       community.general.ufw:

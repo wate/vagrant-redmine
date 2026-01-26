@@ -39,8 +39,8 @@ roles:
   - name: dns
     src: https://github.com/wate/ansible-role-dns
     version: develop
-  - name: hedgedoc
-    src: https://github.com/wate/ansible-role-hedgedoc
+  - name: report
+    src: https://github.com/wate/ansible-role-report
     version: develop
   ### 以下、ローカル検証環境用
   - name: mailpit
@@ -49,7 +49,7 @@ roles:
   - name: spamassassin
     src: https://github.com/wate/ansible-role-spamassassin
     version: develop
-  - name: font
-    src: https://github.com/wate/ansible-role-font
-    version: develop
+  # - name: font
+  #   src: https://github.com/wate/ansible-role-font
+  #   version: develop
 collections: []

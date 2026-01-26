@@ -7,12 +7,11 @@ require 'yaml'
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure('2') do |config|
-  config.vm.box = 'wate/debian-12'
+  config.vm.box = 'bento/debian-13'
   # config.vm.box_check_update = false
 
   config.vm.network 'private_network', ip: '192.168.33.101'
   config.vm.network 'forwarded_port', guest: 80, host: 8080
-  config.vm.network 'forwarded_port', guest: 3000, host: 3000
   config.vm.network 'forwarded_port', guest: 8025, host: 8025
 
   config.vm.hostname = 'redmine'
@@ -23,7 +22,6 @@ Vagrant.configure('2') do |config|
 
   vm_domain = ENV["VAGRANT_VM_DOMAIN"] || "redmine.local"
   vm_host_aliases = [
-    "hedgedoc." + vm_domain,
     "mailpit." + vm_domain
   ]
   ## plugin vagrant-hostsupdater
