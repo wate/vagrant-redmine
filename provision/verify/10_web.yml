@@ -3,14 +3,14 @@
 - name: Assert Nginx package
   ansible.builtin.assert:
     that:
-      - ansible_facts.packages['nginx']
+      - ansible_facts.packages['nginx'] is defined
     success_msg: "Nginx package is installed"
     fail_msg: "Nginx package is not installed"
     quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert Nginx service
   ansible.builtin.assert:
     that:
-      - ansible_facts.services['nginx.service']
+      - ansible_facts.services['nginx.service'] is defined
       - ansible_facts.services['nginx.service']['state'] == 'running'
       - ansible_facts.services['nginx.service']['status'] == 'enabled'
     success_msg: "Nginx service is running and enabled"

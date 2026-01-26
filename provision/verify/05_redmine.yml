@@ -29,7 +29,7 @@
 - name: Assert Redmine service
   ansible.builtin.assert:
     that:
-      - ansible_facts.services['redmine.service']
+      - ansible_facts.services['redmine.service'] is defined
       - ansible_facts.services['redmine.service']['state'] == 'running'
       - ansible_facts.services['redmine.service']['status'] == 'enabled'
     success_msg: "Redmine service is running and enabled"
@@ -38,7 +38,7 @@
 - name: Assert sidekiq service
   ansible.builtin.assert:
     that:
-      - ansible_facts.services['sidekiq.service']
+      - ansible_facts.services['sidekiq.service'] is defined
       - ansible_facts.services['sidekiq.service']['state'] == 'running'
       - ansible_facts.services['sidekiq.service']['status'] == 'enabled'
     success_msg: "Sidekiq service is running and enabled"

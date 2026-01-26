@@ -3,14 +3,14 @@
 - name: Assert packages
   ansible.builtin.assert:
     that:
-      - ansible_facts.packages['mariadb-server']
+      - ansible_facts.packages['mariadb-server'] is defined
     success_msg: "MariaDB package is installed"
     fail_msg: "MariaDB package is not installed"
     quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert service
   ansible.builtin.assert:
     that:
-      - ansible_facts.services['mariadb.service']
+      - ansible_facts.services['mariadb.service'] is defined
       - ansible_facts.services['mariadb.service']['state'] == 'running'
       - ansible_facts.services['mariadb.service']['status'] == 'enabled'
     success_msg: "MariaDB service is running and enabled"

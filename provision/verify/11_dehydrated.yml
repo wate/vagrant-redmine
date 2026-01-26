@@ -3,7 +3,7 @@
 - name: Assert dehydrated package
   ansible.builtin.assert:
     that:
-      - ansible_facts.packages['dehydrated']
+      - ansible_facts.packages['dehydrated'] is defined
     success_msg: "dehydrated package is installed"
     fail_msg: "dehydrated package is not installed"
     quiet: "{{ assert_quiet_mode | default(true) }}"

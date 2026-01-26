@@ -3,14 +3,14 @@
 - name: Assert packages
   ansible.builtin.assert:
     that:
-      - ansible_facts.packages['redis-server']
+      - ansible_facts.packages['redis-server'] is defined
     success_msg: "Redis package is installed"
     fail_msg: "Redis package is not installed"
     quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert service
   ansible.builtin.assert:
     that:
-      - ansible_facts.services['redis-server.service']
+      - ansible_facts.services['redis-server.service'] is defined
       - ansible_facts.services['redis-server.service']['state'] == 'running'
       - ansible_facts.services['redis-server.service']['status'] == 'enabled'
     success_msg: "Redis service is running and enabled"

@@ -3,24 +3,24 @@
 - name: Assert packages
   ansible.builtin.assert:
     that:
-      - ansible_facts.packages['etckeeper']
-      - ansible_facts.packages['postfix']
-      - ansible_facts.packages['vnstat']
-      - ansible_facts.packages['jc']
+      - ansible_facts.packages['etckeeper'] is defined
+      - ansible_facts.packages['postfix'] is defined
+      - ansible_facts.packages['vnstat'] is defined
+      - ansible_facts.packages['jc'] is defined
     success_msg: "Required packages are installed"
     fail_msg: "Required packages are not installed"
     quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert etckeeper service
   ansible.builtin.assert:
     that:
-      - ansible_facts.services['etckeeper.service']
+      - ansible_facts.services['etckeeper.service'] is defined
     success_msg: "etckeeper service exists"
     fail_msg: "etckeeper service does not exist"
     quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert Postfix service
   ansible.builtin.assert:
     that:
-      - ansible_facts.services['postfix.service']
+      - ansible_facts.services['postfix.service'] is defined
       - ansible_facts.services['postfix.service']['status'] == 'enabled'
       - ansible_facts.services['postfix@-.service']['state'] == 'running'
     success_msg: "Postfix service is running and enabled"
@@ -46,7 +46,7 @@
 - name: Assert vnstat service
   ansible.builtin.assert:
     that:
-      - ansible_facts.services['vnstat.service']
+      - ansible_facts.services['vnstat.service'] is defined
       - ansible_facts.services['vnstat.service']['state'] == 'running'
       - ansible_facts.services['vnstat.service']['status'] == 'enabled'
     success_msg: "vnstat service is running and enabled"
@@ -57,8 +57,8 @@
     - name: Assert packages
       ansible.builtin.assert:
         that:
-          - ansible_facts.packages['ufw']
-          - ansible_facts.packages['fail2ban']
+          - ansible_facts.packages['ufw'] is defined
+          - ansible_facts.packages['fail2ban'] is defined
         success_msg: "Security packages are installed"
         fail_msg: "Security packages are not installed"
         quiet: "{{ assert_quiet_mode | default(true) }}"
@@ -67,8 +67,8 @@
         - name: Assert GeoIP filter dependency packages
           ansible.builtin.assert:
             that:
-              - ansible_facts.packages['geoip-bin']
-              - ansible_facts.packages['geoip-database']
+              - ansible_facts.packages['geoip-bin'] is defined
+              - ansible_facts.packages['geoip-database'] is defined
             success_msg: "GeoIP filter packages are installed"
             fail_msg: "GeoIP filter packages are not installed"
             quiet: "{{ assert_quiet_mode | default(true) }}"
@@ -126,7 +126,7 @@
         - name: Assert fail2ban service
           ansible.builtin.assert:
             that:
-              - ansible_facts.services['fail2ban.service']
+              - ansible_facts.services['fail2ban.service'] is defined
               - ansible_facts.services['fail2ban.service']['state'] == 'running'
               - ansible_facts.services['fail2ban.service']['status'] == 'enabled'
             success_msg: "fail2ban service is running and enabled"
@@ -155,15 +155,15 @@
     - name: Assert cron-apt package
       ansible.builtin.assert:
         that:
-          - ansible_facts.packages['cron-apt']
+          - ansible_facts.packages['cron-apt'] is defined
         success_msg: "cron-apt package is installed"
         fail_msg: "cron-apt package is not installed"
         quiet: "{{ assert_quiet_mode | default(true) }}"
     - name: Assert apt-daily service
       ansible.builtin.assert:
         that:
-          - ansible_facts.services['apt-daily.service']
-          - ansible_facts.services['apt-daily-upgrade.service']
+          - ansible_facts.services['apt-daily.service'] is defined
+          - ansible_facts.services['apt-daily-upgrade.service'] is defined
         success_msg: "apt-daily services exist"
         fail_msg: "apt-daily services do not exist"
         quiet: "{{ assert_quiet_mode | default(true) }}"

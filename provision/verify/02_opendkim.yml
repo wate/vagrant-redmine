@@ -3,14 +3,14 @@
 - name: Assert OpenDKIM packages
   ansible.builtin.assert:
     that:
-      - ansible_facts.packages['opendkim']
+      - ansible_facts.packages['opendkim'] is defined
     success_msg: "OpenDKIM package is installed"
     fail_msg: "OpenDKIM package is not installed"
     quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Assert OpenDKIM service
   ansible.builtin.assert:
     that:
-      - ansible_facts.services['opendkim.service']
+      - ansible_facts.services['opendkim.service'] is defined
       - ansible_facts.services['opendkim.service']['state'] == 'running'
       - ansible_facts.services['opendkim.service']['status'] == 'enabled'
     success_msg: "OpenDKIM service is running and enabled"

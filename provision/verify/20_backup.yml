@@ -3,8 +3,8 @@
 - name: Assert packages
   ansible.builtin.assert:
     that:
-      - ansible_facts.packages['rclone']
-      - ansible_facts.packages['restic']
+      - ansible_facts.packages['rclone'] is defined
+      - ansible_facts.packages['restic'] is defined
     success_msg: "Backup packages are installed"
     fail_msg: "Backup packages are not installed"
     quiet: "{{ assert_quiet_mode | default(true) }}"

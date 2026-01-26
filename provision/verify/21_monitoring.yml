@@ -3,9 +3,9 @@
 - name: Assert mackerel-agent package
   ansible.builtin.assert:
     that:
-      - ansible_facts.packages['mackerel-agent']
-      - ansible_facts.packages['mackerel-agent-plugins']
-      - ansible_facts.packages['mackerel-check-plugins']
+      - ansible_facts.packages['mackerel-agent'] is defined
+      - ansible_facts.packages['mackerel-agent-plugins'] is defined
+      - ansible_facts.packages['mackerel-check-plugins'] is defined
     success_msg: "Mackerel packages are installed"
     fail_msg: "Mackerel packages are not installed"
     quiet: "{{ assert_quiet_mode | default(true) }}"
@@ -25,7 +25,7 @@
 - name: Assert mackerel-agent service
   ansible.builtin.assert:
     that:
-      - ansible_facts.services['mackerel-agent.service']
+      - ansible_facts.services['mackerel-agent.service'] is defined
     success_msg: "Mackerel agent service exists"
     fail_msg: "Mackerel agent service does not exist"
     quiet: "{{ assert_quiet_mode | default(true) }}"
