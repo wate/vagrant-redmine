@@ -5,6 +5,28 @@
   become: true
   gather_facts: true
   pre_tasks:
+    - name: Verify required environment variables are set
+      ansible.builtin.assert:
+        that: lookup('env', var_name) | length > 1
+        quiet: true
+        fail_msg: "Environment variable '{{ var_name }}' is not defined or empty"
+      loop: "{{ assert_environments | default([]) }}"
+      loop_control:
+        loop_var: var_name
+        label: "{{ var_name }}"
+    - name: Check if legacy apt sources.list exists
+      ansible.builtin.stat:
+        path: /etc/apt/sources.list
+      register: sources_list_result
+    - name: Modernize apt sources to deb822 format
+      ansible.builtin.command:
+        cmd: apt modernize-sources -y
+      when: sources_list_result.stat.exists
+    - name: Update Debian repository mirror to Japanese server
+      ansible.builtin.replace:
+        path: /etc/apt/sources.list.d/debian.sources
+        regexp: 'http://.*\.debian\.org/debian/'
+        replace: "http://ftp.jp.debian.org/debian/"
     - name: Update package cache
       ansible.builtin.apt:
         update_cache: true

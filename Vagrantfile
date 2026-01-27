@@ -43,8 +43,10 @@ Vagrant.configure('2') do |config|
   ANSIBLE_PLAYBOOK = File.expand_path(File.join(LDE_CONFIG_DIR, 'playbook.yml'))
   ANSIBLE_VERITY_PLAYBOOK = File.expand_path(File.join(LDE_CONFIG_DIR, 'verify.yml'))
   ANSIBLE_GALAXY_ROLES_PATH = File.join('.vagrant', 'provisioners', 'ansible', 'roles')
+  ansible_extra_vars = {}
   provision_tags = []
   provision_skip_tags = []
+  ansible_raw_arguments = []
   provision_role_update = !File.exist?(ANSIBLE_GALAXY_ROLES_PATH)
   provision_config = nil
   provision_config_file_dirs = ['.', LDE_CONFIG_DIR]
@@ -59,8 +61,17 @@ Vagrant.configure('2') do |config|
     if provision_config.key?("role_update") && !provision_config["role_update"].nil?
       provision_role_update = provision_config["role_update"]
     end
-    if provision_config.key?("raw_arguments") && !provision_config["raw_arguments"].nil?
-      ansible_raw_arguments.concat(provision_config["raw_arguments"]).uniq!
+    if provision_config.key?("extra_var") && !provision_config["extra_var"].nil?
+      ansible_extra_vars.merge!(provision_config["extra_var"])
+    end
+    if provision_config.key?("pre_task") && !provision_config["pre_task"].nil?
+      pre_task_setting = provision_config["pre_task"]
+      if pre_task_setting.key?("update_cache") && !pre_task_setting["update_cache"].nil?
+        ansible_extra_vars["pre_task_update_cache"] = pre_task_setting["update_cache"]
+      end
+      if pre_task_setting.key?("update_package") && !pre_task_setting["update_package"].nil?
+        ansible_extra_vars["pre_task_update_package"] = pre_task_setting["update_package"]
+      end
     end
     if provision_config.key?("tags") && !provision_config["tags"].nil?
       ansible_provision_tags = provision_config["tags"]
@@ -68,17 +79,8 @@ Vagrant.configure('2') do |config|
     if provision_config.key?("skip_tags") && !provision_config["skip_tags"].nil?
       ansible_provision_skip_tags = provision_config["skip_tags"]
     end
-    if provision_config.key?("extra_var") && !provision_config["extra_var"].nil?
-      ansible_extra_vars.merge!(provision_config["extra_var"])
-    end
-    if provision_config.key?("pre_task") && !provision_config["pre_task"].nil?
-      pre_task_setting provision_config["pre_task"]
-      if pre_task_setting.key?("update_cache") && !pre_task_setting["update_cache"].nil?
-        ansible_extra_vars["pre_task_update_cache"] = pre_task_setting["update_cache"]
-      end
-      if pre_task_setting.key?("update_package") && !pre_task_setting["update_package"].nil?
-        ansible_extra_vars["pre_task_update_package"] = pre_task_setting["update_package"]
-      end
+    if provision_config.key?("raw_arguments") && !provision_config["raw_arguments"].nil?
+      ansible_raw_arguments.concat(provision_config["raw_arguments"]).uniq!
     end
   end
   config.vm.provision 'ansible' do |ansible|
@@ -87,9 +89,10 @@ Vagrant.configure('2') do |config|
     ansible.galaxy_role_file = ANSIBLE_GALAXY_ROLE_FILE if File.exist?(ANSIBLE_GALAXY_ROLE_FILE) && provision_role_update
     ansible.galaxy_roles_path = ANSIBLE_GALAXY_ROLES_PATH
     ansible.compatibility_mode = '2.0'
-
+    ansible.extra_vars = ansible_extra_vars if ansible_extra_vars.length > 0
     ansible.tags = provision_tags if provision_tags.length > 0
     ansible.skip_tags = provision_skip_tags if provision_skip_tags.length > 0
+    ansible.raw_arguments = ansible_raw_arguments if ansible_raw_arguments.length > 0
   end
 
   if File.exist?(ANSIBLE_VERITY_PLAYBOOK)
@@ -98,8 +101,10 @@ Vagrant.configure('2') do |config|
       ansible.config_file = ANSIBLE_CONFIG_FILE if File.exist?(ANSIBLE_CONFIG_FILE)
       ansible.galaxy_roles_path = ANSIBLE_GALAXY_ROLES_PATH
       ansible.compatibility_mode = '2.0'
+      ansible.extra_vars = ansible_extra_vars if ansible_extra_vars.length > 0
       ansible.tags = provision_tags if provision_tags.length > 0
       ansible.skip_tags = provision_skip_tags if provision_skip_tags.length > 0
+      ansible.raw_arguments = ansible_raw_arguments if ansible_raw_arguments.length > 0
     end
   end
 end
