@@ -1,28 +1,113 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
 tasks:
-  notify:
+  notify:create:
+    internal: true
+    silent: true
+    cmds:
+      - afplay /System/Library/Sounds/Bottle.aiff
+  notify:build:
+    internal: true
+    silent: true
+    cmds:
+      - afplay /System/Library/Sounds/Funk.aiff
+  notify:verify:
+    internal: true
+    silent: true
+    cmds:
+      - afplay /System/Library/Sounds/Ping.aiff
+  notify:deploy:
+    internal: true
+    silent: true
+    cmds:
+      - afplay /System/Library/Sounds/Hero.aiff
+  notify:report:
+    internal: true
+    silent: true
+    cmds:
+      - afplay /System/Library/Sounds/Tink.aiff
+  notify:destroy:
+    internal: true
+    silent: true
+    cmds:
+      - afplay /System/Library/Sounds/Basso.aiff
+  notify:complete:
     internal: true
     silent: true
     cmds:
       - afplay /System/Library/Sounds/Glass.aiff
+  setup:claud:
+    desc: クラウド環境のサーバーをセットアップする
+    cmds:
+      - task: create
+      - task: build
+      - task: verify
+      - task: deploy
+      - task: report
+      - task: notify:complete
+  setup:vps:
+    desc: VPSのサーバーをセットアップする
+    cmds:
+      - task: build
+      - task: verify
+      - task: deploy
+      - task: report
+      - task: notify:complete
+  maintenance:
+    desc: サーバーの運用保守を行う
+    cmds:
+      - task: verify
+      - task: report
+      - task: notify:complete
   create:
-    desc: Run Vagrant up
+    desc: サーバーを作成する
+    preconditions:
+      - sh: test -f main.tf
+        msg: "Terraform configuration (main.tf) not found"
     cmds:
-      - vagrant up
-      - task: notify
+      - terraform apply -auto-approve
+      - task: notify:create
   build:
-    desc: Run Vagrant provision
+    desc: サーバーを構築する
+    dir: provision
+    preconditions:
+      - sh: test -f playbook.yml
+        msg: "Ansible playbook (provision/playbook.yml) not found"
     cmds:
-      - vagrant provision
-      - task: notify
+      - ansible-playbook playbook.yml
+      - task: notify:build
   verify:
-    desc: Run Vagrant provision
+    desc: サーバーの状態をテストする
+    dir: provision
+    preconditions:
+      - sh: test -f verify.yml
+        msg: "Verification playbook (provision/verify.yml) not found"
     cmds:
-      - vagrant provision
-      - task: notify
+      - ansible-playbook verify.yml
+      - task: notify:verify
+  deploy:
+    desc: システムをデプロイする
+    dir: provision
+    preconditions:
+      - sh: test -f deploy.yml
+        msg: "Deployment playbook (provision/deploy.yml) not found"
+    cmds:
+      - ansible-playbook deploy.yml
+      - task: notify:deploy
   report:
-    desc: Run Vagrant provision
+    desc: サーバーレポートを出力する
+    dir: provision
+    preconditions:
+      - sh: test -f report.yml
+        msg: "Report playbook (provision/report.yml) not found"
     cmds:
-      - vagrant provision
-      - task: notify
+      - ansible-playbook report.yml
+      - task: notify:report
+  destroy:
+    desc: サーバーを破棄する
+    preconditions:
+      - sh: test -f main.tf
+        msg: "Terraform configuration (main.tf) not found"
+    cmds:
+      - terraform destroy
+      - task: notify:destroy
