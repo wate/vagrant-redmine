@@ -84,7 +84,6 @@ tasks:
     desc: Remove old versions of installed boxes
     cmds:
       - vagrant box prune
-      - task: notify
   plugin:list:
     desc: List installed Vagrant plugins
     cmds:

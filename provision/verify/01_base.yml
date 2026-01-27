@@ -22,7 +22,7 @@
     that:
       - ansible_facts.services['postfix.service'] is defined
       - ansible_facts.services['postfix.service']['status'] == 'enabled'
-      - ansible_facts.services['postfix@-.service']['state'] == 'running'
+      - ansible_facts.services['postfix.service']['state'] == 'running'
     success_msg: "Postfix service is running and enabled"
     fail_msg: "Postfix service is not properly running or enabled"
     quiet: "{{ assert_quiet_mode | default(true) }}"
