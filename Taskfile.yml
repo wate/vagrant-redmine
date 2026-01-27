@@ -6,85 +6,23 @@ tasks:
     silent: true
     cmds:
       - afplay /System/Library/Sounds/Glass.aiff
-  up:
+  create:
     desc: Run Vagrant up
     cmds:
       - vagrant up
       - task: notify
-  halt:
-    desc: Shut down the running machine
-    cmds:
-      - vagrant halt
-  destroy:
-    desc: Destroy the running machine
-    cmds:
-      - vagrant destroy -f
-  reload:
-    desc: Restart the machine and reload Vagrantfile configuration
-    cmds:
-      - vagrant reload
-      - task: notify
-  suspend:
-    desc: Suspend the machine
-    cmds:
-      - vagrant suspend
-  resume:
-    desc: Resume a suspended machine
-    cmds:
-      - vagrant resume
-  provision:
+  build:
     desc: Run Vagrant provision
     cmds:
       - vagrant provision
       - task: notify
-  ssh:
-    desc: SSH into the machine
+  verify:
+    desc: Run Vagrant provision
     cmds:
-      - vagrant ssh
-  status:
-    desc: Show current machine status
-    cmds:
-      - vagrant status
-  global-status:
-    desc: Show status of all Vagrant machines
-    cmds:
-      - vagrant global-status
-  validate:
-    desc: Validate Vagrantfile
-    cmds:
-      - vagrant validate
-  snapshot:save:
-    desc: Save a snapshot of the current state
-    cmds:
-      - vagrant snapshot save {{.CLI_ARGS | default "manual"}}
+      - vagrant provision
       - task: notify
-  snapshot:restore:
-    desc: Restore a snapshot
+  report:
+    desc: Run Vagrant provision
     cmds:
-      - vagrant snapshot restore {{.CLI_ARGS | default "manual"}}
+      - vagrant provision
       - task: notify
-  snapshot:list:
-    desc: List all snapshots
-    cmds:
-      - vagrant snapshot list
-  snapshot:delete:
-    desc: Delete a snapshot
-    cmds:
-      - vagrant snapshot delete {{.CLI_ARGS | default "manual"}}
-  box:list:
-    desc: List all installed boxes
-    cmds:
-      - vagrant box list
-  box:update:
-    desc: Update the box that is in use
-    cmds:
-      - vagrant box update
-      - task: notify
-  box:prune:
-    desc: Remove old versions of installed boxes
-    cmds:
-      - vagrant box prune
-  plugin:list:
-    desc: List installed Vagrant plugins
-    cmds:
-      - vagrant plugin list

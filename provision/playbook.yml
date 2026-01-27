@@ -60,8 +60,11 @@
       tags:
         - role_mackerel
         - role_mackerel_agent
+        - role_monitoring
     - role: dns
       tags: role_dns
+    # - role: report
+    #   tags: role_report
     ## ------------------------
     ## 以下、ローカル検証環境用
     ## ------------------------

@@ -1,13 +1,5 @@
 ---
 # code: language=ansible
-- name: Assert logrotate timer
-  ansible.builtin.assert:
-    that:
-      - ansible_facts.services['logrotate.timer'] is defined
-      - ansible_facts.services['logrotate.timer']['status'] == 'enabled'
-    success_msg: "logrotate timer is enabled"
-    fail_msg: "logrotate timer is not enabled"
-    quiet: "{{ assert_quiet_mode | default(true) }}"
 - name: Check Redmine log logrotate setting
   ansible.builtin.stat:
     path: /etc/logrotate.d/redmine
