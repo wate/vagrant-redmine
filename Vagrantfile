@@ -56,14 +56,29 @@ Vagrant.configure('2') do |config|
     end
   end
   if provision_config
-    if provision_config.key?('tags') && !provision_config['tags'].nil?
-      provision_tags = provision_config['tags']
+    if provision_config.key?("role_update") && !provision_config["role_update"].nil?
+      provision_role_update = provision_config["role_update"]
     end
-    if provision_config.key?('skip_tags') && !provision_config['skip_tags'].nil?
-      provision_skip_tags = provision_config['skip_tags']
+    if provision_config.key?("raw_arguments") && !provision_config["raw_arguments"].nil?
+      ansible_raw_arguments.concat(provision_config["raw_arguments"]).uniq!
     end
-    if provision_config.key?('role_update') && !provision_config['role_update'].nil?
-      provision_role_update = provision_config['role_update']
+    if provision_config.key?("tags") && !provision_config["tags"].nil?
+      ansible_provision_tags = provision_config["tags"]
+    end
+    if provision_config.key?("skip_tags") && !provision_config["skip_tags"].nil?
+      ansible_provision_skip_tags = provision_config["skip_tags"]
+    end
+    if provision_config.key?("extra_var") && !provision_config["extra_var"].nil?
+      ansible_extra_vars.merge!(provision_config["extra_var"])
+    end
+    if provision_config.key?("pre_task") && !provision_config["pre_task"].nil?
+      pre_task_setting provision_config["pre_task"]
+      if pre_task_setting.key?("update_cache") && !pre_task_setting["update_cache"].nil?
+        ansible_extra_vars["pre_task_update_cache"] = pre_task_setting["update_cache"]
+      end
+      if pre_task_setting.key?("update_package") && !pre_task_setting["update_package"].nil?
+        ansible_extra_vars["pre_task_update_package"] = pre_task_setting["update_package"]
+      end
     end
   end
   config.vm.provision 'ansible' do |ansible|
@@ -72,6 +87,7 @@ Vagrant.configure('2') do |config|
     ansible.galaxy_role_file = ANSIBLE_GALAXY_ROLE_FILE if File.exist?(ANSIBLE_GALAXY_ROLE_FILE) && provision_role_update
     ansible.galaxy_roles_path = ANSIBLE_GALAXY_ROLES_PATH
     ansible.compatibility_mode = '2.0'
+
     ansible.tags = provision_tags if provision_tags.length > 0
     ansible.skip_tags = provision_skip_tags if provision_skip_tags.length > 0
   end

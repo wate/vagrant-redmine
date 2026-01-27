@@ -8,9 +8,11 @@
     - name: Update package cache
       ansible.builtin.apt:
         update_cache: true
+      when: pre_task_update_cache | default(true)
     - name: Upgrade install packages
       ansible.builtin.apt:
         upgrade: true
+      when: pre_task_update_package | default(true)
   roles:
     - role: common
       tags: role_common
