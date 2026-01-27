@@ -27,14 +27,10 @@
         path: /etc/apt/sources.list.d/debian.sources
         regexp: 'http://.*\.debian\.org/debian/'
         replace: "http://ftp.jp.debian.org/debian/"
-    - name: Update package cache
+    - name: Update package cache and upgrade packages
       ansible.builtin.apt:
-        update_cache: true
-      when: pre_task_update_cache | default(true)
-    - name: Upgrade install packages
-      ansible.builtin.apt:
-        upgrade: true
-      when: pre_task_update_package | default(true)
+        update_cache: "{{ pre_task_update_cache | default(true)  }}"
+        upgrade: "{{ pre_task_update_package | default(true) }}"
   roles:
     - role: common
       tags: role_common
