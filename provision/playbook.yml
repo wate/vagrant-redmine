@@ -14,14 +14,10 @@
       loop_control:
         loop_var: var_name
         label: "{{ var_name }}"
-    - name: Check if legacy apt sources.list exists
-      ansible.builtin.stat:
-        path: /etc/apt/sources.list
-      register: sources_list_result
     - name: Modernize apt sources to deb822 format
       ansible.builtin.command:
         cmd: apt modernize-sources -y
-      when: sources_list_result.stat.exists
+        removes: /etc/apt/sources.list
     - name: Update Debian repository mirror to Japanese server
       ansible.builtin.replace:
         path: /etc/apt/sources.list.d/debian.sources
