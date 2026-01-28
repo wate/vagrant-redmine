@@ -57,17 +57,20 @@
         - role_mackerel
         - role_mackerel_agent
         - role_monitoring
-    - role: dns
-      tags: role_dns
-    # - role: report
-    #   tags: role_report
     ## ------------------------
-    ## 以下、ローカル検証環境用
+    ## ローカル検証環境用
     ## ------------------------
     - role: spamassassin
       tags: role_spamassassin
     - role: mailpit
       tags: role_mailpit
+    ## ------------------------
+    ## レポート系
+    ## ------------------------
+    - role: report
+      tags: role_report
+    - role: dns
+      tags: role_dns
   tasks:
     - name: Allow mailpit port
       community.general.ufw:

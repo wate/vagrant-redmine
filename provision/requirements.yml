@@ -39,9 +39,9 @@ roles:
   - name: dns
     src: https://github.com/wate/ansible-role-dns
     version: develop
-  # - name: report
-  #   src: https://github.com/wate/ansible-role-report
-  #   version: develop
+  - name: report
+    src: https://github.com/wate/ansible-role-report
+    version: main
   ### 以下、ローカル検証環境用
   - name: mailpit
     src: https://github.com/wate/ansible-role-mailpit
