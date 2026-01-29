@@ -44,8 +44,8 @@ Vagrant.configure('2') do |config|
   ANSIBLE_VERITY_PLAYBOOK = File.expand_path(File.join(LDE_CONFIG_DIR, 'verify.yml'))
   ANSIBLE_GALAXY_ROLES_PATH = File.join('.vagrant', 'provisioners', 'ansible', 'roles')
   ansible_extra_vars = {}
-  provision_tags = []
-  provision_skip_tags = []
+  ansible_provision_tags = []
+  ansible_provision_skip_tags = []
   ansible_raw_arguments = []
   provision_role_update = !File.exist?(ANSIBLE_GALAXY_ROLES_PATH)
   provision_config = nil
@@ -90,8 +90,8 @@ Vagrant.configure('2') do |config|
     ansible.galaxy_roles_path = ANSIBLE_GALAXY_ROLES_PATH
     ansible.compatibility_mode = '2.0'
     ansible.extra_vars = ansible_extra_vars if ansible_extra_vars.length > 0
-    ansible.tags = provision_tags if provision_tags.length > 0
-    ansible.skip_tags = provision_skip_tags if provision_skip_tags.length > 0
+    ansible.tags = ansible_provision_tags if provision_tags.length > 0
+    ansible.skip_tags = ansible_provision_skip_tags if provision_skip_tags.length > 0
     ansible.raw_arguments = ansible_raw_arguments if ansible_raw_arguments.length > 0
   end
 
@@ -102,8 +102,8 @@ Vagrant.configure('2') do |config|
       ansible.galaxy_roles_path = ANSIBLE_GALAXY_ROLES_PATH
       ansible.compatibility_mode = '2.0'
       ansible.extra_vars = ansible_extra_vars if ansible_extra_vars.length > 0
-      ansible.tags = provision_tags if provision_tags.length > 0
-      ansible.skip_tags = provision_skip_tags if provision_skip_tags.length > 0
+      ansible.tags = ansible_provision_tags if provision_tags.length > 0
+      ansible.skip_tags = ansible_provision_skip_tags if provision_skip_tags.length > 0
       ansible.raw_arguments = ansible_raw_arguments if ansible_raw_arguments.length > 0
     end
   end
