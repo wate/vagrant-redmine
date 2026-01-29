@@ -80,11 +80,6 @@
       ansible.builtin.file:
         path: /home/vagrant
         mode: "0755"
-    # - name: Organize user workspace
-    #   ansible.builtin.import_role:
-    #     name: lifecycle
-    #     tasks_from: organize
-    #   tags: lifecycle_organize
     - name: Setup custom script
       tags: custom_script
       block:
