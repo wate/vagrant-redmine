@@ -90,8 +90,8 @@ Vagrant.configure('2') do |config|
     ansible.galaxy_roles_path = ANSIBLE_GALAXY_ROLES_PATH
     ansible.compatibility_mode = '2.0'
     ansible.extra_vars = ansible_extra_vars if ansible_extra_vars.length > 0
-    ansible.tags = ansible_provision_tags if provision_tags.length > 0
-    ansible.skip_tags = ansible_provision_skip_tags if provision_skip_tags.length > 0
+    ansible.tags = ansible_provision_tags if ansible_provision_tags.length > 0
+    ansible.skip_tags = ansible_provision_skip_tags if ansible_provision_skip_tags.length > 0
     ansible.raw_arguments = ansible_raw_arguments if ansible_raw_arguments.length > 0
   end
 
@@ -102,8 +102,8 @@ Vagrant.configure('2') do |config|
       ansible.galaxy_roles_path = ANSIBLE_GALAXY_ROLES_PATH
       ansible.compatibility_mode = '2.0'
       ansible.extra_vars = ansible_extra_vars if ansible_extra_vars.length > 0
-      ansible.tags = ansible_provision_tags if provision_tags.length > 0
-      ansible.skip_tags = ansible_provision_skip_tags if provision_skip_tags.length > 0
+      ansible.tags = ansible_provision_tags if ansible_provision_tags.length > 0
+      ansible.skip_tags = ansible_provision_skip_tags if ansible_provision_skip_tags.length > 0
       ansible.raw_arguments = ansible_raw_arguments if ansible_raw_arguments.length > 0
     end
   end
