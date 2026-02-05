@@ -36,19 +36,25 @@ roles:
   - name: mackerel_agent
     src: https://github.com/wate/ansible-role-mackerel_agent
     version: develop
-  - name: dns
-    src: https://github.com/wate/ansible-role-dns
-    version: develop
+  ### レポート関連
   - name: report
     src: https://github.com/wate/ansible-role-report
     version: main
-  ### 以下、ローカル検証環境用
+  - name: dns
+    src: https://github.com/wate/ansible-role-dns
+    version: develop
+  ### 定型処理
+  - name: lifecycle
+    src: https://github.com/wate/ansible-role-lifecycle
+    version: main
+  ### ローカル検証環境用
   - name: mailpit
     src: https://github.com/wate/ansible-role-mailpit
     version: develop
   - name: spamassassin
     src: https://github.com/wate/ansible-role-spamassassin
     version: develop
+  ### その他
   # - name: font
   #   src: https://github.com/wate/ansible-role-font
   #   version: develop
