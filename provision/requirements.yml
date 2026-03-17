@@ -33,9 +33,9 @@ roles:
   - name: backup
     src: https://github.com/wate/ansible-role-backup
     version: develop
-  - name: mackerel_agent
-    src: https://github.com/wate/ansible-role-mackerel_agent
-    version: develop
+  # - name: mackerel_agent
+  #   src: https://github.com/wate/ansible-role-mackerel_agent
+  #   version: develop
   ### レポート関連
   - name: report
     src: https://github.com/wate/ansible-role-report
@@ -44,8 +44,8 @@ roles:
     src: https://github.com/wate/ansible-role-dns
     version: develop
   ### 定型処理
-  - name: lifecycle
-    src: https://github.com/wate/ansible-role-lifecycle
+  - name: utils
+    src: https://github.com/wate/ansible-role-utils
     version: main
   ### ローカル検証環境用
   - name: mailpit
@@ -53,6 +53,9 @@ roles:
     version: develop
   - name: spamassassin
     src: https://github.com/wate/ansible-role-spamassassin
+    version: develop
+  - name: logdy
+    src: https://github.com/wate/ansible-role-logdy
     version: develop
   ### その他
   # - name: font

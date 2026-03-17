@@ -3,6 +3,7 @@ assh
 cakephp
 direnv
 dotenv
+dpkg
 duckdb
 etckeeper
 github

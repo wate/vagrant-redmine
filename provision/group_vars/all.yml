@@ -1802,7 +1802,7 @@ redmine_customize_message:
 ## 以下、Redmine以外の設定
 ## =================================
 ## --------------------------
-## インストールするツール
+## インストールする各種ツール
 ## --------------------------
 install_tools:
   ## https://github.com/eza-community/eza
@@ -1817,8 +1817,14 @@ install_tools:
   - lnav
   ## https://github.com/ggreer/the_silver_searcher
   - the_silver_searcher
+  ## https://github.com/BurntSushi/ripgrep
+  - ripgrep
+  ## https://github.com/jesseduffield/lazygit
+  - lazygit
   ## https://github.com/dandavison/delta
   - delta
+  ## https://goaccess.io/
+  # - goaccess
   ## https://github.com/google/osv-scanner
   - osv-scanner
   # https://direnv.net/
@@ -1831,10 +1837,16 @@ install_tools:
   - rclone
   ## https://github.com/tldr-pages/tlrc
   - tldr
+  ## https://github.com/znscli/zns
+  # - zns
   ## https://github.com/kellyjonbrazil/jc
   - jc
+  ## https://httpie.io/
+  - httpie
   ## https://duckdb.org/
   - duckdb
+  ## https://github.com/moul/assh
+  - assh
   ## https://github.com/charmbracelet/glow
   - glow
   ## https://github.com/jgm/pandoc
@@ -1863,8 +1875,6 @@ install_tools:
   - fnt
   ## https://github.com/jgraph/drawio-desktop
   - drawio
-  ## PDF 向けユーティリティ
-  - poppler-utils
 
 ## ---------
 ## ログインバナーに表示するロゴのテキスト

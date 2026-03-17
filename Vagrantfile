@@ -7,7 +7,7 @@ require 'yaml'
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure('2') do |config|
-  config.vm.box = 'bento/debian-13'
+  config.vm.box = 'wate/debian-13'
   # config.vm.box_check_update = false
 
   config.vm.network 'private_network', ip: '192.168.33.101'
@@ -118,6 +118,33 @@ Vagrant.configure('2') do |config|
       ansible.tags = ansible_provision_tags if ansible_provision_tags.length > 0
       ansible.skip_tags = ansible_provision_skip_tags if ansible_provision_skip_tags.length > 0
       ansible.raw_arguments = ansible_raw_arguments if ansible_raw_arguments.length > 0
+    end
+  end
+  TRIGGER_SCRIPT_DIR = "provision/vagrant_trigger"
+  trigger_scripts = {
+    "up_before" => { event: :up, timing: :before },
+    "up_after" => { event: :up, timing: :after },
+    "provision_before" => { event: :provision, timing: :before },
+    "provision_after" => { event: :provision, timing: :after },
+    "halt_before" => { event: :halt, timing: :before, on_error: :continue },
+    "destroy_before" => { event: :destroy, timing: :before, on_error: :continue }
+  }
+  trigger_scripts.each do |trigger_key, options|
+    local_trigger_script_path = File.join(TRIGGER_SCRIPT_DIR, "#{trigger_key}_local.sh")
+    remote_trigger_script_path = File.join(TRIGGER_SCRIPT_DIR, "#{trigger_key}.sh")
+    run_local = File.exist?(local_trigger_script_path)
+    trigger_script_path = run_local ? local_trigger_script_path : remote_trigger_script_path
+
+    if File.exist?(trigger_script_path)
+      config.trigger.send(options[:timing], options[:event]) do |trigger|
+        trigger.info = "Run #{options[:timing]} #{options[:event]} task"
+        if run_local
+          trigger.run = { path: trigger_script_path }
+        else
+          trigger.run_remote = { path: trigger_script_path }
+        end
+        trigger.on_error = options[:on_error] if options[:on_error]
+      end
     end
   end
 end
