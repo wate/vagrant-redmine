@@ -15,3 +15,7 @@
     - role: dns
       tags: role_dns
   tasks: []
+  post_tasks:
+    - name: Cleanup packages
+      ansible.builtin.apt:
+        autoremove: true

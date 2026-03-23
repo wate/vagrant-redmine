@@ -18,6 +18,16 @@
       ansible.builtin.command:
         cmd: apt modernize-sources -y
         removes: /etc/apt/sources.list
+    # - name: Update Debian repository mirror
+    #   ansible.builtin.replace:
+    #     path: /etc/apt/sources.list.d/debian.sources
+    #     regexp: 'http://.*\.debian\.org/debian/'
+    #     replace: "http://deb.debian.org/debian/"
+    #     # replace: "http://ftp.jp.debian.org/debian/"
+    - name: Update package cache and packages
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: true
   roles:
     - role: common
       tags: role_common
@@ -99,6 +109,9 @@
                 loop_var: custom_script_template
                 label: "{{ (custom_script_template | basename)[:-6] }}"
   post_tasks:
+    - name: Cleanup packages
+      ansible.builtin.apt:
+        autoremove: true
     - name: Restart services
       ansible.builtin.systemd_service:
         name: "{{ item }}"

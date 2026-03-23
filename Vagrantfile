@@ -7,7 +7,7 @@ require 'yaml'
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure('2') do |config|
-  config.vm.box = 'wate/debian-13'
+  config.vm.box = 'debian-13'
   # config.vm.box_check_update = false
 
   config.vm.network 'private_network', ip: '192.168.33.101'
