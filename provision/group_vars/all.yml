@@ -1582,7 +1582,7 @@ redmine_projects:
       - login: authority_check_repoter
         role: 報告者
     ## トラッカー
-    trackes:
+    trackers:
       - 要望
       - タスク
       - 不具合
