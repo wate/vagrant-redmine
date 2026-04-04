@@ -7,8 +7,8 @@ redmine_hostname: "{{ redmine_domain }}"
 ## --------------------
 redmine_reimport: true
 redmine_reimport_all: true
-# redmine_reimport_admin: false
-# redmine_reimport_project: true
+redmine_reimport_admin: false
+redmine_reimport_project: true
 
 ## --------------------
 ## config/configuration.ymlの設定
@@ -1488,9 +1488,9 @@ redmine_wiki_page_help:
         要望: "{{ redmine_wiki_content_help_workflow_request }}"
         タスク: "{{ redmine_wiki_content_help_workflow_task }}"
         不具合: "{{ redmine_wiki_content_help_workflow_bug }}"
-        運用保守: "{{ redmine_wiki_content_help_workflow_inquiry }}"
+        運用保守: "{{ redmine_wiki_content_help_workflow_support }}"
         問い合わせ: "{{ redmine_wiki_content_help_workflow_inquiry }}"
-        その他: "{{ redmine_wiki_content_help_workflow_inquiry }}"
+        その他: "{{ redmine_wiki_content_help_workflow_other }}"
     マクロ一覧: "{{ redmine_wiki_content_help_macro_list }}"
 redmine_wiki_page_orverview:
   content: "{{ redmine_wiki_content_overview }}"
@@ -1649,12 +1649,9 @@ redmine_projects:
 #     file: files/attachment/dummy_wiki.txt
 #     filename: dummy.txt
 
-## --------------------
-## message customizeプラグイン
-## --------------------
-# 置換内容
+# 文言の変更内容
 # ------------------
-# トラッカー => 分類
+# トラッカー => チケット種別 / 種別
 # 文書 => ドキュメント
 # ニュース => お知らせ
 # カスタムクエリ => 検索条件
@@ -1664,12 +1661,12 @@ redmine_projects:
 # redmine_reimport_message_customize: true
 redmine_message_customize:
   error_scm_annotate: "エントリが存在しない、もしくは注釈できません。"
-  error_no_tracker_in_project: 'このプロジェクトには分類が登録されていません。プロジェクト設定を確認してください。'
-  error_workflow_copy_source: 'コピー元となる分類またはロールを選択してください'
-  error_workflow_copy_target: 'コピー先となる分類とロールを選択してください'
-  error_can_not_delete_tracker: 'この分類は使用中です。削除できません。'
-  field_tracker: 分類
-  setting_default_projects_tracker_ids: 新規プロジェクトにおいてデフォルトで有効になる分類
+  error_no_tracker_in_project: 'このプロジェクトにはチケット種別が登録されていません。プロジェクト設定を確認してください。'
+  error_workflow_copy_source: 'コピー元となるチケット種別またはロールを選択してください'
+  error_workflow_copy_target: 'コピー先となるチケット種別とロールを選択してください'
+  error_can_not_delete_tracker: 'このチケット種別は使用中です。削除できません。'
+  field_tracker: 種別
+  setting_default_projects_tracker_ids: 新規プロジェクトにおいてデフォルトで有効になるチケット種別
   permission_view_news: お知らせの閲覧
   permission_manage_news: お知らせの管理
   permission_comment_news: お知らせへのコメント
@@ -1680,9 +1677,9 @@ redmine_message_customize:
   label_document_new: 新しいドキュメント
   label_document_plural: ドキュメント
   label_document_added: ドキュメントの追加
-  label_tracker: 分類
-  label_tracker_plural: 分類
-  label_tracker_new: 新しい分類
+  label_tracker: 種別
+  label_tracker_plural: 種別
+  label_tracker_new: 新しい種別
   label_news: お知らせ
   label_news_new: お知らせを追加
   label_news_plural: お知らせ
@@ -1694,11 +1691,11 @@ redmine_message_customize:
   label_query_plural: 検索条件
   label_query_new: 新しい検索条件
   label_my_queries: マイ検索条件
-  label_display_used_statuses_only: この分類で使用中のステータスのみ表示
+  label_display_used_statuses_only: この種別で使用中のステータスのみ表示
   button_annotate: 注釈
-  text_workflow_edit: ワークフローを編集するロールと分類を選んでください
-  text_tracker_no_workflow: この分類にワークフローが定義されていません
-  text_no_configuration_data: "ロール、分類、チケットのステータス、ワークフローがまだ設定されていません。\nデフォルト設定のロードを強くお勧めします。ロードした後、それを修正することができます。"
+  text_workflow_edit: ワークフローを編集するロールとチケット種別を選んでください
+  text_tracker_no_workflow: このチケット種別にワークフローが定義されていません
+  text_no_configuration_data: "ロール、チケット種別、チケットのステータス、ワークフローがまだ設定されていません。\nデフォルト設定のロードを強くお勧めします。ロードした後、それを修正することができます。"
   default_doc_category_user: ユーザードキュメント
   default_doc_category_tech: 技術ドキュメント
   enumeration_doc_categories: ドキュメントカテゴリー
@@ -1707,12 +1704,12 @@ redmine_message_customize:
   permission_add_documents: ドキュメントの追加
   permission_edit_documents: ドキュメントの編集
   permission_delete_documents: ドキュメントの削除
-  error_no_tracker_allowed_for_new_issue_in_project: このプロジェクトにはチケットの追加が許可されている分類がありません
-  label_tracker_all: すべての分類
-  text_status_no_workflow: このステータスはどの分類のワークフローでも使われていません
-  label_trackers_description: 分類の説明
-  label_open_trackers_description: すべての分類の説明を表示
-  text_select_apply_tracker: この分類を適用
+  error_no_tracker_allowed_for_new_issue_in_project: このプロジェクトにはチケットの追加が許可されているチケット種別がありません
+  label_tracker_all: すべての種別
+  text_status_no_workflow: このステータスはどのチケット種別のワークフローでも使われていません
+  label_trackers_description: チケット種別の説明
+  label_open_trackers_description: すべてのチケット種別の説明を表示
+  text_select_apply_tracker: この種別を適用
   label_view_previous_annotation: この更新以前の注釈
   ## ----------
   ## DMSF
