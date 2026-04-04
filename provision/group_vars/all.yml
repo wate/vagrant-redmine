@@ -3,18 +3,12 @@ redmine_domain: redmine.local
 redmine_hostname: "{{ redmine_domain }}"
 
 ## --------------------
-## 追加インストールするgemパッケージ
+## データの再インポートの可否
 ## --------------------
-redmine_gemfile_local_packages:
-  sidekiq:
-  # yard:
-  # rails-erd:
-
-## --------------------
-## 追加の環境設定
-## --------------------
-redmine_additional_environment: |
-  config.active_job.queue_adapter = :sidekiq
+redmine_reimport: true
+redmine_reimport_all: true
+# redmine_reimport_admin: false
+# redmine_reimport_project: true
 
 ## --------------------
 ## config/configuration.ymlの設定
@@ -31,46 +25,32 @@ redmine_cfg:
         port: 1025
 
 ## --------------------
-## インストールするテーマ
-## --------------------
-redmine_themes:
-  PurpleMine2:
-    repo: https://github.com/mrliptontea/PurpleMine2.git
-    version: master
-  bleuclair:
-    repo: https://github.com/farend/redmine_theme_farend_bleuclair.git
-    version: master
-  farend_fancy:
-    repo: https://github.com/farend/redmine_theme_farend_fancy.git
-    version: master
-  farend_basic:
-    repo: https://github.com/farend/redmine_theme_farend_basic.git
-    version: master
-  gitmike:
-    repo: https://github.com/makotokw/redmine-theme-gitmike.git
-    version: master
-
-## --------------------
 ## インストールするプラグイン
 ## --------------------
-redmine_plugins: {}
-  # view_customize:
-  #   repo: https://github.com/onozaty/redmine-view-customize.git
-  #   version: master
-  # redmine_issue_templates:
-  #   repo: https://github.com/agileware-jp/redmine_issue_templates.git
-  #   version: master
-  # redmine_messenger:
-  #   repo: https://github.com/alphanodes/redmine_messenger.git
-  #   version: main
-  # redmine_dashboard:
-  #   repo: https://github.com/jgraichen/redmine_dashboard.git
-  #   version: main
+redmine_plugins:
+  additionals:
+    repo: https://github.com/AlphaNodes/additionals.git
+    version: main
+  redmine_sudo:
+    repo: https://github.com/AlphaNodes/redmine_sudo.git
+    version: main
+  redmine_issue_templates:
+    repo: https://github.com/agileware-jp/redmine_issue_templates.git
+    version: master
+  view_customize:
+    repo: https://github.com/onozaty/redmine-view-customize.git
+    version: master
+  redmine_dashboard:
+    repo: https://github.com/jgraichen/redmine_dashboard.git
+    version: main
+  redmica_ui_extension:
+    repo: https://github.com/redmica/redmica_ui_extension.git
+    version: master
+  redmine_oauth:
+    repo: https://github.com/kontron/redmine_oauth.git
+    version: main
   # redmine_drawio:
   #   repo: https://github.com/mikitex70/redmine_drawio.git
-  #   version: master
-  # redmica_ui_extension:
-  #   repo: https://github.com/redmica/redmica_ui_extension.git
   #   version: master
   # redmine_dmsf:
   #   repo: https://github.com/danmunn/redmine_dmsf.git
@@ -95,41 +75,43 @@ redmine_plugins: {}
   #   # cron_job:
   #   #   cmd: cd {{ redmine_root }}/plugins && XAPIAN_CJK_NGRAM=true ruby redmine_dmsf/extra/xapian_indexer.rb -v
   #   #   minute: 10
-  # additionals:
-  #   repo: https://github.com/AlphaNodes/additionals.git
-  #   version: main
-  # redmine_sudo:
-  #   repo: https://github.com/AlphaNodes/redmine_sudo.git
-  #   version: main
-  # redmine_oauth:
-  #   repo: https://github.com/kontron/redmine_oauth.git
-  #   version: main
-  # # redmine_message_customize:
-  # #   repo: https://github.com/farend/redmine_message_customize.git
-  # #   version: master
-  # # redmine_saml:
-  # #   repo: https://github.com/alphanodes/redmine_saml.git
-  # #   version: main
-  # #   post_install_action: |
-  # #     cp plugins/redmine_saml/contrib/sample_saml_initializers.rb config/initializers/saml.rb
-  # # toggl2redmine:
-  # #   repo: https://github.com/jigarius/toggl2redmine.git
-  # #   version: 5.x
-  # # redmine_toggl:
-  # #   repo: https://github.com/ozguryazilimas/redmine_toggl.git
-  # #   version: master
-  # # redmine_oidc:
-  # #   repo: https://github.com/Contargo/redmine_oidc.git
-  # #   version: master
-
+  # # redmine_messenger:
+  # #   repo: https://github.com/alphanodes/redmine_messenger.git
+  # #  version: main
 
 ## --------------------
-## データの再インポートの可否
+## インストールするテーマ
 ## --------------------
-redmine_reimport: true
-redmine_reimport_all: true
-redmine_reimport_admin: true
-redmine_reimport_project: false
+redmine_themes:
+  bleuclair:
+    repo: https://github.com/farend/redmine_theme_farend_bleuclair.git
+    version: master
+  farend_fancy:
+    repo: https://github.com/farend/redmine_theme_farend_fancy.git
+    version: master
+  farend_basic:
+    repo: https://github.com/farend/redmine_theme_farend_basic.git
+    version: master
+  PurpleMine2:
+    repo: https://github.com/mrliptontea/PurpleMine2.git
+    version: master
+  gitmike:
+    repo: https://github.com/makotokw/redmine-theme-gitmike.git
+    version: master
+
+## --------------------
+## 追加の環境設定
+## --------------------
+redmine_additional_environment: |
+  config.active_job.queue_adapter = :sidekiq
+
+## --------------------
+## 追加インストールするgemパッケージ
+## --------------------
+redmine_gemfile_local_packages:
+  sidekiq:
+  # yard:
+  # rails-erd:
 
 ## --------------------
 ## Redmineのデータベース設定(config/database.yml)
@@ -1491,6 +1473,8 @@ redmine_wiki_content_help_workflow_request: "{{ lookup('file', 'files/wiki/help/
 redmine_wiki_content_help_workflow_task: "{{ lookup('file', 'files/wiki/help/workflow/task.md') }}"
 redmine_wiki_content_help_workflow_bug: "{{ lookup('file', 'files/wiki/help/workflow/bug.md') }}"
 redmine_wiki_content_help_workflow_inquiry: "{{ lookup('file', 'files/wiki/help/workflow/inquiry.md') }}"
+redmine_wiki_content_help_workflow_support: "{{ lookup('file', 'files/wiki/help/workflow/support.md') }}"
+redmine_wiki_content_help_workflow_other: "{{ lookup('file', 'files/wiki/help/workflow/other.md') }}"
 
 redmine_wiki_page_sidebar: "{{ redmine_wiki_content_sidebar }}"
 redmine_wiki_page_help:
@@ -1504,7 +1488,9 @@ redmine_wiki_page_help:
         要望: "{{ redmine_wiki_content_help_workflow_request }}"
         タスク: "{{ redmine_wiki_content_help_workflow_task }}"
         不具合: "{{ redmine_wiki_content_help_workflow_bug }}"
+        運用保守: "{{ redmine_wiki_content_help_workflow_inquiry }}"
         問い合わせ: "{{ redmine_wiki_content_help_workflow_inquiry }}"
+        その他: "{{ redmine_wiki_content_help_workflow_inquiry }}"
     マクロ一覧: "{{ redmine_wiki_content_help_macro_list }}"
 redmine_wiki_page_orverview:
   content: "{{ redmine_wiki_content_overview }}"
@@ -1593,9 +1579,8 @@ redmine_projects:
     wiki_pages:
       Wiki:
         content: "{{ lookup('file', 'files/wiki/home/client.md') }}"
-        children:
-          ヘルプ: "{{ redmine_wiki_page_help }}"
       Sidebar: "{{ redmine_wiki_page_sidebar }}"
+      Help: "{{ redmine_wiki_page_help }}"
     issue_queries: []
     time_entry_queries: []
     children:
@@ -1612,9 +1597,8 @@ redmine_projects:
         wiki_pages:
           Wiki:
             content: "{{ lookup('file', 'files/wiki/home/web.md') }}"
-            children:
-              ヘルプ: "{{ redmine_wiki_page_help }}"
           Sidebar: "{{ redmine_wiki_page_sidebar }}"
+          Help: "{{ redmine_wiki_page_help }}"
       develop:
         name: システム開発
         description: システム開発用のテンプレートプロジェクトです
@@ -1631,8 +1615,8 @@ redmine_projects:
               インフラ情報: "{{ redmine_wiki_page_infra }}"
               環境情報: "{{ redmine_wiki_page_environment }}"
               開発情報: "{{ redmine_wiki_page_development }}"
-              ヘルプ: "{{ redmine_wiki_page_help }}"
           Sidebar: "{{ redmine_wiki_page_sidebar }}"
+          Help: "{{ redmine_wiki_page_help }}"
       infra:
         name: インフラ管理
         description: インフラ管理用のテンプレートプロジェクトです
@@ -1640,9 +1624,8 @@ redmine_projects:
         wiki_pages:
           Wiki:
             content: "{{ lookup('file', 'files/wiki/home/infra.md') }}"
-            children:
-              ヘルプ: "{{ redmine_wiki_page_help }}"
           Sidebar: "{{ redmine_wiki_page_sidebar }}"
+          Help: "{{ redmine_wiki_page_help }}"
       support:
         name: カスタマーサポート
         description: 問い合わせ管理用のテンプレートプロジェクトです
@@ -1650,9 +1633,8 @@ redmine_projects:
         wiki_pages:
           Wiki:
             content: "{{ lookup('file', 'files/wiki/home/support.md') }}"
-            children:
-              ヘルプ: "{{ redmine_wiki_page_help }}"
           Sidebar: "{{ redmine_wiki_page_sidebar }}"
+          Help: "{{ redmine_wiki_page_help }}"
 
 ## --------------------
 ## 添付ファイル
