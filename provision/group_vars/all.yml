@@ -5,10 +5,11 @@ redmine_hostname: "{{ redmine_domain }}"
 ## --------------------
 ## データの再インポートの可否
 ## --------------------
-redmine_reimport: true
-redmine_reimport_all: true
-redmine_reimport_admin: false
-redmine_reimport_project: true
+# redmine_reimport: true
+# redmine_reimport_all: true
+# redmine_reimport_admin: true
+# redmine_reimport_project: true
+# redmine_reimport_attachment: true
 
 ## --------------------
 ## config/configuration.ymlの設定
@@ -1465,14 +1466,18 @@ redmine_wiki_content_infra_server_other: "{{ lookup('file', 'files/wiki/infra/se
 ## ヘルプ
 redmine_wiki_content_help: "{{ lookup('file', 'files/wiki/help.md') }}"
 redmine_wiki_content_help_format: "{{ lookup('file', 'files/wiki/help/format.md') }}"
-redmine_wiki_content_help_operation: "{{ lookup('file', 'files/wiki/help/operation.md') }}"
 redmine_wiki_content_help_macro_list: "{{ lookup('file', 'files/wiki/help/macro_list.md') }}"
+### ヘルプ - チケット管理の仕組み
+redmine_wiki_content_help_workflow_issue_management: "{{ lookup('file', 'files/wiki/help/issue_management.md') }}"
+redmine_wiki_content_help_workflow_issue_flow: "{{ lookup('file', 'files/wiki/help/issue_flow.md') }}"
+redmine_wiki_content_help_workflow_issue_artifacts: "{{ lookup('file', 'files/wiki/help/issue_artifacts.md') }}"
+redmine_wiki_content_help_workflow_issue_faq: "{{ lookup('file', 'files/wiki/help/issue_faq.md') }}"
 ### ヘルプ - ワークフロー
-redmine_wiki_content_help_workflow: "{{ lookup('file', 'files/wiki/help/workflow.md') }}"
+redmine_wiki_content_help_workflow: "{{ lookup('file', 'files/wiki/help/workflow/all.md') }}"
 redmine_wiki_content_help_workflow_request: "{{ lookup('file', 'files/wiki/help/workflow/request.md') }}"
 redmine_wiki_content_help_workflow_task: "{{ lookup('file', 'files/wiki/help/workflow/task.md') }}"
 redmine_wiki_content_help_workflow_bug: "{{ lookup('file', 'files/wiki/help/workflow/bug.md') }}"
-redmine_wiki_content_help_workflow_inquiry: "{{ lookup('file', 'files/wiki/help/workflow/inquiry.md') }}"
+redmine_wiki_content_help_workflow_contact: "{{ lookup('file', 'files/wiki/help/workflow/contact.md') }}"
 redmine_wiki_content_help_workflow_support: "{{ lookup('file', 'files/wiki/help/workflow/support.md') }}"
 redmine_wiki_content_help_workflow_other: "{{ lookup('file', 'files/wiki/help/workflow/other.md') }}"
 
@@ -1481,7 +1486,12 @@ redmine_wiki_page_help:
   content: "{{ redmine_wiki_content_help }}"
   children:
     Redmine記法: "{{ redmine_wiki_content_help_format }}"
-    運用方法: "{{ redmine_wiki_content_help_operation }}"
+    チケット管理の仕組み:
+      content: "{{ redmine_wiki_content_help_workflow_issue_management }}"
+      children:
+        チケット管理の流れ: "{{ redmine_wiki_content_help_workflow_issue_flow }}"
+        成果物ごとの役割: "{{ redmine_wiki_content_help_workflow_issue_artifacts }}"
+        判断に迷ったときのFAQと実例: "{{ redmine_wiki_content_help_workflow_issue_faq }}"
     ワークフロー:
       content: "{{ redmine_wiki_content_help_workflow }}"
       children:
@@ -1489,10 +1499,10 @@ redmine_wiki_page_help:
         タスク: "{{ redmine_wiki_content_help_workflow_task }}"
         不具合: "{{ redmine_wiki_content_help_workflow_bug }}"
         運用保守: "{{ redmine_wiki_content_help_workflow_support }}"
-        問い合わせ: "{{ redmine_wiki_content_help_workflow_inquiry }}"
+        問い合わせ: "{{ redmine_wiki_content_help_workflow_contact }}"
         その他: "{{ redmine_wiki_content_help_workflow_other }}"
     マクロ一覧: "{{ redmine_wiki_content_help_macro_list }}"
-redmine_wiki_page_orverview:
+redmine_wiki_page_overview:
   content: "{{ redmine_wiki_content_overview }}"
   children:
     システム構成: "{{ redmine_wiki_content_overview_architecture }}"
@@ -1611,7 +1621,7 @@ redmine_projects:
           Wiki:
             content: "{{ lookup('file', 'files/wiki/home/develop.md') }}"
             children:
-              システム概要: "{{ redmine_wiki_page_orverview }}"
+              システム概要: "{{ redmine_wiki_page_overview }}"
               インフラ情報: "{{ redmine_wiki_page_infra }}"
               環境情報: "{{ redmine_wiki_page_environment }}"
               開発情報: "{{ redmine_wiki_page_development }}"
@@ -1639,15 +1649,200 @@ redmine_projects:
 ## --------------------
 ## 添付ファイル
 ## --------------------
-# redmine_reimport_attachment: true
-# redmine_attachments:
-#   - project: client
-#     file: files/attachment/dummy_project.txt
-#     description: ダミーファイル
-#   - project: client
-#     wiki: Wiki
-#     file: files/attachment/dummy_wiki.txt
-#     filename: dummy.txt
+redmine_attachments:
+  # - project: client
+  #   # ※provision/playbook.ymlから見た場合のパスを記載
+  #   file: files/attachment/dummy_project.txt
+  #   description: ダミーファイル
+  # - project: client
+  #   wiki: Wiki
+  #   file: files/attachment/dummy_wiki.txt
+  #   filename: dummy.txt
+  ## プロジェクト: クライアント
+  - project: client
+    wiki: チケット管理の仕組み
+    file: files/wiki/help/type_map.png
+  - project: client
+    wiki: チケット管理の仕組み
+    file: files/wiki/help/status_overview.drawio.png
+  - project: client
+    wiki: チケット管理の流れ
+    file: files/wiki/help/issue_sequence.png
+  - project: client
+    wiki: ワークフロー
+    file: files/wiki/help/workflow/all_status.png
+  - project: client
+    wiki: 要望
+    file: files/wiki/help/workflow/request_status.png
+  - project: client
+    wiki: タスク
+    file: files/wiki/help/workflow/task_status.png
+  - project: client
+    wiki: タスク
+    file: files/wiki/help/workflow/confirm_status.png
+  - project: client
+    wiki: 不具合
+    file: files/wiki/help/workflow/bug_status.png
+  - project: client
+    wiki: 不具合
+    file: files/wiki/help/workflow/confirm_status.png
+  - project: client
+    wiki: 運用保守
+    file: files/wiki/help/workflow/support_status.png
+  - project: client
+    wiki: 問い合わせ
+    file: files/wiki/help/workflow/contact_status.png
+  - project: client
+    wiki: その他
+    file: files/wiki/help/workflow/other_status.png
+  ## プロジェクト: Web制作
+  - project: web
+    wiki: チケット管理の仕組み
+    file: files/wiki/help/type_map.png
+  - project: web
+    wiki: チケット管理の仕組み
+    file: files/wiki/help/status_overview.drawio.png
+  - project: web
+    wiki: チケット管理の流れ
+    file: files/wiki/help/issue_sequence.png
+  - project: web
+    wiki: ワークフロー
+    file: files/wiki/help/workflow/all_status.png
+  - project: web
+    wiki: 要望
+    file: files/wiki/help/workflow/request_status.png
+  - project: web
+    wiki: タスク
+    file: files/wiki/help/workflow/task_status.png
+  - project: web
+    wiki: タスク
+    file: files/wiki/help/workflow/confirm_status.png
+  - project: web
+    wiki: 不具合
+    file: files/wiki/help/workflow/bug_status.png
+  - project: web
+    wiki: 不具合
+    file: files/wiki/help/workflow/confirm_status.png
+  - project: web
+    wiki: 運用保守
+    file: files/wiki/help/workflow/support_status.png
+  - project: web
+    wiki: 問い合わせ
+    file: files/wiki/help/workflow/contact_status.png
+  - project: web
+    wiki: その他
+    file: files/wiki/help/workflow/other_status.png
+  ## プロジェクト: システム開発
+  - project: develop
+    wiki: チケット管理の仕組み
+    file: files/wiki/help/type_map.png
+  - project: develop
+    wiki: チケット管理の仕組み
+    file: files/wiki/help/status_overview.drawio.png
+  - project: develop
+    wiki: チケット管理の流れ
+    file: files/wiki/help/issue_sequence.png
+  - project: develop
+    wiki: ワークフロー
+    file: files/wiki/help/workflow/all_status.png
+  - project: develop
+    wiki: 要望
+    file: files/wiki/help/workflow/request_status.png
+  - project: develop
+    wiki: タスク
+    file: files/wiki/help/workflow/task_status.png
+  - project: develop
+    wiki: タスク
+    file: files/wiki/help/workflow/confirm_status.png
+  - project: develop
+    wiki: 不具合
+    file: files/wiki/help/workflow/bug_status.png
+  - project: develop
+    wiki: 不具合
+    file: files/wiki/help/workflow/confirm_status.png
+  - project: develop
+    wiki: 運用保守
+    file: files/wiki/help/workflow/support_status.png
+  - project: develop
+    wiki: 問い合わせ
+    file: files/wiki/help/workflow/contact_status.png
+  - project: develop
+    wiki: その他
+    file: files/wiki/help/workflow/other_status.png
+  ## プロジェクト: インフラ管理
+  - project: infra
+    wiki: チケット管理の仕組み
+    file: files/wiki/help/type_map.png
+  - project: infra
+    wiki: チケット管理の仕組み
+    file: files/wiki/help/status_overview.drawio.png
+  - project: infra
+    wiki: チケット管理の流れ
+    file: files/wiki/help/issue_sequence.png
+  - project: infra
+    wiki: ワークフロー
+    file: files/wiki/help/workflow/all_status.png
+  - project: infra
+    wiki: 要望
+    file: files/wiki/help/workflow/request_status.png
+  - project: infra
+    wiki: タスク
+    file: files/wiki/help/workflow/task_status.png
+  - project: infra
+    wiki: タスク
+    file: files/wiki/help/workflow/confirm_status.png
+  - project: infra
+    wiki: 不具合
+    file: files/wiki/help/workflow/bug_status.png
+  - project: infra
+    wiki: 不具合
+    file: files/wiki/help/workflow/confirm_status.png
+  - project: infra
+    wiki: 運用保守
+    file: files/wiki/help/workflow/support_status.png
+  - project: infra
+    wiki: 問い合わせ
+    file: files/wiki/help/workflow/contact_status.png
+  - project: infra
+    wiki: その他
+    file: files/wiki/help/workflow/other_status.png
+  ## プロジェクト: カスタマーサポート
+  - project: support
+    wiki: チケット管理の仕組み
+    file: files/wiki/help/type_map.png
+  - project: support
+    wiki: チケット管理の仕組み
+    file: files/wiki/help/status_overview.drawio.png
+  - project: support
+    wiki: チケット管理の流れ
+    file: files/wiki/help/issue_sequence.png
+  - project: support
+    wiki: ワークフロー
+    file: files/wiki/help/workflow/all_status.png
+  - project: support
+    wiki: 要望
+    file: files/wiki/help/workflow/request_status.png
+  - project: support
+    wiki: タスク
+    file: files/wiki/help/workflow/task_status.png
+  - project: support
+    wiki: タスク
+    file: files/wiki/help/workflow/confirm_status.png
+  - project: support
+    wiki: 不具合
+    file: files/wiki/help/workflow/bug_status.png
+  - project: support
+    wiki: 不具合
+    file: files/wiki/help/workflow/confirm_status.png
+  - project: support
+    wiki: 運用保守
+    file: files/wiki/help/workflow/support_status.png
+  - project: support
+    wiki: 問い合わせ
+    file: files/wiki/help/workflow/contact_status.png
+  - project: support
+    wiki: その他
+    file: files/wiki/help/workflow/other_status.png
 
 # 文言の変更内容
 # ------------------
@@ -1743,13 +1938,13 @@ redmine_message_customize:
 ## view customizeプラグイン
 ## --------------------
 # redmine_reimport_view_customize: true
-redmine_view_customize:
-  - name: リセット用CSS
-    code: <link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css">
-    path_pattern: ".*"
-    insertion_position: html_head
-    customize_type: html
-    is_enabled: false
+# redmine_view_customize:
+#   - name: リセット用CSS
+#     code: <link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css">
+#     path_pattern: ".*"
+#     insertion_position: html_head
+#     customize_type: html
+#     is_enabled: false
 
 ## --------------------
 ## グローバルチケットテンプレート
@@ -1785,7 +1980,6 @@ redmine_note_templates:
 ## --------------------------
 redmine_customize_message:
   ja: "{{ redmine_message_customize }}"
-
 
 ## 以下、Redmine以外の設定
 ## =================================
