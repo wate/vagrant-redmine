@@ -1462,7 +1462,6 @@ redmine_wiki_content_infra_server_disk: "{{ lookup('file', 'files/wiki/infra/ser
 redmine_wiki_content_infra_server_file: "{{ lookup('file', 'files/wiki/infra/server/file.md') }}"
 redmine_wiki_content_infra_server_port: "{{ lookup('file', 'files/wiki/infra/server/port.md') }}"
 redmine_wiki_content_infra_server_traffic: "{{ lookup('file', 'files/wiki/infra/server/traffic.md') }}"
-redmine_wiki_content_infra_server_other: "{{ lookup('file', 'files/wiki/infra/server/other.md') }}"
 ## ヘルプ
 redmine_wiki_content_help: "{{ lookup('file', 'files/wiki/help.md') }}"
 redmine_wiki_content_help_format: "{{ lookup('file', 'files/wiki/help/format.md') }}"
@@ -1534,7 +1533,6 @@ redmine_wiki_page_infra:
         ファイル: "{{ redmine_wiki_content_infra_server_file }}"
         待受ポート: "{{ redmine_wiki_content_infra_server_port }}"
         トラフィック: "{{ redmine_wiki_content_infra_server_traffic }}"
-        その他: "{{ redmine_wiki_content_infra_server_other }}"
 
 ## --------------------
 ## プロジェクト
