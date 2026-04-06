@@ -10,6 +10,9 @@ redmine_hostname: "{{ redmine_domain }}"
 # redmine_reimport_admin: true
 # redmine_reimport_project: true
 # redmine_reimport_attachment: true
+# redmine_reimport_issue_template: true
+# redmine_reimport_note_template: true
+# redmine_reimport_message_customize: true
 
 ## --------------------
 ## config/configuration.ymlの設定
@@ -1851,7 +1854,6 @@ redmine_attachments:
 # 新しいクエリ => 新しい検索条件
 # アノテート => 注釈
 # ------------------
-# redmine_reimport_message_customize: true
 redmine_message_customize:
   error_scm_annotate: "エントリが存在しない、もしくは注釈できません。"
   error_no_tracker_in_project: 'このプロジェクトにはチケット種別が登録されていません。プロジェクト設定を確認してください。'
@@ -1947,7 +1949,6 @@ redmine_message_customize:
 ## --------------------
 ## グローバルチケットテンプレート
 ## --------------------
-# redmine_reimport_issue_template: true
 redmine_issue_templates:
   - tracker: 不具合
     name: デフォルト
@@ -1970,20 +1971,19 @@ redmine_issue_templates:
   - tracker: タスク
     name: インフラ要件
     description: "{{ lookup('file', 'files/template/cloud.md') }}"
-    is_default: true
+    is_default: false
     enabled: true
     position: 4
   - tracker: タスク
     name: サーバー要件
     description: "{{ lookup('file', 'files/template/server.md') }}"
-    is_default: true
+    is_default: false
     enabled: true
     position: 5
 
 ## --------------------
 ## グローバルノートテンプレート
 ## --------------------
-# redmine_reimport_note_template: true
 redmine_note_templates:
   - tracker: タスク
     name: レビュー
