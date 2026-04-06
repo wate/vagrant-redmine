@@ -4,6 +4,8 @@
 # https://github.com/k1LoW/tbls
 # -------------
 name: Database schema
+dsn: mariadb://redmine_user:redmine_password@localhost:3306/redmine
+docPath: docs/schema
 er:
   format: svg
   comment: true
@@ -31,8 +33,25 @@ dict:
   Extra Definition: 拡張定義
   Viewpoints: ビューポイント
 exclude:
+  ## Rails
   - ar_internal_metadata
   - schema_migrations
+  ## Issue template
+  - issue_template_settings
+  - global_issue_templates
+  - global_issue_templates_projects
+  - issue_templates
+  - global_note_templates
+  - global_note_templates_projects
+  - global_note_visible_roles
+  - note_templates
+  ## OAuth
+  - oauth_providers
+  - oauth_applications
+  - oauth_access_grants
+  - oauth_access_tokens
+  ## View customize
+  - view_customizes
 lint:
   requireTableComment:
     enabled: true
