@@ -45,6 +45,7 @@ exclude:
   - global_note_templates_projects
   - global_note_visible_roles
   - note_templates
+  - note_visible_roles
   ## OAuth
   - oauth_providers
   - oauth_applications
