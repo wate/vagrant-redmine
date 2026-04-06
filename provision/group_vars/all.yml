@@ -1951,17 +1951,34 @@ redmine_message_customize:
 redmine_issue_templates:
   - tracker: 不具合
     name: デフォルト
-    description: "{{ lookup('file', 'files/template/issue/bug.md') }}"
+    description: "{{ lookup('file', 'files/template/bug.md') }}"
     is_default: true
     enabled: true
     position: 1
-  - tracker: 問い合わせ
-    name: 仕様確認
-    issue_title: 〇〇機能の仕様について確認です
-    description: "{{ lookup('file', 'files/template/issue/inquiry.md') }}"
-    is_default: false
+  - tracker: 要望
+    name: デフォルト
+    description: "{{ lookup('file', 'files/template/request.md') }}"
+    is_default: true
     enabled: true
     position: 2
+  - tracker: タスク
+    name: デフォルト
+    description: "{{ lookup('file', 'files/template/task.md') }}"
+    is_default: true
+    enabled: true
+    position: 3
+  - tracker: タスク
+    name: インフラ要件
+    description: "{{ lookup('file', 'files/template/cloud.md') }}"
+    is_default: true
+    enabled: true
+    position: 4
+  - tracker: タスク
+    name: サーバー要件
+    description: "{{ lookup('file', 'files/template/server.md') }}"
+    is_default: true
+    enabled: true
+    position: 5
 
 ## --------------------
 ## グローバルノートテンプレート
@@ -1969,8 +1986,8 @@ redmine_issue_templates:
 # redmine_reimport_note_template: true
 redmine_note_templates:
   - tracker: タスク
-    name: レビュー結果
-    description: "{{ lookup('file', 'files/template/note/review.md') }}"
+    name: レビュー
+    description: "{{ lookup('file', 'files/template/review.md') }}"
     enabled: true
 
 ## --------------------------
