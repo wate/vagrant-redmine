@@ -15,7 +15,7 @@
 - {プロバイダー名1} (例: AWS, Vultr, さくらのクラウド)
 - {プロバイダー名2} (例: Cloudflare)
 
-### 認証情報（環境変数）
+### 認証情報(環境変数)
 
 - `{ENV_VAR_NAME}`: {説明}
 
@@ -135,11 +135,11 @@ SSL/TLS証明書
 その他の設定
 -------------------------
 
-### タグ/ラベル（共通）
+### タグ/ラベル(共通)
 
 - `project`: {プロジェクト名}
 - `environment`: {production}
-- `managed_by`: {terraform}
+- `managed_by`: {Terraform}
 
 ### バックアップ・復旧
 

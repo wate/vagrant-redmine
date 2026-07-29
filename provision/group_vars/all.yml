@@ -1474,6 +1474,7 @@ redmine_wiki_content_help_workflow_issue_management: "{{ lookup('file', 'files/w
 redmine_wiki_content_help_workflow_issue_flow: "{{ lookup('file', 'files/wiki/help/issue_flow.md') }}"
 redmine_wiki_content_help_workflow_issue_artifacts: "{{ lookup('file', 'files/wiki/help/issue_artifacts.md') }}"
 redmine_wiki_content_help_workflow_issue_faq: "{{ lookup('file', 'files/wiki/help/issue_faq.md') }}"
+redmine_wiki_content_help_workflow_issue_metrics: "{{ lookup('file', 'files/wiki/help/issue_metrics.md') }}"
 ### ヘルプ - ワークフロー
 redmine_wiki_content_help_workflow: "{{ lookup('file', 'files/wiki/help/workflow/all.md') }}"
 redmine_wiki_content_help_workflow_request: "{{ lookup('file', 'files/wiki/help/workflow/request.md') }}"
@@ -1482,6 +1483,7 @@ redmine_wiki_content_help_workflow_bug: "{{ lookup('file', 'files/wiki/help/work
 redmine_wiki_content_help_workflow_contact: "{{ lookup('file', 'files/wiki/help/workflow/contact.md') }}"
 redmine_wiki_content_help_workflow_support: "{{ lookup('file', 'files/wiki/help/workflow/support.md') }}"
 redmine_wiki_content_help_workflow_other: "{{ lookup('file', 'files/wiki/help/workflow/other.md') }}"
+redmine_wiki_content_help_workflow_confirm: "{{ lookup('file', 'files/wiki/help/workflow/confirm_status.md') }}"
 
 redmine_wiki_page_sidebar: "{{ redmine_wiki_content_sidebar }}"
 redmine_wiki_page_help:
@@ -1494,6 +1496,7 @@ redmine_wiki_page_help:
         チケット管理の流れ: "{{ redmine_wiki_content_help_workflow_issue_flow }}"
         成果物ごとの役割: "{{ redmine_wiki_content_help_workflow_issue_artifacts }}"
         判断に迷ったときのFAQと実例: "{{ redmine_wiki_content_help_workflow_issue_faq }}"
+        プロセス改善の指標と振り返り: "{{ redmine_wiki_content_help_workflow_issue_metrics }}"
     ワークフロー:
       content: "{{ redmine_wiki_content_help_workflow }}"
       children:
@@ -1503,6 +1506,7 @@ redmine_wiki_page_help:
         運用保守: "{{ redmine_wiki_content_help_workflow_support }}"
         問い合わせ: "{{ redmine_wiki_content_help_workflow_contact }}"
         その他: "{{ redmine_wiki_content_help_workflow_other }}"
+        確認用ワークフロー: "{{ redmine_wiki_content_help_workflow_confirm }}"
     マクロ一覧: "{{ redmine_wiki_content_help_macro_list }}"
 redmine_wiki_page_overview:
   content: "{{ redmine_wiki_content_overview }}"

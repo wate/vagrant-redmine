@@ -6,7 +6,7 @@
 
 - プロジェクト名: {プロジェクト名}
 - 環境: {本番/ステージング/開発}
-- Playbookパス: playbook.yml
+- Playbookパス: [playbook.yml](playbook.yml)
 
 サーバー基本情報
 -------------------------
@@ -75,7 +75,7 @@
 
 - バージョン: {8.4等}
 - 必須拡張モジュール: {fpm, cli, mbstring, xml, curl, gd, zip, intl, mysql等、カンマ区切り}
-- php.ini設定: {変更が必要な場合のみ記載}
+- PHP.ini設定: {変更が必要な場合のみ記載}
 
 ### MariaDB/MySQL
 
@@ -114,7 +114,7 @@
 
 - 有効化: {する/しない}
 - 監視対象: {SSH、Nginx等}
-- BANルール: {デフォルト/カスタム（記載）}
+- BANルール: {デフォルト/カスタム(記載)}
 
 ### ファイアウォール
 
@@ -164,9 +164,9 @@
 
 ### Linuxアカウント名の命名規則
 
-- 推奨: サイト名 + 環境サフィックス（`example_prod`、`example_stg`、`example_dev`等）
+- 推奨: サイト名 + 環境サフィックス(`example_prod`、`example_stg`、`example_dev`等)
 - 環境サフィックス: 本番 (`_prod`)、ステージング (`_stg`)、開発 (`_dev`)
-- 禁止: root、admin等の予約語（管理者アカウントを除く）
+- 禁止: root、admin等の予約語(管理者アカウントを除く)
 
 ### GitHubアカウントの確認方法
 
@@ -175,7 +175,7 @@ SSH公開鍵は`https://github.com/{username}.keys`形式で自動取得され�
 
 ### 環境変数名の命名規則
 
-- データベースパスワード: `{サイト名}_{環境}_DB_PASSWORD`（例: `EXAMPLE_PROD_DB_PASSWORD`、`EXAMPLE_STG_DB_PASSWORD`）
+- データベースパスワード: `{サイト名}_{環境}_DB_PASSWORD`(例: `EXAMPLE_PROD_DB_PASSWORD`、`EXAMPLE_STG_DB_PASSWORD`)
 - 環境識別子: 本番 (`PROD`)、ステージング (`STG`)、開発 (`DEV`)
-- その他機密情報: `{用途}_{環境}_{種別}`（例: `EXAMPLE_PROD_API_KEY`）
+- その他機密情報: `{用途}_{環境}_{種別}`(例: `EXAMPLE_PROD_API_KEY`)
 - 大文字・アンダースコア区切りを推奨
