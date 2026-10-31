@@ -1849,95 +1849,6 @@ redmine_attachments:
     wiki: その他
     file: files/wiki/help/workflow/other_status.png
 
-# 文言の変更内容
-# ------------------
-# トラッカー => チケット種別 / 種別
-# 文書 => ドキュメント
-# ニュース => お知らせ
-# カスタムクエリ => 検索条件
-# 新しいクエリ => 新しい検索条件
-# アノテート => 注釈
-# ------------------
-redmine_message_customize:
-  error_scm_annotate: "エントリが存在しない、もしくは注釈できません。"
-  error_no_tracker_in_project: 'このプロジェクトにはチケット種別が登録されていません。プロジェクト設定を確認してください。'
-  error_workflow_copy_source: 'コピー元となるチケット種別またはロールを選択してください'
-  error_workflow_copy_target: 'コピー先となるチケット種別とロールを選択してください'
-  error_can_not_delete_tracker: 'このチケット種別は使用中です。削除できません。'
-  field_tracker: 種別
-  setting_default_projects_tracker_ids: 新規プロジェクトにおいてデフォルトで有効になるチケット種別
-  permission_view_news: お知らせの閲覧
-  permission_manage_news: お知らせの管理
-  permission_comment_news: お知らせへのコメント
-  permission_view_documents: ドキュメントの閲覧
-  project_module_news: お知らせ
-  project_module_documents: ドキュメント
-  label_document: ドキュメント
-  label_document_new: 新しいドキュメント
-  label_document_plural: ドキュメント
-  label_document_added: ドキュメントの追加
-  label_tracker: 種別
-  label_tracker_plural: 種別
-  label_tracker_new: 新しい種別
-  label_news: お知らせ
-  label_news_new: お知らせを追加
-  label_news_plural: お知らせ
-  label_news_latest: 最新お知らせ
-  label_news_view_all: すべてのお知らせを表示
-  label_news_added: お知らせの追加
-  label_news_comment_added: お知らせへのコメント追加
-  label_query: 検索条件
-  label_query_plural: 検索条件
-  label_query_new: 新しい検索条件
-  label_my_queries: マイ検索条件
-  label_display_used_statuses_only: この種別で使用中のステータスのみ表示
-  button_annotate: 注釈
-  text_workflow_edit: ワークフローを編集するロールとチケット種別を選んでください
-  text_tracker_no_workflow: このチケット種別にワークフローが定義されていません
-  text_no_configuration_data: "ロール、チケット種別、チケットのステータス、ワークフローがまだ設定されていません。\nデフォルト設定のロードを強くお勧めします。ロードした後、それを修正することができます。"
-  default_doc_category_user: ユーザードキュメント
-  default_doc_category_tech: 技術ドキュメント
-  enumeration_doc_categories: ドキュメントカテゴリー
-  description_issue_category_reassign: 新しいカテゴリーを選択してください
-  error_scm_annotate_big_text_file: テキストファイルサイズの上限を超えているため注釈できません。
-  permission_add_documents: ドキュメントの追加
-  permission_edit_documents: ドキュメントの編集
-  permission_delete_documents: ドキュメントの削除
-  error_no_tracker_allowed_for_new_issue_in_project: このプロジェクトにはチケットの追加が許可されているチケット種別がありません
-  label_tracker_all: すべての種別
-  text_status_no_workflow: このステータスはどのチケット種別のワークフローでも使われていません
-  label_trackers_description: チケット種別の説明
-  label_open_trackers_description: すべてのチケット種別の説明を表示
-  text_select_apply_tracker: この種別を適用
-  label_view_previous_annotation: この更新以前の注釈
-  ## ----------
-  ## DMSF
-  ## ----------
-  dmsf: ファイル管理   ## Custom fields tab title
-  menu_dmsf: ファイル管理
-  label_dmsf_file_plural: ファイル管理のファイル ## Email subject & Search options
-  label_dmsf_updated: ファイル管理 更新
-  label_dmsf_downloaded: ファイル管理 ダウンロード
-  project_module_dmsf: ファイル管理
-  permission_email_documents: ファイルをメールで送信
-  link_user_preferences: ファイル管理の設定
-  heading_send_documents_by_email: メールでファイルを送信する
-  label_email_documents: ファイル
-  link_documents: ファイル管理
-  dmsf_and: 及び
-  dmsf_or: または
-  label_empty_trash_bin: ゴミ箱を空にする
-  label_dmsf_columns: ファイルの表示項目
-  field_modified: 更新日
-  field_updated: 更新日
-  field_count: ダウンロード数
-  field_first_at: 最初へ
-  field_last_at: 最後へ
-  field_locked: ロックする
-  label_column_modified: 更新日時
-  label_dmsf_permissions: アクセス制限
-  option_version_patch: パッチ
-
 ## --------------------
 ## view customizeプラグイン
 ## --------------------
@@ -2016,16 +1927,12 @@ install_tools:
   - tig
   ## https://lnav.org/
   - lnav
-  ## https://github.com/ggreer/the_silver_searcher
-  - the_silver_searcher
   ## https://github.com/BurntSushi/ripgrep
   - ripgrep
   ## https://github.com/jesseduffield/lazygit
   - lazygit
   ## https://github.com/dandavison/delta
   - delta
-  ## https://goaccess.io/
-  # - goaccess
   ## https://github.com/google/osv-scanner
   - osv-scanner
   # https://direnv.net/
@@ -2036,14 +1943,8 @@ install_tools:
   - restic
   ## https://rclone.org/
   - rclone
-  ## https://github.com/tldr-pages/tlrc
-  - tldr
-  ## https://github.com/znscli/zns
-  # - zns
   ## https://github.com/kellyjonbrazil/jc
   - jc
-  ## https://httpie.io/
-  - httpie
   ## https://duckdb.org/
   - duckdb
   ## https://github.com/moul/assh

@@ -31,7 +31,7 @@ DNS設定
 
 - `{レコード名}` (A/CNAME/MX/TXT)
     - タイプ: {A}
-    - 値: {IPアドレス or FQDN}
+    - 値: {IPアドレスまたはFQDN}
     - TTL: {3600} (任意)
     - プロキシ有効: {Yes/No} (Cloudflareの場合)
 
