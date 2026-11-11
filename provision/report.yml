@@ -12,8 +12,6 @@
   roles:
     - role: report
       tags: role_report
-    - role: dns
-      tags: role_dns
   tasks: []
   post_tasks:
     - name: Cleanup packages

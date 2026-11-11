@@ -17,7 +17,8 @@ Vagrant.configure('2') do |config|
   config.vm.hostname = 'redmine'
   config.vm.provider 'virtualbox' do |vb|
     vb.name = 'redmine'
-    vb.memory = 2048
+    vb.memory = 4096
+    vb.cpus = 4
   end
 
   vm_domain = ENV["VAGRANT_VM_DOMAIN"] || "redmine.local"
