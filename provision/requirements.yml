@@ -33,9 +33,9 @@ roles:
   - name: backup
     src: https://github.com/wate/ansible-role-backup
     version: develop
-  # - name: mackerel_agent
-  #   src: https://github.com/wate/ansible-role-mackerel_agent
-  #   version: develop
+  - name: mackerel_agent
+    src: https://github.com/wate/ansible-role-mackerel_agent
+    version: develop
   ### レポート関連
   - name: report
     src: https://github.com/wate/ansible-role-report
