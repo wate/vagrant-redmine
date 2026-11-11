@@ -46,6 +46,9 @@ exclude:
   - global_note_visible_roles
   - note_templates
   - note_visible_roles
+  # additionals
+  - dashboards
+  - dashboard_roles
   ## OAuth
   - oauth_providers
   - oauth_applications
@@ -246,6 +249,19 @@ comments:
         TimeEntryQuery:作業時間
   - table: queries_roles
     tableComment: カスタムクエリ⇔ロール
+  - table: reactions
+    tableComment: チケット・コメント等に対するユーザーのリアクション
+    labels:
+      - ポリモーフィック関連
+    columnComments:
+      reactable_type: |
+        Issue:チケット
+        Journal:ジャーナル
+        Message:フォーラムメッセージ
+        News:ニュース
+        Comment:コメント
+      reactable_id: リアクション対象ID
+      user_id: リアクションしたユーザーID
   - table: repositories
     tableComment: リポジトリ
   - table: roles
