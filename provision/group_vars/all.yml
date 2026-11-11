@@ -2240,17 +2240,6 @@ report_file_searches:
   - name: バックアップファイル
     path: /backup/data
 
-## ----------
-## DNS情報を取得するドメイン
-## ※収集されたDNSのレコード情報は「dns_recodes」変数にホスト名毎のディクショナリとして格納されます
-## -----------
-dns_domains: "{{ { redmine_hostname: None } }}"
-
-## ----------
-## DNSレコード情報の出力先ディレクトリ
-## ----------
-dns_recode_output_dir: ./dns_info
-
 ## --------------
 ## maipitの環境変数の設定
 ## --------------
