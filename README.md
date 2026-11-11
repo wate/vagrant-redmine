@@ -15,6 +15,3 @@ http://localhost:8080/
 
 http://localhost:8025/
 
-### HedgeDoc
-
-http://localhost:3000/
