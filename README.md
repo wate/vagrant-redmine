@@ -1,11 +1,12 @@
 Redmine 検証環境 (vagrant-redmine)
 ===========================
 
-Vagrant + Ansible で Redmine の検証環境をローカルに構築するリポジトリです。
-Debian 13 の仮想マシン上に、
+Vagrant + Ansible で Redmine の検証環境をローカルに構築するリポジトリです。  
+Debian 13 の仮想マシン上に、  
 Redmine 本体と周辺サービス(Web サーバー、データベース、メール、監視)を一式セットアップします。
 
-Redmine 本体の動作検証、プラグインの検証、wiki やチケットテンプレートなどのコンテンツ検証を目的としています。
+Redmine 本体の動作検証、プラグインの検証、wikiや  
+チケットテンプレートなどのコンテンツ検証を目的としています。
 
 構築される環境
 ---------------------------
@@ -89,16 +90,16 @@ vagrant ssh   # 仮想マシンへログイン
 | `mackerel_agent`           | 監視エージェント                 |
 | `spamassassin` / `mailpit` | メール検証用(ローカル環境向け)   |
 
-再構築は `vagrant provision` です。特定のロールだけを実行する場合は、`provision.yml` の
-`tags` にロールタグ(例: `role_redmine`)を指定します。
+再構築は `vagrant provision` です。特定のロールだけを実行する場合は、  
+`provision.yml` の`tags` にロールタグ(例: `role_redmine`)を指定します。
 
 設定
 ---------------------------
 
 ### provision.yml
 
-リポジトリ直下の `provision.yml` でプロビジョニングの挙動を制御します。書式は
-`provision.sample.yml` を参照してください。
+リポジトリ直下の `provision.yml` でプロビジョニングの挙動を制御します。  
+書式は`provision.sample.yml` を参照してください。
 
 | キー                                                | 内容                                                |
 | --------------------------------------------------- | --------------------------------------------------- |
@@ -140,8 +141,8 @@ task verify   # ansible-playbook verify.yml
 task report   # ansible-playbook report.yml
 ```
 
-`create` / `destroy` は `main.tf` が存在する場合のみ実行できます。ローカル検証環境では、
-これらのタスクではなく `vagrant` コマンドを使用してください。
+`create` / `destroy` は `main.tf` が存在する場合のみ実行できます。  
+ローカル検証環境では、これらのタスクではなく `vagrant` コマンドを使用してください。
 
 ディレクトリ構成
 ---------------------------
@@ -172,7 +173,7 @@ bin/                     補助スクリプト
 ドキュメント
 ---------------------------
 
-`docs/schema/` は tbls(https://github.com/k1LoW/tbls)で生成したデータベーススキーマです。
+`docs/schema/` は tbls(https://github.com/k1LoW/tbls)で生成したデータベーススキーマです。  
 `.tbls.yml` の接続先を構築済みの MariaDB に向けたうえで再生成できます。
 
 ```bash
@@ -180,7 +181,7 @@ tbls doc        # docs/schema を更新
 mkdocs serve    # http://127.0.0.1:8000 で確認
 ```
 
-`bin/normalize_help_wiki_links.sh` は、`provision/files/wiki/help` 配下の Markdown リンクを
+`bin/normalize_help_wiki_links.sh` は、`provision/files/wiki/help` 配下の Markdown リンクを  
 Redmine wiki 記法へ正規化します。
 
 トラブルシュート
@@ -194,13 +195,14 @@ Redmine wiki 記法へ正規化します。
 ベースボックス(VM イメージ)
 ---------------------------
 
-`Vagrantfile` の `config.vm.box = 'debian-13'` は、このリポジトリ内では定義していません。
+`Vagrantfile` の `config.vm.box = 'debian-13'` は、このリポジトリ内では定義していません。  
 イメージ自体は次のリポジトリでビルドしており、ローカルに登録された box を参照します。
 
 - https://github.com/wate/vagrant-boxes
 
-なお `config.vm.box` の `debian-13` はベースイメージ(box)の名前で、VirtualBox 上に作成される
-仮想マシン名とは別です。仮想マシン名はプロバイダ設定の `vb.name` で指定しており、現在は `redmine` です。
+なお `config.vm.box` の `debian-13` はベースイメージ(box)の名前で、  
+VirtualBox 上に作成される仮想マシン名とは別です。
+仮想マシン名はプロバイダ設定の `vb.name` で指定しており、現在は `redmine` です。
 
 | 項目       | 内容                                                  |
 | ---------- | ----------------------------------------------------- |
@@ -216,6 +218,7 @@ packer build -force debian-13.pkr.hcl   # ビルド後に debian-13 として自
 vagrant box list                        # debian-13 が登録されていることを確認
 ```
 
-ビルド後は `prepare.yml` / `verify.yml` により、ディストリビューションのバージョンと
-アーキテクチャが `metadata.yml` の値と一致するか検証できます。box を更新した場合は、
-このリポジトリ側で `vagrant destroy -f` のあと `vagrant up` を実行して作り直してください。
+ビルド後は `prepare.yml` / `verify.yml` により、ディストリビューションのバージョンと  
+アーキテクチャが `metadata.yml` の値と一致するか検証できます。
+box を更新した場合は、このリポジトリ側で `vagrant destroy -f` のあと  
+`vagrant up` を実行して作り直してください。
